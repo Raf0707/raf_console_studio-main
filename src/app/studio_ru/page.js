@@ -13,8 +13,8 @@ export default function StudioPage() {
         <div className="space-y-24 px-4 md:px-8 max-w-7xl mx-auto">
             {/* Hero Section */}
             <section className="text-center mt-20">
-                <h1 className="text-4xl md:text-5xl font-bold">
-                    Разработаем стабильное мобильное приложение от 6 недель и 390 000 ₽
+                <h1 className="text-2xl md:text-5xl font-bold">
+                    Разработаем стабильное мобильное приложение от 6 недель и 390 000₽
                 </h1>
             </section>
 

@@ -13,8 +13,8 @@ export default function StudioPage() {
         <div className="space-y-24 px-4 md:px-8 max-w-7xl mx-auto">
             {/* Герой-секция */}
             <section className="text-center mt-20">
-                <h1 className="text-4xl md:text-5xl font-bold">
-                    Разрабатываем эффективные сайты от 3 недель и 150 000 ₽
+                <h1 className="text-2xl md:text-5xl font-bold">
+                    Разрабатываем эффективные сайты от 3 недель и 150 000₽
                 </h1>
             </section>
 

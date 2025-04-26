@@ -3,7 +3,7 @@
 export default function PrivacyPolicy() {
     return (
         <div className="flex flex-col justify-center pt-[96px] pb-[96px] max-w-3xl mx-auto px-4">
-            <h1 className="text-5xl text-center font-extrabold text-black dark:text-white mt-3 mb-12 md:text-6xl">
+            <h1 className="text-2xl text-center font-extrabold text-black dark:text-white mt-3 mb-12 md:text-6xl">
                 Политика конфиденциальности
             </h1>
             <div className="text-lg leading-relaxed text-neutral-800 dark:text-neutral-200 space-y-6">

@@ -13,7 +13,7 @@ export default function StudioPage() {
         <div className="space-y-24 px-4 md:px-8 max-w-7xl mx-auto">
             {/* Hero Section */}
             <section className="text-center mt-20">
-                <h1 className="text-4xl md:text-5xl font-bold">
+                <h1 className="text-2xl md:text-5xl font-bold">
                     We develop high-performance websites starting from 3 weeks and $2,500
                 </h1>
             </section>
@@ -21,7 +21,7 @@ export default function StudioPage() {
             {/* Intro Card and Form */}
             <section className="flex flex-col md:flex-row gap-8">
                 <div className="bg-white/70 dark:bg-white/5 rounded-2xl shadow-lg p-8 flex-1 space-y-4">
-                    <p className="text-lg font-semibold">✅ We'll boost your online presence!</p>
+                    <p className="text-lg font-semibold">✅ We&#39;ll boost your online presence!</p>
                     <p>Over 5 years of successfully creating and promoting websites</p>
                     <p className="text-lg font-semibold">✅ Modern web technologies</p>
                     <p>Using React, Next.js, and modern frameworks for fast, responsive sites</p>
@@ -44,14 +44,14 @@ export default function StudioPage() {
                         Contact us directly for a free consultation and project estimate. <br/> <br/>
 
                         Telegram: @ibn_Rustum <br/> <br/>
-                        What's App: +7 916 273 68 56
+                        What&#39;s App: +7 916 273 68 56
                     </p>
                 </div>
             </section>
 
             {/* Mission Section */}
             <section className="text-center text-xl font-medium space-y-4">
-                <p>We don't just build websites - we create digital solutions that drive business growth.</p>
+                <p>We don&#39;t just build websites - we create digital solutions that drive business growth.</p>
                 <p>Our goal is your online success and long-term partnership.</p>
             </section>
 
@@ -136,7 +136,7 @@ export default function StudioPage() {
             {/* Marketing Banner */}
             <section className="text-center space-y-6">
                 <h2 className="text-2xl font-bold">
-                    We'll develop and execute a comprehensive digital strategy:<br />
+                    We&#39;ll develop and execute a comprehensive digital strategy:<br />
                     ensuring maximum online visibility and conversions
                 </h2>
 
