@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { remoteConfig } from '@/app/lib/firebase'; // ✅ Импорт Remote Config
+import { fetchAndActivate, getString } from "firebase/remote-config"; // ✅ Импорт нужных функций
 
 export default function ContactFormRu() {
     const [formData, setFormData] = useState({
@@ -18,7 +20,7 @@ export default function ContactFormRu() {
         comment: ''
     });
     const [isLoading, setIsLoading] = useState(false);
-    const [showSuccessAlert, setShowSuccessAlert] = useState(false); // ✅ Добавлено
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const { toast } = useToast();
 
     const handleChange = (e) => {
@@ -44,20 +46,20 @@ export default function ContactFormRu() {
         };
 
         if (!formData.name.trim()) {
-            newErrors.name = 'Name is required';
+            newErrors.name = 'Заполните обязательное поле';
             valid = false;
         }
 
         if (!formData.contact.trim()) {
-            newErrors.contact = 'Contact information is required';
+            newErrors.contact = 'Заполните обязательное поле';
             valid = false;
         } else if (!/^(\+?\d{10,}|@\w+)$/.test(formData.contact)) {
-            newErrors.contact = 'Please enter a valid phone number or Telegram username';
+            newErrors.contact = 'Введите номер телефона в международном формате (+) или юзернейм телеграм (@)';
             valid = false;
         }
 
         if (!formData.comment.trim()) {
-            newErrors.comment = 'Comment is required';
+            newErrors.comment = 'Оставьте комментарий по теме вашего вопроса или обращения';
             valid = false;
         }
 
@@ -65,13 +67,15 @@ export default function ContactFormRu() {
         return valid;
     };
 
+    // ✅ Теперь получаем токен и чат через Remote Config
     const sendToTelegram = async (data) => {
-        const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
-        const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
-
-        const text = `📌 Новая заявка:\n\n👤 Имя: ${data.name}\n📞 Контакты: ${data.contact}\n📝 Сообщение: ${data.comment}`;
-
         try {
+            await fetchAndActivate(remoteConfig); // сначала активируем конфиг
+            const botToken = "12345null"//getString(remoteConfig, 'NEXT_PUBLIC_TELEGRAM_BOT_TOKEN');
+            const chatId = getString(remoteConfig, 'NEXT_PUBLIC_TELEGRAM_CHAT_ID');
+
+            const text = `📌 Новая заявка:\n\n👤 Имя: ${data.name}\n📞 Контакты: ${data.contact}\n📝 Сообщение: ${data.comment}`;
+
             const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: 'POST',
                 headers: {
@@ -86,7 +90,7 @@ export default function ContactFormRu() {
 
             return response.ok;
         } catch (error) {
-            console.error('Telegram API error:', error);
+            console.error('Ошибка отправки в Telegram:', error);
             return false;
         }
     };
@@ -118,7 +122,7 @@ export default function ContactFormRu() {
                     contact: '',
                     comment: ''
                 });
-                setShowSuccessAlert(true); // ✅ Показываем alert
+                setShowSuccessAlert(true);
             } else {
                 throw new Error('Ошибка отправки в Telegram');
             }
@@ -133,7 +137,6 @@ export default function ContactFormRu() {
         }
     };
 
-    // ✅ Функция алерта
     const renderSuccessAlert = () => (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full mx-4">
@@ -153,6 +156,7 @@ export default function ContactFormRu() {
                 onSubmit={handleSubmit}
                 className="bg-white/70 dark:bg-white/5 rounded-2xl shadow-lg p-8 flex-1 space-y-4"
             >
+                {/* поля формы */}
                 <div>
                     <label className="block text-sm font-medium mb-1">Ваше имя*</label>
                     <Input
@@ -195,7 +199,6 @@ export default function ContactFormRu() {
                 </Button>
             </form>
 
-            {/* ✅ Alert при успешной отправке */}
             {showSuccessAlert && renderSuccessAlert()}
         </>
     );

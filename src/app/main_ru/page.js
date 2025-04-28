@@ -6,7 +6,7 @@ export default function Home() {
     return (
         <div className='flex flex-col justify-center pt-[96px]'>
             <div className='flex flex-col items-center gap-8'>
-                <h1 className='text-5xl text-center font-extrabold text-black dark:text-white mt-3 md:text-7xl'>
+                <h1 className='text-2xl text-center font-extrabold text-black dark:text-white mt-3 md:text-7xl'>
                     От идеи до результата
                 </h1>
                 <h2 className='text-2xl'>
@@ -82,7 +82,7 @@ export default function Home() {
                         Если у вас есть вопросы или предложения,
                         <br /> не стесняйтесь связаться с нами через:
                     </p>
-                    <div className='flex gap-7 justify-center'>
+                    <div className='flex gap-3 justify-center'>
                         <a
                             href='https://github.com/Raf0707'
                             className='flex flex-col items-center gap-2'

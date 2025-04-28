@@ -44,20 +44,20 @@ export default function ContactFormWEBRu() {
         };
 
         if (!formData.name.trim()) {
-            newErrors.name = 'Name is required';
+            newErrors.name = 'Заполните обязательное поле';
             valid = false;
         }
 
         if (!formData.contact.trim()) {
-            newErrors.contact = 'Contact information is required';
+            newErrors.contact = 'Заполните обязательное поле';
             valid = false;
         } else if (!/^(\+?\d{10,}|@\w+)$/.test(formData.contact)) {
-            newErrors.contact = 'Please enter a valid phone number or Telegram username';
+            newErrors.contact = 'Введите номер телефона в международном формате (+) или юзернейм телеграм (@)';
             valid = false;
         }
 
         if (!formData.comment.trim()) {
-            newErrors.comment = 'Comment is required';
+            newErrors.comment = 'Оставьте комментарий по теме вашего вопроса или обращения';
             valid = false;
         }
 

@@ -6,7 +6,7 @@ export default function Page() {
     return (
         <div className='flex flex-col justify-center pt-[96px]'>
             <div className='flex flex-col items-center gap-8'>
-                <h1 className='text-5xl text-center font-extrabold text-black dark:text-white mt-3 md:text-7xl'>
+                <h1 className='text-2xl text-center font-extrabold text-black dark:text-white mt-3 md:text-7xl'>
                     Raf&lt;/&gt;Console Studio
                 </h1>
                 <h2 className='text-2xl'>
@@ -353,10 +353,10 @@ export default function Page() {
                         - Сохраненные</p>
                     <div className='flex gap-2 mt-3 flex-wrap'>
                         <div className='py-2 px-3 rounded-3xl bg-blue-500 text-white font-medium'>
-                            Java
+                            Kotlin
                         </div>
                         <div className='py-2 px-3 self-center rounded-3xl bg-rose-500 text-white font-medium'>
-                            XML
+                            Jetpack Compose
                         </div>
                         <div className='py-2 px-3 rounded-3xl bg-violet-500 text-white font-medium'>
                             Material3

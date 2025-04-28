@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import ContactFormRu from "@/components/layouts_ru/ContactFormRu";
+import {MessageSquare, Send} from "lucide-react";
 
 export default function StudioPage() {
     const scrollToForm = () => {
@@ -42,9 +43,31 @@ export default function StudioPage() {
                 <div className="bg-muted text-muted-foreground rounded-2xl p-6 max-w-4xl mx-auto">
                     <p className="text-lg">
                         Тогда свяжитесь с нами напрямую и получите бесплатную консультацию и расчет стоимости вне очереди <br/> <br/>
-                        
-                        Telegram: @ibn_Rustum <br/> <br/>
-                        What&#39;s App: +7 916 273 68 56
+
+                        <div className='flex gap-7 justify-center'>
+                            <a
+                                href='https://t.me/ibn_Rustum'
+                                className='flex flex-col items-center gap-2'
+                                target='_blank'
+                                rel='noopener noreferrer'
+                            >
+                                <div className='flex p-4 bg-neutral-50 border dark:bg-neutral-900 dark:border-neutral-800 rounded-[32px]'>
+                                    <Send width={24} height={24} />
+                                </div>
+                                <p className='font-medium text-sm'>Telegram</p>
+                            </a>
+                            <a
+                                href='https://wa.me/79162736856'
+                                className='flex flex-col items-center gap-2'
+                                target='_blank'
+                                rel='noopener noreferrer'
+                            >
+                                <div className='flex p-4 bg-neutral-50 border dark:bg-neutral-900 dark:border-neutral-800 rounded-[32px]'>
+                                    <MessageSquare width={24} height={24} />
+                                </div>
+                                <p className='font-medium text-sm'>WhatsApp</p>
+                            </a>
+                        </div>
                     </p>
                 </div>
             </section>
