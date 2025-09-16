@@ -2,29 +2,26 @@
   "hosting": {
     "site": "raf-console-studio",
     "public": "out",
+    "trailingSlash": true,
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites": [
+    "headers": [
       {
-        "source": "**",
-        "destination": "/index.html"
+        "source": "/app-ads.txt",
+        "headers": [
+          { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+          { "key": "Cache-Control", "value": "public, max-age=300, must-revalidate" }
+        ]
       }
+    ],
+    "redirects": [
+      { "source": "/app-ads.txt/", "destination": "/app-ads.txt", "type": 301 }
+    ],
+    "rewrites": [
+      { "source": "**", "destination": "/index.html" }
     ]
-  },
-  "functions": [
-    {
-      "source": "functions",
-      "codebase": "default",
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log",
-        "*.local"
-      ]
-    }
-  ]
+  }
 }

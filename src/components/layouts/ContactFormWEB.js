@@ -6,57 +6,35 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 
-
 export default function ContactFormWEB() {
-    const [formData, setFormData] = useState({
-        name: '',
-        contact: '',
-        comment: ''
-    });
-    const [errors, setErrors] = useState({
-        name: '',
-        contact: '',
-        comment: ''
-    });
+    const [formData, setFormData] = useState({ name: '', contact: '', comment: '' });
+    const [errors, setErrors] = useState({ name: '', contact: '', comment: '' });
     const [isLoading, setIsLoading] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const { toast } = useToast();
+    const SERVICE_WEB = process.env.NEXT_PUBLIC_SERVICE_WEB;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-        if (errors[name]) {
-            setErrors(prev => ({
-                ...prev,
-                [name]: ''
-            }));
-        }
+        setFormData(prev => ({ ...prev, [name]: value }));
+        if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
     };
 
     const validateForm = () => {
         let valid = true;
-        const newErrors = {
-            name: '',
-            contact: '',
-            comment: ''
-        };
+        const newErrors = { name: '', contact: '', comment: '' };
 
         if (!formData.name.trim()) {
             newErrors.name = 'Name is required';
             valid = false;
         }
-
         if (!formData.contact.trim()) {
-            newErrors.contact = 'Contact information is required';
+            newErrors.contact = 'Contact is required';
             valid = false;
         } else if (!/^(\+?\d{10,}|@\w+)$/.test(formData.contact)) {
-            newErrors.contact = 'Please enter a valid phone number or Telegram username';
+            newErrors.contact = 'Use +phone or @telegram';
             valid = false;
         }
-
         if (!formData.comment.trim()) {
             newErrors.comment = 'Comment is required';
             valid = false;
@@ -66,67 +44,40 @@ export default function ContactFormWEB() {
         return valid;
     };
 
-    const sendToTelegram = async (data) => {
-        const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN_WEB;
-        const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID_WEB;
-
-        const text = `📌 New From:\n\n👤 Name: ${data.name}\n📞 Contact: ${data.contact}\n📝 Message: ${data.comment}`;
-
-        try {
-            const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: text,
-                    parse_mode: 'Markdown'
-                })
-            });
-
-            return response.ok;
-        } catch (error) {
-            console.error('Telegram API error:', error);
-            return false;
-        }
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!validateForm()) {
-            toast({
-                title: "Error",
-                description: "Please fill in all required fields",
-                variant: "destructive",
-            });
+            toast({ title: "Error", description: "Please fill in all required fields", variant: "destructive" });
             return;
         }
 
         setIsLoading(true);
 
         try {
-            const telegramSuccess = await sendToTelegram(formData);
+            const response = await fetch(SERVICE_WEB, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    form: "raf_console_web",
+                    name: formData.name,
+                    contact: formData.contact,
+                    comment: formData.comment,
+                }),
+            });
 
-            if (telegramSuccess) {
-                toast({
-                    title: "Success!",
-                    description: "Your request has been sent",
-                });
-                setFormData({
-                    name: '',
-                    contact: '',
-                    comment: ''
-                });
+            if (response.ok) {
+                toast({ title: "Success!", description: "Your request has been sent" });
+                setFormData({ name: "", contact: "", comment: "" });
                 setShowSuccessAlert(true);
             } else {
-                throw new Error('Telegram send error');
+                throw new Error("Server error");
             }
-        } catch (error) {
+        } catch (err) {
+            console.error("Send error:", err);
             toast({
                 title: "Error",
-                description: "Could not send your request. Please try again later.",
+                description: "Could not send your request. Please try later.",
                 variant: "destructive",
             });
         } finally {
@@ -137,7 +88,6 @@ export default function ContactFormWEB() {
     return (
         <>
             <form
-                id="contact-form"
                 onSubmit={handleSubmit}
                 className="bg-white/70 dark:bg-white/5 rounded-2xl shadow-lg p-8 flex-1 space-y-4"
             >
@@ -178,11 +128,7 @@ export default function ContactFormWEB() {
                     {errors.comment && <p className="text-red-500 text-xs mt-1">{errors.comment}</p>}
                 </div>
 
-                <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={isLoading}
-                >
+                <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? 'Sending...' : 'Submit'}
                 </Button>
             </form>
@@ -192,10 +138,7 @@ export default function ContactFormWEB() {
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full mx-4">
                         <h3 className="text-lg font-bold mb-2">Success!</h3>
                         <p className="mb-4">Your request has been sent. We will contact you shortly.</p>
-                        <Button
-                            className="w-full"
-                            onClick={() => setShowSuccessAlert(false)}
-                        >
+                        <Button className="w-full" onClick={() => setShowSuccessAlert(false)}>
                             OK
                         </Button>
                     </div>

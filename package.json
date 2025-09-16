@@ -10,8 +10,9 @@
     "start": "next start",
     "lint": "next lint",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d out",
-    "export": "next export"
+    "deploy": "firebase deploy --only hosting:raf-console-studio",
+    "export": "next export",
+    "postbuild": "node -e \"require('fs').copyFileSync('public/app-ads.txt','out/app-ads.txt')\""
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.6",

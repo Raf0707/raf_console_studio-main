@@ -5,10 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { remoteConfig } from '@/app/lib/firebase'; // ✅ Импорт Remote Config
-import { fetchAndActivate, getString } from "firebase/remote-config"; // ✅ Импорт нужных функций
 
-export default function ContactFormRu() {
+export default function ContactFormAppRu() {
     const [formData, setFormData] = useState({
         name: '',
         contact: '',
@@ -23,76 +21,38 @@ export default function ContactFormRu() {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const { toast } = useToast();
 
+    const SERVICE_APP = process.env.NEXT_PUBLIC_SERVICE_APP;
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        setFormData(prev => ({ ...prev, [name]: value }));
         if (errors[name]) {
-            setErrors(prev => ({
-                ...prev,
-                [name]: ''
-            }));
+            setErrors(prev => ({ ...prev, [name]: '' }));
         }
     };
 
     const validateForm = () => {
         let valid = true;
-        const newErrors = {
-            name: '',
-            contact: '',
-            comment: ''
-        };
+        const newErrors = { name: '', contact: '', comment: '' };
 
         if (!formData.name.trim()) {
             newErrors.name = 'Заполните обязательное поле';
             valid = false;
         }
-
         if (!formData.contact.trim()) {
             newErrors.contact = 'Заполните обязательное поле';
             valid = false;
         } else if (!/^(\+?\d{10,}|@\w+)$/.test(formData.contact)) {
-            newErrors.contact = 'Введите номер телефона в международном формате (+) или юзернейм телеграм (@)';
+            newErrors.contact = 'Введите номер телефона (+...) или юзернейм Telegram (@...)';
             valid = false;
         }
-
         if (!formData.comment.trim()) {
-            newErrors.comment = 'Оставьте комментарий по теме вашего вопроса или обращения';
+            newErrors.comment = 'Оставьте комментарий по теме вашего обращения';
             valid = false;
         }
 
         setErrors(newErrors);
         return valid;
-    };
-
-    // ✅ Теперь получаем токен и чат через Remote Config
-    const sendToTelegram = async (data) => {
-        try {
-            await fetchAndActivate(remoteConfig); // сначала активируем конфиг
-            const botToken = "12345null"//getString(remoteConfig, 'NEXT_PUBLIC_TELEGRAM_BOT_TOKEN');
-            const chatId = getString(remoteConfig, 'NEXT_PUBLIC_TELEGRAM_CHAT_ID');
-
-            const text = `📌 Новая заявка:\n\n👤 Имя: ${data.name}\n📞 Контакты: ${data.contact}\n📝 Сообщение: ${data.comment}`;
-
-            const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: text,
-                    parse_mode: 'Markdown'
-                })
-            });
-
-            return response.ok;
-        } catch (error) {
-            console.error('Ошибка отправки в Telegram:', error);
-            return false;
-        }
     };
 
     const handleSubmit = async (e) => {
@@ -110,23 +70,26 @@ export default function ContactFormRu() {
         setIsLoading(true);
 
         try {
-            const telegramSuccess = await sendToTelegram(formData);
+            const response = await fetch(SERVICE_APP, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    form: "raf_console_app",
+                    name: formData.name,
+                    contact: formData.contact,
+                    comment: formData.comment,
+                }),
+            });
 
-            if (telegramSuccess) {
-                toast({
-                    title: "Успешно!",
-                    description: "Ваша заявка отправлена",
-                });
-                setFormData({
-                    name: '',
-                    contact: '',
-                    comment: ''
-                });
+            if (response.ok) {
+                toast({ title: "Успешно!", description: "Ваша заявка отправлена" });
+                setFormData({ name: "", contact: "", comment: "" });
                 setShowSuccessAlert(true);
             } else {
-                throw new Error('Ошибка отправки в Telegram');
+                throw new Error("Ошибка сервера");
             }
-        } catch (error) {
+        } catch (err) {
+            console.error("Send error:", err);
             toast({
                 title: "Ошибка",
                 description: "Не удалось отправить заявку. Попробуйте позже.",
@@ -137,26 +100,12 @@ export default function ContactFormRu() {
         }
     };
 
-    const renderSuccessAlert = () => (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full mx-4">
-                <h3 className="text-lg font-bold mb-2">Успешно!</h3>
-                <p className="mb-4">Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.</p>
-                <Button className="w-full" onClick={() => setShowSuccessAlert(false)}>
-                    OK
-                </Button>
-            </div>
-        </div>
-    );
-
     return (
         <>
             <form
-                id="contact-form"
                 onSubmit={handleSubmit}
                 className="bg-white/70 dark:bg-white/5 rounded-2xl shadow-lg p-8 flex-1 space-y-4"
             >
-                {/* поля формы */}
                 <div>
                     <label className="block text-sm font-medium mb-1">Ваше имя*</label>
                     <Input
@@ -199,7 +148,17 @@ export default function ContactFormRu() {
                 </Button>
             </form>
 
-            {showSuccessAlert && renderSuccessAlert()}
+            {showSuccessAlert && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full mx-4">
+                        <h3 className="text-lg font-bold mb-2">Успешно!</h3>
+                        <p className="mb-4">Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.</p>
+                        <Button className="w-full" onClick={() => setShowSuccessAlert(false)}>
+                            OK
+                        </Button>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

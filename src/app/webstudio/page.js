@@ -15,7 +15,8 @@ export default function StudioPage() {
             {/* Hero Section */}
             <section className="text-center mt-20">
                 <h1 className="text-2xl md:text-5xl font-bold">
-                    We develop high-performance websites starting from 3 weeks and $2,500
+                    <p>We develop high-performance websites starting from 3 weeks and $2,500</p>
+                    <p>Landing pages starting from $300</p>
                 </h1>
             </section>
 

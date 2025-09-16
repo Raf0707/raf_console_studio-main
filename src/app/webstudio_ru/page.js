@@ -15,7 +15,8 @@ export default function StudioPage() {
             {/* Герой-секция */}
             <section className="text-center mt-20">
                 <h1 className="text-2xl md:text-5xl font-bold">
-                    Разрабатываем эффективные сайты от 3 недель и 150 000₽
+                    <p>Разрабатываем эффективные сайты от 3 недель и 150 000₽</p>
+                    <p>Одностраничные сайты от 30 000₽</p>
                 </h1>
             </section>
 
