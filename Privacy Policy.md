@@ -45,4 +45,4 @@ Contact Us
 If you have any questions about this Privacy Policy or our data practices, please contact us at:
 
 - Email: raf_android-dev@mail.ru
-- Telegram: t.me/ibnRustum
+- Telegram: t.me/ibn_Rustum

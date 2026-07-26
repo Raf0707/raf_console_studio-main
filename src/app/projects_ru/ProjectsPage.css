@@ -1,0 +1,370 @@
+/* Projects page responsive layer */
+
+.projects-page {
+    position: relative;
+    min-width: 0;
+    overflow: clip;
+}
+
+.projects-page,
+.projects-page * {
+    box-sizing: border-box;
+}
+
+.projects-shell,
+.projects-hero,
+.projects-filters,
+.projects-heading,
+.projects-grid,
+.project-card,
+.project-segment {
+    min-width: 0;
+}
+
+/* Prevent touch browsers from keeping desktop hover transforms. */
+@media (hover: none), (pointer: coarse) {
+    .project-card:hover {
+        transform: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .projects-page {
+        padding-top: clamp(6.5rem, 26vw, 8rem) !important;
+        padding-bottom: clamp(4rem, 16vw, 6rem) !important;
+    }
+
+    .projects-shell {
+        width: 100%;
+        padding-inline: clamp(0.875rem, 4vw, 1.25rem) !important;
+    }
+
+    .projects-hero {
+        align-items: flex-start !important;
+        text-align: left !important;
+    }
+
+    .projects-hero > div:first-child {
+        margin-bottom: 1.25rem !important;
+        padding: 0.6rem 0.85rem !important;
+        font-size: 0.78rem !important;
+    }
+
+    .projects-hero h1 {
+        max-width: 100%;
+        font-size: clamp(2.05rem, 10vw, 3.15rem) !important;
+        line-height: 1.04 !important;
+        letter-spacing: -0.045em !important;
+        text-wrap: pretty;
+        overflow-wrap: anywhere;
+    }
+
+    .projects-hero h1 span {
+        margin-top: 0.45rem !important;
+    }
+
+    .projects-hero p {
+        margin-top: 1.15rem !important;
+        max-width: 100%;
+        font-size: clamp(0.92rem, 4vw, 1rem) !important;
+        line-height: 1.65 !important;
+    }
+
+    .projects-filters {
+        margin-top: 2rem !important;
+        padding: 0.65rem !important;
+        border-radius: 1.5rem !important;
+        overflow: visible !important;
+    }
+
+    /* Every segmented selector becomes an independently scrollable row. */
+    .project-segment {
+        width: 100%;
+        max-width: 100%;
+        gap: 0.4rem !important;
+        padding: 0.35rem !important;
+        border-radius: 1.05rem !important;
+    }
+
+    /*
+     * Два элемента:
+     * занимают всю ширину,
+     * каждый строго по 50%.
+     */
+    .project-segment--two {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        overflow: hidden !important;
+        touch-action: manipulation;
+    }
+
+    /*
+     * Три элемента и больше:
+     * ширина зависит от текста,
+     * доступна горизонтальная прокрутка.
+     */
+    .project-segment--scrollable {
+        display: flex !important;
+        grid-template-columns: none !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scroll-snap-type: x proximity;
+        scroll-padding-inline: 0.35rem;
+        scrollbar-width: none;
+        overscroll-behavior-inline: contain;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x;
+    }
+
+    .project-segment--scrollable::-webkit-scrollbar {
+        display: none;
+    }
+
+    .project-segment::-webkit-scrollbar {
+        display: none;
+    }
+
+    .project-segment__button {
+        padding: 0.72rem 0.95rem !important;
+        border-radius: 0.82rem !important;
+        font-size: 0.82rem !important;
+        line-height: 1.2 !important;
+    }
+
+    /* В двухэлементном SegmentButton обе кнопки равны. */
+    .project-segment--two .project-segment__button {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        flex: none !important;
+    }
+
+    /* В SegmentButton с 3+ элементами ширина определяется текстом. */
+    .project-segment--scrollable .project-segment__button {
+        flex: 0 0 auto !important;
+        width: auto !important;
+        min-width: max-content !important;
+        scroll-snap-align: start;
+    }
+
+
+    /* Two-item selectors fill the entire row and do not scroll. */
+    .project-segment--split {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        overflow: hidden !important;
+        scroll-snap-type: none;
+        touch-action: manipulation;
+    }
+
+    .project-segment--split .project-segment__button {
+        width: 100%;
+        min-width: 0 !important;
+        flex: 1 1 50% !important;
+        scroll-snap-align: none;
+    }
+
+    /* Three or more items keep their natural width and horizontal scroll. */
+    .project-segment--scroll {
+        display: flex !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scroll-snap-type: x proximity;
+        touch-action: pan-x;
+    }
+
+    .project-segment--scroll .project-segment__button {
+        flex: 0 0 auto !important;
+        min-width: max-content !important;
+        scroll-snap-align: start;
+    }
+    .project-segment__label {
+        display: block !important;
+        max-width: none !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        white-space: nowrap !important;
+    }
+
+    .projects-heading {
+        margin-top: 2.35rem !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+
+    .projects-heading > div:first-child {
+        width: 100%;
+    }
+
+    .projects-heading p {
+        font-size: 0.72rem !important;
+        line-height: 1.35 !important;
+        letter-spacing: 0.16em !important;
+    }
+
+    .projects-heading h2 {
+        margin-top: 0.45rem !important;
+        font-size: clamp(1.75rem, 8vw, 2.35rem) !important;
+        line-height: 1.08 !important;
+        letter-spacing: -0.045em !important;
+        overflow-wrap: anywhere;
+    }
+
+    .projects-heading > div:last-child {
+        padding: 0.55rem 0.8rem !important;
+        font-size: 0.78rem !important;
+    }
+
+    .projects-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+        grid-auto-rows: auto !important;
+        margin-top: 1.25rem !important;
+        gap: 0.9rem !important;
+    }
+
+    .project-card {
+        width: 100%;
+        min-height: 0 !important;
+        padding: 1.1rem !important;
+        border-radius: 1.45rem !important;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .project-card > div {
+        min-width: 0;
+    }
+
+    .project-card h3 {
+        max-width: 100%;
+        font-size: clamp(1.1rem, 5vw, 1.35rem) !important;
+        line-height: 1.2 !important;
+        overflow-wrap: anywhere;
+    }
+
+    .project-card p {
+        font-size: 0.875rem !important;
+        line-height: 1.55 !important;
+    }
+
+    .project-card [class*="mt-7"] {
+        margin-top: 1.25rem !important;
+    }
+
+    .project-card [class*="pt-8"] {
+        padding-top: 1.5rem !important;
+    }
+
+    .projects-empty {
+        min-height: 15rem !important;
+        margin-top: 1.25rem !important;
+        padding: 1.5rem 1.1rem !important;
+        border-radius: 1.45rem !important;
+    }
+
+    .projects-empty h3 {
+        font-size: 1.4rem !important;
+    }
+
+    .projects-empty p {
+        font-size: 0.9rem !important;
+        line-height: 1.6 !important;
+    }
+}
+
+@media (max-width: 390px) {
+    .projects-shell {
+        padding-inline: 0.75rem !important;
+    }
+
+    .projects-filters {
+        padding: 0.5rem !important;
+        border-radius: 1.25rem !important;
+    }
+
+    .project-segment__button {
+        padding-inline: 0.82rem !important;
+        font-size: 0.78rem !important;
+    }
+
+    .project-card {
+        padding: 1rem !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .projects-page {
+        padding-top: 8.5rem !important;
+    }
+
+    .projects-filters {
+        max-width: 100%;
+    }
+
+    .project-segment__button {
+        padding-inline: 0.8rem !important;
+        font-size: 0.82rem !important;
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 767px) {
+    /*
+     * SegmentButton, в котором ровно две кнопки.
+     * CSS самостоятельно определяет количество элементов.
+     */
+    .projects-page
+    .project-segment:has(
+        > .project-segment__button:nth-child(2):last-child
+    ) {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        overflow-x: hidden !important;
+        overflow-y: hidden !important;
+
+        scroll-snap-type: none !important;
+        touch-action: manipulation !important;
+    }
+
+    /*
+     * Каждая из двух кнопок занимает ровно половину полосы.
+     */
+    .projects-page
+    .project-segment:has(
+        > .project-segment__button:nth-child(2):last-child
+    )
+    > .project-segment__button {
+        display: flex !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        flex: none !important;
+
+        justify-content: center !important;
+        text-align: center !important;
+    }
+
+    .projects-page
+    .project-segment:has(
+        > .project-segment__button:nth-child(2):last-child
+    )
+    > .project-segment__button
+    .project-segment__label {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        overflow: hidden !important;
+        text-align: center !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+}

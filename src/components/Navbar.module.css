@@ -1,0 +1,405 @@
+.desktopNav {
+  --items-count: 7;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  width: min(60vw, 49rem);
+  height: 2.9rem;
+  min-width: 0;
+  flex: 0 1 49rem;
+  align-items: center;
+  overflow: hidden;
+  padding: 0.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18),
+    0 0.8rem 2.2rem rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(1.5rem);
+  -webkit-backdrop-filter: blur(1.5rem);
+  isolation: isolate;
+}
+
+.desktopNav::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  content: '';
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent 46%),
+    radial-gradient(circle at 50% 120%, rgba(255, 255, 255, 0.1), transparent 62%);
+}
+
+.activeDrop {
+  --active-index: 0;
+  position: absolute;
+  z-index: 1;
+  top: 0.25rem;
+  bottom: 0.25rem;
+  left: 0.25rem;
+  display: block;
+  width: calc((100% - 0.5rem) / var(--items-count));
+  pointer-events: none;
+  border-radius: 999px;
+  transform: translate3d(calc(var(--active-index) * 100%), 0, 0);
+  transition: transform 680ms cubic-bezier(0.2, 0.9, 0.15, 1.08);
+  will-change: transform;
+}
+
+.activeDrop,
+.dropSurface,
+.dropHighlight,
+.dropCaustic,
+.dropRipple {
+  pointer-events: none;
+}
+
+.dropSurface {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: 999px;
+  background:
+    radial-gradient(ellipse at 29% 16%, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.58) 17%, transparent 37%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.32) 42%, rgba(134, 134, 134, 0.38) 70%, rgba(255, 255, 255, 0.52) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.28),
+    inset 0 0 1rem rgba(255, 255, 255, 0.2),
+    0 0.65rem 1.5rem rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(1rem) contrast(1.08);
+  -webkit-backdrop-filter: blur(1rem) contrast(1.08);
+  transform: scaleX(1) scaleY(1);
+  transform-origin: 50% 50%;
+  will-change: transform, box-shadow;
+}
+
+.dropSurface::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: '';
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.44), transparent 44%),
+    radial-gradient(ellipse at 50% 112%, rgba(255, 255, 255, 0.34), transparent 58%);
+  mix-blend-mode: screen;
+}
+
+.dropSurface::after {
+  position: absolute;
+  inset: 1px;
+  pointer-events: none;
+  content: '';
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    inset 0 -0.45rem 0.8rem rgba(0, 0, 0, 0.08);
+}
+
+.dropSurfaceImpact {
+  animation: expoDropImpact 780ms cubic-bezier(0.2, 0.88, 0.18, 1) both;
+}
+
+.dropHighlight {
+  position: absolute;
+  top: 10%;
+  left: 12%;
+  width: 52%;
+  height: 36%;
+  border-radius: 999px;
+  opacity: 0.82;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), transparent);
+  filter: blur(0.13rem);
+  transform: rotate(-7deg);
+}
+
+.dropCaustic {
+  position: absolute;
+  right: 7%;
+  bottom: 8%;
+  width: 48%;
+  height: 28%;
+  border-radius: 999px;
+  opacity: 0.48;
+  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.72), transparent 70%);
+  filter: blur(0.2rem);
+}
+
+.dropRipple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.25);
+}
+
+.dropSurfaceImpact .dropHighlight {
+  animation: highlightFlow 780ms ease-out both;
+}
+
+.dropSurfaceImpact .dropCaustic {
+  animation: causticFlow 780ms ease-out both;
+}
+
+.dropSurfaceImpact .dropRipple {
+  animation: oilRipple 680ms ease-out both;
+}
+
+.desktopLink {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: calc(100% / var(--items-count));
+  height: 100%;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.32rem;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: clamp(0.57rem, 0.67vw, 0.72rem);
+  font-weight: 560;
+  line-height: 1.05;
+  white-space: nowrap;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: color 360ms ease, transform 220ms ease, text-shadow 360ms ease;
+}
+
+.desktopLink:hover {
+  color: #fff;
+  text-shadow: 0 0 1rem rgba(255, 255, 255, 0.22);
+}
+
+.desktopLink:active {
+  transform: scale(0.97);
+}
+
+.desktopLinkActive {
+  color: #080808;
+  text-shadow: none;
+}
+
+.mobileTrigger {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.06);
+  transition: background 220ms ease, border-color 220ms ease, color 220ms ease, transform 220ms ease;
+}
+
+.mobileTrigger:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.mobileTrigger:active {
+  transform: scale(0.95);
+}
+
+.drawerContent {
+  height: min(90dvh, 48rem) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #fff !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.1), transparent 30rem),
+    rgba(7, 8, 12, 0.96) !important;
+  backdrop-filter: blur(2.2rem) saturate(150%);
+  -webkit-backdrop-filter: blur(2.2rem) saturate(150%);
+}
+
+.drawerBody {
+  width: 100%;
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 1rem 0.9rem max(1.25rem, env(safe-area-inset-bottom));
+  overflow-y: auto;
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.drawerBrand {
+  min-width: 0;
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+}
+
+.drawerBrand span:last-child {
+  color: #ad8a70;
+  font-weight: 500;
+}
+
+.drawerInstall {
+  display: flex;
+  width: 100%;
+  margin-bottom: 0.8rem;
+}
+
+.mobileList {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mobileLink {
+  position: relative;
+  display: flex;
+  min-height: 3.2rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  overflow: hidden;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  color: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.035);
+  font-size: clamp(0.92rem, 4vw, 1.06rem);
+  font-weight: 570;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: background 220ms ease, border-color 220ms ease, color 220ms ease, transform 220ms ease;
+}
+
+.mobileLink > span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.mobileLink > span:last-child {
+  flex: 0 0 auto;
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 0.72rem;
+}
+
+.mobileLink:active {
+  transform: scale(0.985);
+}
+
+.mobileLinkActive {
+  border-color: rgba(255, 255, 255, 0.38);
+  color: #0b0c10;
+  background: linear-gradient(135deg, #fff, #c8c8c8);
+  box-shadow: inset 0 1px 0 #fff, 0 1rem 2.5rem rgba(0, 0, 0, 0.3);
+}
+
+.mobileLinkActive > span:last-child {
+  color: rgba(11, 12, 16, 0.45);
+}
+
+@keyframes expoDropImpact {
+  0% { transform: scaleX(1) scaleY(1); }
+  16% { transform: scaleX(0.88) scaleY(1.1); }
+  34% { transform: scaleX(1.22) scaleY(0.72); }
+  52% { transform: scaleX(0.94) scaleY(1.06); }
+  70% { transform: scaleX(1.055) scaleY(0.965); }
+  86% { transform: scaleX(0.988) scaleY(1.012); }
+  100% { transform: scaleX(1) scaleY(1); }
+}
+
+@keyframes oilRipple {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+  20% { opacity: 0.72; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(4.2); }
+}
+
+@keyframes highlightFlow {
+  0%, 100% { transform: translateX(0) rotate(-7deg) scale(1); }
+  34% { transform: translateX(24%) rotate(-3deg) scaleX(1.22) scaleY(0.76); }
+  62% { transform: translateX(-7%) rotate(-9deg) scaleX(0.94) scaleY(1.08); }
+}
+
+@keyframes causticFlow {
+  0%, 100% { transform: translateX(0) scale(1); opacity: 0.48; }
+  34% { transform: translateX(-28%) scaleX(1.35) scaleY(0.72); opacity: 0.7; }
+  68% { transform: translateX(8%) scaleX(0.9) scaleY(1.08); opacity: 0.38; }
+}
+
+@media (min-width: 1024px) {
+  .mobileTrigger {
+    display: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  .desktopNav {
+    display: none;
+  }
+
+  .mobileTrigger {
+    display: flex;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .desktopNav {
+    width: min(59vw, 44rem);
+  }
+
+  .desktopLink {
+    padding-inline: 0.18rem;
+    font-size: clamp(0.52rem, 0.62vw, 0.64rem);
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1535px) {
+  .desktopNav {
+    width: min(60vw, 47rem);
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .mobileTrigger {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activeDrop,
+  .desktopLink,
+  .mobileTrigger,
+  .mobileLink {
+    transition: none;
+  }
+
+  .dropSurfaceImpact,
+  .dropSurfaceImpact .dropHighlight,
+  .dropSurfaceImpact .dropCaustic,
+  .dropSurfaceImpact .dropRipple {
+    animation: none;
+  }
+}

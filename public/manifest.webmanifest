@@ -1,0 +1,19 @@
+{
+  "name": "Raf</>Console Studio",
+  "short_name": "Raf Console",
+  "description": "Raf</>Console Studio with offline AntiBoredom and Privacy Policy sections.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#070910",
+  "theme_color": "#080a11",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

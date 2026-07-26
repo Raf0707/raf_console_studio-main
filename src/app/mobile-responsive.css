@@ -1,0 +1,506 @@
+/*
+ * Raf</>Console Studio — точечная мобильная адаптация.
+ *
+ * Важно: экран «От скуки» не затрагивается этим файлом. Для Home используются
+ * точные CSS-module селекторы вида MonochromeHome_hero__*, чтобы правило для
+ * Hero больше не попадало на heroTitle, heroSubtitle, heroMeta и остальные
+ * элементы с похожими именами.
+ */
+
+:root {
+  --raf-mobile-edge: clamp(0.72rem, 3.6vw, 1rem);
+  --raf-mobile-section-gap: clamp(2.5rem, 9vw, 3.7rem);
+  --raf-mobile-card-gap: clamp(0.75rem, 3vw, 1rem);
+}
+
+@media (max-width: 820px) {
+  html:not([data-raf-route='bored']),
+  html:not([data-raf-route='bored']) body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  html:not([data-raf-route='bored']) *,
+  html:not([data-raf-route='bored']) *::before,
+  html:not([data-raf-route='bored']) *::after {
+    box-sizing: border-box;
+  }
+
+  html:not([data-raf-route='bored']) #raf-page-root {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  html:not([data-raf-route='bored']) :is(button, a) {
+    min-width: 0;
+  }
+
+  html:not([data-raf-route='bored']) :is(h1, h2, h3, p, span, button, a) {
+    text-rendering: optimizeLegibility;
+  }
+
+  /* -------------------------------------------------------------------- */
+  /* Home — сохраняем исходную композицию, уменьшаем только интервалы.    */
+  /* -------------------------------------------------------------------- */
+
+  html[data-raf-route='home']
+    :is(
+      [class^='MonochromeHome_page__'],
+      [class*=' MonochromeHome_page__']
+    ) {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    overflow-x: clip !important;
+  }
+
+  html[data-raf-route='home']
+    :is(
+      [class^='MonochromeHome_section__'],
+      [class*=' MonochromeHome_section__']
+    ) {
+    padding-block: var(--raf-mobile-section-gap) !important;
+  }
+
+  html[data-raf-route='home']
+    :is(
+      [class^='MonochromeHome_sectionHeading__'],
+      [class*=' MonochromeHome_sectionHeading__']
+    ) {
+    gap: 0.85rem !important;
+    margin-bottom: clamp(1.25rem, 5vw, 1.8rem) !important;
+  }
+
+  html[data-raf-route='home']
+    :is(
+      [class^='MonochromeHome_servicesGrid__'],
+      [class*=' MonochromeHome_servicesGrid__'],
+      [class^='MonochromeHome_statsGrid__'],
+      [class*=' MonochromeHome_statsGrid__'],
+      [class^='MonochromeHome_channelsGrid__'],
+      [class*=' MonochromeHome_channelsGrid__']
+    ) {
+    gap: var(--raf-mobile-card-gap) !important;
+  }
+
+  /* Карточки остаются полноразмерными — прежние min-height не уменьшаются. */
+  html[data-raf-route='home']
+    :is(
+      [class^='MonochromeHome_serviceCard__'],
+      [class*=' MonochromeHome_serviceCard__']
+    ) {
+    width: 100% !important;
+    min-height: 25rem !important;
+  }
+
+  /* Возвращаем большой логотипный блок, который ранее был сжат до 13rem. */
+  html[data-raf-route='home']
+    :is(
+      [class^='MonochromeHome_aboutLogoVisual__'],
+      [class*=' MonochromeHome_aboutLogoVisual__'],
+      [class^='MonochromeHome_aboutVisual__'],
+      [class*=' MonochromeHome_aboutVisual__']
+    ) {
+    width: 100% !important;
+    min-height: clamp(27rem, 92vw, 32rem) !important;
+  }
+
+  html[data-raf-route='home']
+    :is(
+      [class^='MonochromeHome_aboutSection__'],
+      [class*=' MonochromeHome_aboutSection__'],
+      [class^='MonochromeHome_contactSection__'],
+      [class*=' MonochromeHome_contactSection__']
+    ) {
+    gap: clamp(1rem, 4vw, 1.5rem) !important;
+  }
+
+  /* Не задаём Hero и его дочерним элементам новую высоту или типографику. */
+
+  /* -------------------------------------------------------------------- */
+  /* Studio — отдельные карточки без лишних мобильных оболочек.            */
+  /* -------------------------------------------------------------------- */
+
+  html[data-raf-route='studio'] main {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding-inline: 0 !important;
+    overflow-x: clip !important;
+  }
+
+  html[data-raf-route='studio'] main > div[class*='max-w-[96rem]'] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding-inline: var(--raf-mobile-edge) !important;
+    padding-bottom: 4rem !important;
+  }
+
+  /* Возвращает pt-28 Hero, который раньше перебивался общим section-rule. */
+  html[data-raf-route='studio'] main > div > section:first-of-type {
+    min-height: auto !important;
+    padding-top: max(7.25rem, calc(env(safe-area-inset-top) + 6.35rem)) !important;
+  }
+
+  html[data-raf-route='studio'] main > div[class*='space-y-28'] > :not([hidden]) ~ :not([hidden]),
+  html[data-raf-route='studio'] main > div[class*='lg:space-y-36'] > :not([hidden]) ~ :not([hidden]) {
+    margin-top: clamp(3rem, 11vw, 4.5rem) !important;
+  }
+
+  html[data-raf-route='studio'] main :is(
+    [class*='grid-cols-2'],
+    [class*='grid-cols-3'],
+    [class*='grid-cols-4']
+  ) {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  /*
+   * Снимаем GlassSurface только с крупных оболочек секций. Карточки внутри
+   * feature/process/audience grids сохраняют стекло, матовость и границы.
+   */
+  html[data-raf-route='studio'] main section > [class*='backdrop-blur-2xl'][class*='rounded-[2rem]'],
+  html[data-raf-route='studio'] main #contact-form > [class*='backdrop-blur-2xl'][class*='rounded-[2rem]'],
+  html[data-raf-route='studio'] main section:first-of-type [class*='max-w-xl'][class*='backdrop-blur-2xl'][class*='rounded-[2rem]'] {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Убираем ещё одну декоративную рамку внутри preview и формы. */
+  html[data-raf-route='studio'] main section:first-of-type
+    [class*='max-w-xl'][class*='backdrop-blur-2xl']
+    > .relative.z-10
+    > [class*='rounded-[1.55rem]'],
+  html[data-raf-route='studio'] main #contact-form
+    > [class*='backdrop-blur-2xl']
+    > .relative.z-10
+    > [class*='rounded-[1.5rem]'] {
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+  }
+
+  html[data-raf-route='studio'] main :is(h1, h2) {
+    max-width: 100% !important;
+    overflow-wrap: normal !important;
+  }
+
+  html[data-raf-route='studio'] main h3,
+  html[data-raf-route='studio'] main :is(button, a) {
+    overflow-wrap: anywhere;
+  }
+
+  /* -------------------------------------------------------------------- */
+  /* Projects — прокручиваются только линейки SegmentButton.              */
+  /* -------------------------------------------------------------------- */
+
+  html[data-raf-route='projects'],
+  html[data-raf-route='projects'] body,
+  html[data-raf-route='projects'] #raf-page-root,
+  html[data-raf-route='projects'] main {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-x: clip !important;
+  }
+
+  html[data-raf-route='projects'] main {
+    padding-inline: 0 !important;
+  }
+
+  html[data-raf-route='projects'] main > section {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 80rem !important;
+    margin-inline: auto !important;
+    padding-inline: var(--raf-mobile-edge) !important;
+  }
+
+  html[data-raf-route='projects'] main [aria-label]:has(> button) {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    grid-template-columns: none !important;
+    gap: 0.35rem !important;
+    padding: 0.35rem !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    overscroll-behavior-inline: contain;
+    scroll-padding-inline: 0.35rem;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  html[data-raf-route='projects'] main [aria-label]:has(> button)::-webkit-scrollbar {
+    display: none;
+  }
+
+  html[data-raf-route='projects'] main [aria-label]:has(> button) > button {
+    width: auto !important;
+    min-width: max-content !important;
+    max-width: none !important;
+    flex: 0 0 auto !important;
+    padding: 0.7rem 0.9rem !important;
+    overflow: visible !important;
+    font-size: clamp(0.8rem, 3.6vw, 0.92rem) !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+    text-overflow: clip !important;
+    scroll-snap-align: start;
+  }
+
+  html[data-raf-route='projects'] main :is(
+    [class*='auto-rows-fr'],
+    [class*='grid-cols-2'],
+    [class*='grid-cols-3']
+  ) {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: var(--raf-mobile-card-gap) !important;
+  }
+
+  html[data-raf-route='projects'] main .mt-20 {
+    margin-top: 2.75rem !important;
+  }
+
+  html[data-raf-route='projects'] main .mt-12 {
+    margin-top: 2rem !important;
+  }
+
+  html[data-raf-route='projects'] main .mt-10 {
+    margin-top: 1.6rem !important;
+  }
+
+  html[data-raf-route='projects'] main .mt-7 {
+    margin-top: 1rem !important;
+  }
+
+  html[data-raf-route='projects'] main :is(h1, h2, h3, p) {
+    max-width: 100% !important;
+    overflow-wrap: anywhere;
+  }
+
+  /* -------------------------------------------------------------------- */
+  /* Contacts                                                              */
+  /* -------------------------------------------------------------------- */
+
+  html[data-raf-route='contacts'] [class*='ContactsPage_page'] {
+    width: 100% !important;
+    max-width: none !important;
+    padding: clamp(6.4rem, 18vw, 7.5rem) var(--raf-mobile-edge) 3rem !important;
+  }
+
+  html[data-raf-route='contacts'] [class*='ContactsPage_hero'] {
+    width: 100% !important;
+    max-width: none !important;
+    margin-bottom: 1.35rem !important;
+  }
+
+  html[data-raf-route='contacts'] [class*='ContactsPage_title'] {
+    max-width: 100% !important;
+    font-size: clamp(2rem, 10.5vw, 3.35rem) !important;
+    line-height: 0.99 !important;
+    overflow-wrap: anywhere;
+  }
+
+  html[data-raf-route='contacts'] [class*='ContactsPage_subtitle'] {
+    max-width: none !important;
+    margin-top: 1rem !important;
+    font-size: clamp(0.92rem, 4vw, 1.04rem) !important;
+    line-height: 1.55 !important;
+  }
+
+  html[data-raf-route='contacts'] [class*='ContactsPage_contactsGrid'] {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: var(--raf-mobile-card-gap) !important;
+  }
+
+  html[data-raf-route='contacts'] [class*='ContactsPage_contactCard'] {
+    width: 100% !important;
+    min-height: 0 !important;
+    grid-template-columns: auto minmax(0, 1fr) auto !important;
+    gap: 0.75rem !important;
+    padding: 1rem !important;
+    border-radius: 1.35rem !important;
+  }
+
+  html[data-raf-route='contacts'] [class*='ContactsPage_cardContent'] {
+    min-width: 0 !important;
+  }
+
+  html[data-raf-route='contacts'] :is(
+    [class*='ContactsPage_cardTitle'],
+    [class*='ContactsPage_cardDescription'],
+    [class*='ContactsPage_cardValue']
+  ) {
+    max-width: 100% !important;
+    overflow-wrap: anywhere;
+  }
+
+  html[data-raf-route='contacts'] [class*='ContactsPage_developerCard'] {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 1rem !important;
+    margin-top: 1.25rem !important;
+    padding: 1.15rem !important;
+    border-radius: 1.5rem !important;
+  }
+
+  html[data-raf-route='contacts'] [class*='ContactsPage_developerMark'] {
+    display: none !important;
+  }
+
+  html[data-raf-route='contacts'] [class*='ContactsPage_developerButton'] {
+    width: 100% !important;
+    justify-content: center !important;
+    white-space: normal !important;
+    text-align: center;
+  }
+
+  html[data-raf-route='contacts'] #raf-page-root > div[class*='max-w-3xl'] {
+    width: 100% !important;
+    max-width: none !important;
+    margin-top: 6.3rem !important;
+    padding-inline: var(--raf-mobile-edge) !important;
+  }
+
+  html[data-raf-route='contacts'] #raf-page-root > div[class*='max-w-3xl'] > a {
+    margin-bottom: 0.75rem !important;
+    padding: 1rem !important;
+  }
+
+  /* -------------------------------------------------------------------- */
+  /* Privacy                                                               */
+  /* -------------------------------------------------------------------- */
+
+  html[data-raf-route='privacy'] #raf-page-root > div,
+  html[data-raf-route='privacy'] #raf-page-root > main {
+    width: 100% !important;
+    max-width: 52rem !important;
+    margin-inline: auto !important;
+    padding: 6.4rem var(--raf-mobile-edge) 3rem !important;
+  }
+
+  html[data-raf-route='privacy'] #raf-page-root h1 {
+    max-width: 100% !important;
+    margin: 0 0 1.45rem !important;
+    font-size: clamp(1.85rem, 9.7vw, 3rem) !important;
+    line-height: 1.04 !important;
+    text-align: left !important;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+  }
+
+  html[data-raf-route='privacy'] #raf-page-root h2 {
+    margin-top: 1.5rem !important;
+    font-size: clamp(1.2rem, 5.7vw, 1.6rem) !important;
+    line-height: 1.16 !important;
+    overflow-wrap: anywhere;
+  }
+
+  html[data-raf-route='privacy'] #raf-page-root :is(p, li) {
+    font-size: clamp(0.92rem, 3.9vw, 1rem) !important;
+    line-height: 1.65 !important;
+    overflow-wrap: anywhere;
+  }
+
+  html[data-raf-route='privacy'] #raf-page-root ul {
+    padding-left: 1.2rem !important;
+  }
+
+  html[data-raf-route='privacy'] #raf-page-root [class*='space-y-6'] > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1rem !important;
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --raf-mobile-edge: 0.62rem;
+  }
+
+  html[data-raf-route='projects'] main [aria-label]:has(> button) > button {
+    padding-inline: 0.75rem !important;
+  }
+}
+
+/*
+/* ТОЧЕЧНЫЕ ФИКСЫ
+ */
+
+/* -------------------------------------------------------------------- */
+/* Home — минимальные мобильные вертикальные промежутки.                 */
+/* -------------------------------------------------------------------- */
+
+/* 1. Между блоком карточек услуг и карточкой с логотипом. */
+html[data-raf-route='home']
+:is(
+    [class^='MonochromeHome_servicesSection__'],
+    [class*=' MonochromeHome_servicesSection__']
+  ) {
+  padding-top: -1rem !important;
+  padding-bottom: -1rem !important;
+}
+
+html[data-raf-route='home']
+:is(
+    [class^='MonochromeHome_aboutSection__'],
+    [class*=' MonochromeHome_aboutSection__']
+  ) {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+
+/* 2. Между блоком «Разрабатываем не отдельные экраны…»
+   и блоком «Давайте превратим вашу идею в продукт». */
+html[data-raf-route='home']
+:is(
+    [class^='MonochromeHome_aboutSection__'],
+    [class*=' MonochromeHome_aboutSection__']
+  ) {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+html[data-raf-route='home']
+:is(
+    [class^='MonochromeHome_contactSection__'],
+    [class*=' MonochromeHome_contactSection__']
+  ) {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+
+/* 3. Между карточками контактов и Footer. */
+html[data-raf-route='home']
+:is(
+    [class^='MonochromeHome_contactSection__'],
+    [class*=' MonochromeHome_contactSection__']
+  ) {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+html[data-raf-route='home']
+:is(
+    [class^='MonochromeHome_channelsGrid__'],
+    [class*=' MonochromeHome_channelsGrid__']
+  ) {
+  margin-bottom: 0 !important;
+}

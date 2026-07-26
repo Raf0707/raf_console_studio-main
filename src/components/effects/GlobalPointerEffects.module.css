@@ -1,0 +1,656 @@
+@property --charge-angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+.effectRoot {
+    --effect-x: 50vw;
+    --effect-y: 50vh;
+    --effect-rgb: 255, 255, 255;
+    --charge-angle: 0deg;
+
+    position: fixed;
+    z-index: 2147483000;
+
+    inset: 0;
+
+    display: block;
+
+    width: 100vw;
+    height: 100dvh;
+
+    overflow: hidden;
+    pointer-events: none;
+
+    contain: layout style paint;
+    isolation: isolate;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              ОБЫЧНЫЕ ВОЛНЫ                                 */
+/* -------------------------------------------------------------------------- */
+
+.waveContainer {
+    --effect-rgb: var(--wave-rgb, 255, 255, 255);
+
+    position: absolute;
+
+    left: var(--wave-x, 50vw);
+    top: var(--wave-y, 50vh);
+
+    width: 0;
+    height: 0;
+
+    overflow: visible;
+    pointer-events: none;
+
+    transform: translateZ(0);
+}
+
+.waveGlow {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 8rem;
+    height: 8rem;
+
+    pointer-events: none;
+
+    border-radius: 50%;
+
+    background:
+            radial-gradient(
+                    circle,
+                    rgba(var(--effect-rgb), 0.3) 0%,
+                    rgba(var(--effect-rgb), 0.14) 28%,
+                    rgba(var(--effect-rgb), 0.045) 54%,
+                    transparent 76%
+            );
+
+    filter: blur(0.2rem);
+
+    transform:
+            translate(-50%, -50%)
+            scale(0.3);
+
+    transform-origin: center;
+
+    animation:
+            waveGlowPulse
+            1050ms
+            ease-out
+            both;
+}
+
+.waveFirst,
+.waveSecond,
+.waveThird,
+.pressWave {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: clamp(11rem, 20vw, 19rem);
+    height: clamp(11rem, 20vw, 19rem);
+
+    pointer-events: none;
+
+    border:
+            1.5px solid
+            rgba(var(--effect-rgb), 0.88);
+
+    border-radius: 50%;
+
+    opacity: 0;
+
+    box-shadow:
+            0 0 0.65rem
+            rgba(var(--effect-rgb), 0.3),
+            0 0 1.6rem
+            rgba(var(--effect-rgb), 0.14),
+            inset 0 0 0.65rem
+            rgba(var(--effect-rgb), 0.1);
+
+    transform:
+            translate(-50%, -50%)
+            scale(0.07);
+
+    transform-origin: center;
+
+    will-change:
+            opacity,
+            transform;
+}
+
+.waveFirst,
+.waveSecond,
+.waveThird {
+    animation:
+            pointerWave
+            2050ms
+            cubic-bezier(0.1, 0.65, 0.2, 1)
+            both;
+}
+
+.waveSecond {
+    animation-delay: 250ms;
+}
+
+.waveThird {
+    animation-delay: 500ms;
+}
+
+.pressWave {
+    border-color:
+            rgba(var(--effect-rgb), 0.92);
+
+    box-shadow:
+            0 0 0.8rem
+            rgba(var(--effect-rgb), 0.34),
+            0 0 1.8rem
+            rgba(var(--effect-rgb), 0.16),
+            inset 0 0 0.7rem
+            rgba(var(--effect-rgb), 0.1);
+
+    animation:
+            pressPointerWave
+            1050ms
+            cubic-bezier(0.12, 0.68, 0.18, 1)
+            both;
+}
+
+@keyframes pointerWave {
+    0% {
+        opacity: 0;
+
+        transform:
+                translate(-50%, -50%)
+                scale(0.07);
+    }
+
+    10% {
+        opacity: 0.9;
+    }
+
+    42% {
+        opacity: 0.46;
+    }
+
+    70% {
+        opacity: 0.18;
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+                translate(-50%, -50%)
+                scale(1);
+    }
+}
+
+@keyframes pressPointerWave {
+    0% {
+        opacity: 0;
+
+        transform:
+                translate(-50%, -50%)
+                scale(0.07);
+    }
+
+    12% {
+        opacity: 0.95;
+    }
+
+    48% {
+        opacity: 0.52;
+    }
+
+    76% {
+        opacity: 0.2;
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+                translate(-50%, -50%)
+                scale(1);
+    }
+}
+
+@keyframes waveGlowPulse {
+    0% {
+        opacity: 0;
+
+        transform:
+                translate(-50%, -50%)
+                scale(0.3);
+    }
+
+    25% {
+        opacity: 0.9;
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+                translate(-50%, -50%)
+                scale(1.35);
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                            ДОЛГОЕ НАЖАТИЕ                                  */
+/* -------------------------------------------------------------------------- */
+
+.plasmaContainer {
+    position: absolute;
+
+    left: var(--effect-x);
+    top: var(--effect-y);
+
+    width: clamp(8.5rem, 12vw, 11rem);
+    aspect-ratio: 1;
+
+    overflow: visible;
+    pointer-events: none;
+
+    opacity: 1;
+
+    transform:
+            translate(-50%, -50%)
+            translateZ(0);
+
+    filter:
+            drop-shadow(
+                    0 0 0.75rem
+                    rgba(255, 255, 255, 0.16)
+            );
+
+    transition:
+            opacity 280ms ease;
+
+    will-change: opacity;
+}
+
+.plasmaContainerFading {
+    opacity: 0;
+}
+
+.plasmaChargeTrack,
+.plasmaChargeFill {
+    position: absolute;
+    inset: 0;
+
+    border-radius: 50%;
+}
+
+.plasmaChargeTrack {
+    border:
+            1px solid
+            rgba(255, 255, 255, 0.18);
+
+    box-shadow:
+            inset 0 0 0.8rem
+            rgba(255, 255, 255, 0.04),
+            0 0 1.2rem
+            rgba(255, 255, 255, 0.06);
+}
+
+.plasmaChargeFill {
+    --charge-angle: 0deg;
+
+    overflow: hidden;
+
+    background:
+            conic-gradient(
+                    from -90deg,
+                    rgba(255, 255, 255, 0.96) 0deg,
+                    rgba(255, 255, 255, 0.74)
+                    var(--charge-angle),
+                    transparent
+                    var(--charge-angle),
+                    transparent 360deg
+            );
+
+    animation:
+            chargeCircle
+            520ms
+            linear
+            forwards;
+}
+
+.plasmaChargeFill::after {
+    position: absolute;
+    inset: 3px;
+
+    content: '';
+
+    border-radius: 50%;
+
+    background:
+            rgba(0, 0, 0, 0.92);
+
+    box-shadow:
+            inset 0 0 0.8rem
+            rgba(255, 255, 255, 0.035);
+}
+
+.plasmaContainerActive
+.plasmaChargeFill {
+    --charge-angle: 360deg;
+
+    animation: none;
+
+    background:
+            conic-gradient(
+                    from -90deg,
+                    rgba(255, 255, 255, 0.96) 0deg,
+                    rgba(255, 255, 255, 0.72) 120deg,
+                    rgba(255, 255, 255, 0.96) 240deg,
+                    rgba(255, 255, 255, 0.96) 360deg
+            );
+}
+
+.plasmaCenter {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 0.8rem;
+    aspect-ratio: 1;
+
+    border:
+            1px solid
+            rgba(255, 255, 255, 0.82);
+
+    border-radius: 50%;
+
+    opacity: 0;
+
+    background:
+            rgba(255, 255, 255, 0.28);
+
+    box-shadow:
+            0 0 0.65rem
+            rgba(255, 255, 255, 0.48),
+            0 0 1.7rem
+            rgba(255, 255, 255, 0.2);
+
+    transform:
+            translate(-50%, -50%)
+            scale(0.5);
+}
+
+.plasmaContainerActive
+.plasmaCenter {
+    animation:
+            plasmaCenterPulse
+            620ms
+            ease-in-out
+            infinite alternate;
+}
+
+.plasmaLightning {
+    position: absolute;
+
+    left: 50%;
+    top: 0;
+
+    width: 72%;
+    height: 58%;
+
+    overflow: visible;
+
+    opacity: 0;
+
+    transform:
+            translateX(-50%)
+            translateZ(0);
+
+    transform-origin:
+            50% 100%;
+
+    transition:
+            opacity 220ms ease,
+            filter 220ms ease;
+
+    will-change: opacity;
+}
+
+.plasmaContainerActive
+.plasmaLightning {
+    opacity: 1;
+}
+
+.plasmaContainerFading
+.plasmaLightning {
+    opacity: 0;
+
+    transition-duration: 280ms;
+}
+
+.plasmaPathOuter,
+.plasmaPathGlow,
+.plasmaPathCore,
+.plasmaContactSurface {
+    fill: none;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    vector-effect: non-scaling-stroke;
+}
+
+.plasmaPathOuter {
+    stroke:
+            rgba(255, 255, 255, 0.16);
+
+    stroke-width: 11;
+
+    filter:
+            url(#global-plasma-soft-blur);
+}
+
+.plasmaPathGlow {
+    stroke:
+            url(#global-plasma-line-gradient);
+
+    stroke-width: 4.6;
+
+    opacity: 0.72;
+
+    filter:
+            drop-shadow(
+                    0 0 0.35rem
+                    rgba(255, 255, 255, 0.56)
+            );
+}
+
+.plasmaPathCore {
+    stroke:
+            url(#global-plasma-line-gradient);
+
+    stroke-width: 1.15;
+
+    opacity: 0.98;
+
+    filter:
+            drop-shadow(
+                    0 0 0.18rem
+                    rgba(255, 255, 255, 0.95)
+            );
+}
+
+.plasmaParticleHalo {
+    fill:
+            rgba(255, 255, 255, 0.34);
+
+    filter:
+            url(#global-plasma-particle-blur);
+}
+
+.plasmaParticle {
+    fill: #ffffff;
+
+    filter:
+            drop-shadow(
+                    0 0 0.32rem
+                    rgba(255, 255, 255, 1)
+            );
+}
+
+.plasmaContactGlow {
+    fill:
+            rgba(255, 255, 255, 0.72);
+
+    opacity: 0.08;
+
+    filter:
+            url(#global-plasma-contact-blur);
+
+    will-change: opacity;
+}
+
+.plasmaContactSurface {
+    stroke:
+            rgba(255, 255, 255, 0.88);
+
+    stroke-width: 2.4;
+
+    opacity: 0;
+
+    filter:
+            drop-shadow(
+                    0 0 0.55rem
+                    rgba(255, 255, 255, 0.9)
+            );
+
+    will-change: opacity;
+}
+
+.plasmaContainerActive
+.plasmaPathGlow {
+    animation:
+            plasmaGlowBreathing
+            760ms
+            ease-in-out
+            infinite alternate;
+}
+
+.plasmaContainerActive
+.plasmaPathCore {
+    animation:
+            plasmaCoreBreathing
+            430ms
+            ease-in-out
+            infinite alternate;
+}
+
+@keyframes chargeCircle {
+    from {
+        --charge-angle: 0deg;
+    }
+
+    to {
+        --charge-angle: 360deg;
+    }
+}
+
+@keyframes plasmaCenterPulse {
+    from {
+        opacity: 0.58;
+
+        transform:
+                translate(-50%, -50%)
+                scale(0.72);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+                translate(-50%, -50%)
+                scale(1.18);
+    }
+}
+
+@keyframes plasmaGlowBreathing {
+    from {
+        opacity: 0.56;
+    }
+
+    to {
+        opacity: 0.86;
+    }
+}
+
+@keyframes plasmaCoreBreathing {
+    from {
+        opacity: 0.76;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              МОБИЛЬНАЯ ВЕРСИЯ                              */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 48rem) {
+    .waveFirst,
+    .waveSecond,
+    .waveThird {
+        animation-duration: 1750ms;
+    }
+
+    .waveSecond {
+        animation-delay: 180ms;
+    }
+
+    .waveThird {
+        animation-delay: 360ms;
+    }
+
+    .plasmaContainer {
+        width: 8.5rem;
+    }
+}
+
+@media (pointer: coarse) {
+    .waveGlow {
+        width: 6rem;
+        height: 6rem;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                         УМЕНЬШЕНИЕ ДВИЖЕНИЯ                                */
+/* -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .waveFirst,
+    .waveSecond,
+    .waveThird,
+    .pressWave,
+    .waveGlow,
+    .plasmaChargeFill,
+    .plasmaCenter,
+    .plasmaPathGlow,
+    .plasmaPathCore {
+        animation-duration:
+                1ms !important;
+
+        animation-iteration-count:
+                1 !important;
+    }
+}

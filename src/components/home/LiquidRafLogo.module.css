@@ -1,0 +1,179 @@
+.stage {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.heroPlacement {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  right: clamp(-1rem, 2vw, 4rem);
+  width: min(37vw, 33rem);
+  height: min(80vh, 50rem);
+  transform: translateY(-48%);
+}
+
+.aboutPlacement {
+  position: absolute;
+  inset: clamp(0.85rem, 1.8vw, 1.6rem);
+}
+
+.aura {
+  position: absolute;
+  width: 94%;
+  height: 94%;
+  border-radius: 50%;
+  opacity: 0.68;
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(255, 255, 255, 0.24) 0%,
+      rgba(255, 255, 255, 0.1) 22%,
+      rgba(198, 127, 80, 0.055) 36%,
+      transparent 68%
+    );
+  filter: blur(clamp(2rem, 4vw, 5rem));
+  animation: auraPulse 7s ease-in-out infinite;
+}
+
+.logo {
+  position: absolute;
+  inset: 0;
+  contain: paint;
+  isolation: isolate;
+}
+
+.logo > *,
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  -webkit-mask-image: url('/raf-logo.svg');
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+
+  mask-image: url('/raf-logo.svg');
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+.base {
+  z-index: 1;
+  background:
+    linear-gradient(
+      138deg,
+      #3d4652 0%,
+      #b5bcc7 32%,
+      #f7f8fb 58%,
+      #d8dee8 100%
+    );
+  filter:
+    drop-shadow(0 2.2rem 3.4rem rgba(0, 0, 0, 0.68))
+    drop-shadow(0 0 1.3rem rgba(255, 255, 255, 0.12));
+}
+
+.shadow {
+  z-index: 2;
+  background:
+    linear-gradient(
+      115deg,
+      rgba(17, 24, 39, 0.78) 0%,
+      rgba(17, 24, 39, 0.18) 38%,
+      rgba(17, 24, 39, 0) 100%
+    );
+}
+
+.canvas {
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+
+.canvasReady {
+  opacity: 0.96;
+}
+
+.shine {
+  z-index: 4;
+  opacity: 0.76;
+  background:
+    radial-gradient(
+      circle at 58% 27%,
+      rgba(255, 255, 255, 0.75) 0%,
+      rgba(255, 255, 255, 0.22) 52%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  mix-blend-mode: screen;
+}
+
+.edge {
+  z-index: 5;
+  opacity: 0.36;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.04) 42%,
+      rgba(0, 0, 0, 0.42) 72%,
+      rgba(255, 255, 255, 0.52)
+    );
+  filter:
+    drop-shadow(0 0 0.18rem rgba(255, 255, 255, 0.38))
+    drop-shadow(0 0 0.7rem rgba(255, 255, 255, 0.1));
+  mix-blend-mode: soft-light;
+}
+
+@keyframes auraPulse {
+  0%,
+  100% {
+    opacity: 0.48;
+    transform: scale(0.95);
+  }
+
+  50% {
+    opacity: 0.82;
+    transform: scale(1.05);
+  }
+}
+
+@media (max-width: 1024px) {
+  .heroPlacement {
+    right: -5rem;
+    width: min(47vw, 29rem);
+    height: min(72vh, 43rem);
+    opacity: 0.78;
+  }
+}
+
+@media (max-width: 760px) {
+  .heroPlacement {
+    top: 56%;
+    right: -7rem;
+    width: 25rem;
+    height: 36rem;
+    opacity: 0.46;
+  }
+
+  .aboutPlacement {
+    inset: 0.65rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aura {
+    animation: none;
+  }
+
+  .canvas {
+    transition: none;
+  }
+}

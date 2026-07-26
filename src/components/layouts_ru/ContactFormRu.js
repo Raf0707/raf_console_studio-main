@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,6 +20,23 @@ export default function ContactFormAppRu() {
     const [isLoading, setIsLoading] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const { toast } = useToast();
+
+    const [comment, setComment] = useState('');
+    const [personalDataConsent, setPersonalDataConsent] = useState(false);
+    const commentRef = useRef(null);
+
+    const handleCommentChange = (event) => {
+        const value = event.target.value.slice(0, 500);
+
+        setComment(value);
+
+        const textarea = commentRef.current;
+
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
+        }
+    };
 
     const SERVICE_APP = process.env.NEXT_PUBLIC_SERVICE_APP;
 
@@ -56,6 +73,10 @@ export default function ContactFormAppRu() {
     };
 
     const handleSubmit = async (e) => {
+        if (!personalDataConsent) {
+            return;
+        }
+
         e.preventDefault();
 
         if (!validateForm()) {
@@ -119,7 +140,7 @@ export default function ContactFormAppRu() {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1">Контактные данные (WhatsApp/Telegram)*</label>
+                    <label className="block text-sm font-medium mb-1">Контактные данные (WhatsApp / Telegram / MAX)*</label>
                     <Input
                         name="contact"
                         value={formData.contact}
@@ -130,18 +151,62 @@ export default function ContactFormAppRu() {
                     {errors.contact && <p className="text-red-500 text-xs mt-1">{errors.contact}</p>}
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium mb-1">Комментарий*</label>
-                    <Textarea
+                <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-4">
+                        <label
+                            htmlFor="comment"
+                            className="text-sm font-medium text-black/70 dark:text-white/70"
+                        >
+                            Комментарий
+                        </label>
+
+                        <span
+                            className="text-xs tabular-nums text-black/40 dark:text-white/40"
+                            aria-live="polite"
+                        >
+      {comment.length}/500
+    </span>
+                    </div>
+
+                    <textarea
+                        ref={commentRef}
+                        id="comment"
                         name="comment"
-                        value={formData.comment}
-                        onChange={handleChange}
-                        placeholder="Введите ваш комментарий"
-                        rows={5}
-                        className={errors.comment ? 'border-red-500' : ''}
+                        rows={3}
+                        maxLength={300}
+                        value={comment}
+                        onChange={handleCommentChange}
+                        placeholder="Расскажите кратко о задаче, приложении или вашей идее"
+                        className="min-h-28 w-full resize-none overflow-hidden rounded-2xl border border-black/10 bg-white/55 px-4 py-3.5 text-black outline-none backdrop-blur-xl transition placeholder:text-black/35 focus:border-black/25 focus:bg-white/75 dark:border-white/10 dark:bg-white/[0.06] dark:text-white dark:placeholder:text-white/30 dark:focus:border-white/25 dark:focus:bg-white/[0.09]"
                     />
-                    {errors.comment && <p className="text-red-500 text-xs mt-1">{errors.comment}</p>}
                 </div>
+
+                <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-black/[0.08] bg-white/35 p-4 backdrop-blur-xl transition hover:bg-white/55 dark:border-white/[0.09] dark:bg-white/[0.035] dark:hover:bg-white/[0.06]">
+                    <input
+                        type="checkbox"
+                        name="personalDataConsent"
+                        required
+                        checked={personalDataConsent}
+                        onChange={(event) => setPersonalDataConsent(event.target.checked)}
+                        className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-black dark:accent-white"
+                    />
+
+                    <span className="text-xs leading-5 text-black/55 dark:text-white/55">
+    Я даю согласие на обработку моих персональных данных исключительно
+    в целях рассмотрения заявки, обратной связи, подготовки предложения
+    и оказания запрошенных услуг в соответствии с{' '}
+                        <a
+                            href="/privacy_policy_ru"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-medium text-black underline decoration-black/25 underline-offset-2 transition hover:decoration-black dark:text-white dark:decoration-white/30 dark:hover:decoration-white"
+                            onClick={(event) => event.stopPropagation()}
+                        >
+      политикой обработки персональных данных
+    </a>
+    .
+  </span>
+                </label>
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? 'Отправка...' : 'Отправить заявку'}

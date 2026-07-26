@@ -1,39 +1,169 @@
 'use client';
 
-import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import Link from 'next/link';
+import { Menu, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+import InstallAppButton from '@/components/pwa/InstallAppButton';
 import { Button } from '@/components/ui/button';
-import { Menu } from 'lucide-react';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
 
-export default function Navbar({ navLinks, isRussian }) {
+import styles from './Navbar.module.css';
+
+function normalizePathname(pathname) {
+  if (!pathname || pathname === '/') {
+    return '/';
+  }
+
+  return pathname.replace(/\/+$/, '');
+}
+
+function isActivePath(pathname, href) {
+  return normalizePathname(pathname) === normalizePathname(href);
+}
+
+export default function Navbar({
+  navLinks,
+  isRussian,
+  pathname,
+  variant = 'all',
+}) {
+  const normalizedPathname = normalizePathname(pathname);
+  const foundRouteIndex = navLinks.findIndex((link) => (
+    isActivePath(normalizedPathname, link.href)
+  ));
+  const routeIndex = foundRouteIndex >= 0 ? foundRouteIndex : 0;
+
+  const [visualIndex, setVisualIndex] = useState(routeIndex);
+  const [impactId, setImpactId] = useState(0);
+
+  useEffect(() => {
+    setVisualIndex(routeIndex);
+  }, [routeIndex]);
+
+  const activateDrop = (index) => {
+    setVisualIndex(index);
+    setImpactId((currentImpactId) => currentImpactId + 1);
+  };
+
+  const showDesktop = variant === 'all' || variant === 'desktop';
+  const showMobile = variant === 'all' || variant === 'mobile';
+
   return (
-      <Drawer>
-        <DrawerTrigger className="flex md:hidden p-3">
-          <Menu className="h-6 w-6" />
-        </DrawerTrigger>
-        <DrawerContent className="h-[90vh]">
-          <div className="mx-auto w-full max-w-sm p-6">
-            <ul className="space-y-4">
-              {navLinks.map((link) => (
-                  <li key={link.href}>
-                    <a
-                        href={link.href}
-                        className="block py-3 px-4 text-lg rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-              ))}
-            </ul>
+    <>
+      {showDesktop && (
+        <nav
+          className={styles.desktopNav}
+          aria-label={isRussian ? 'Основная навигация' : 'Primary navigation'}
+          style={{ '--items-count': navLinks.length }}
+        >
+          <span
+            aria-hidden="true"
+            className={styles.activeDrop}
+            style={{ '--active-index': visualIndex, pointerEvents: 'none' }}
+          >
+            <span
+              key={`${visualIndex}-${impactId}`}
+              className={`${styles.dropSurface} ${impactId > 0 ? styles.dropSurfaceImpact : ''}`}
+            >
+              <span className={styles.dropHighlight} />
+              <span className={styles.dropCaustic} />
+              <span className={styles.dropRipple} />
+            </span>
+          </span>
 
-            <div className="mt-8">
-              <DrawerClose asChild>
-                <Button variant="outline" className="w-full">
-                  {isRussian ? 'Закрыть меню' : 'Close Menu'}
-                </Button>
-              </DrawerClose>
+          {navLinks.map((link, index) => {
+            const active = isActivePath(normalizedPathname, link.href);
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                prefetch
+                aria-current={active ? 'page' : undefined}
+                onPointerDown={() => activateDrop(index)}
+                onClick={() => activateDrop(index)}
+                className={`${styles.desktopLink} ${
+                  visualIndex === index ? styles.desktopLinkActive : ''
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </nav>
+      )}
+
+      {showMobile && (
+        <Drawer>
+          <DrawerTrigger
+            className={styles.mobileTrigger}
+            aria-label={isRussian ? 'Открыть меню' : 'Open menu'}
+          >
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">
+              {isRussian ? 'Открыть меню' : 'Open menu'}
+            </span>
+          </DrawerTrigger>
+
+          <DrawerContent className={styles.drawerContent}>
+            <div className={styles.drawerBody}>
+              <div className={styles.drawerHeader}>
+                <p className={styles.drawerBrand}>
+                  <span>Raf&lt;/&gt;Console</span>{' '}
+                  <span>Studio</span>
+                </p>
+
+                <DrawerClose asChild>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full text-white/65 hover:bg-white/10 hover:text-white"
+                  >
+                    <X className="h-5 w-5" />
+                    <span className="sr-only">
+                      {isRussian ? 'Закрыть меню' : 'Close menu'}
+                    </span>
+                  </Button>
+                </DrawerClose>
+              </div>
+
+              <InstallAppButton
+                locale={isRussian ? 'ru' : 'en'}
+                className={styles.drawerInstall}
+              />
+
+              <ul className={styles.mobileList}>
+                {navLinks.map((link, index) => {
+                  const active = isActivePath(normalizedPathname, link.href);
+
+                  return (
+                    <li key={link.href}>
+                      <DrawerClose asChild>
+                        <Link
+                          href={link.href}
+                          prefetch
+                          aria-current={active ? 'page' : undefined}
+                          className={`${styles.mobileLink} ${active ? styles.mobileLinkActive : ''}`}
+                        >
+                          <span>{link.label}</span>
+                          <span>{String(index + 1).padStart(2, '0')}</span>
+                        </Link>
+                      </DrawerClose>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
-          </div>
-        </DrawerContent>
-      </Drawer>
+          </DrawerContent>
+        </Drawer>
+      )}
+    </>
   );
 }

@@ -1,0 +1,90 @@
+.crosshair {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  opacity: var(--crosshair-opacity, 1);
+  filter: blur(var(--crosshair-blur, 0));
+  transform:
+    translate(
+      calc(-50% + var(--crosshair-recoil-x, 0px)),
+      calc(-50% + var(--crosshair-recoil-y, 0px))
+    );
+  transform-origin: center;
+  will-change: transform, filter;
+}
+
+.arm,
+.centerDot {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  background: var(--crosshair-color, white);
+  box-shadow:
+    0 0 0 var(--crosshair-outline, 0px) rgba(0, 0, 0, 0.92),
+    0 0 var(--crosshair-glow, 2.5px)
+      rgba(var(--crosshair-rgb, 255, 255, 255), 0.52);
+}
+
+.armTop,
+.armBottom {
+  left: 50%;
+  width: var(--crosshair-thickness, 1px);
+  height: var(--crosshair-length, 12px);
+  transform: translateX(-50%);
+}
+
+.armTop {
+  bottom: var(--crosshair-gap, 6px);
+}
+
+.armBottom {
+  top: var(--crosshair-gap, 6px);
+}
+
+.armRight,
+.armLeft {
+  top: 50%;
+  width: var(--crosshair-length, 12px);
+  height: var(--crosshair-thickness, 1px);
+  transform: translateY(-50%);
+}
+
+.armRight {
+  left: var(--crosshair-gap, 6px);
+}
+
+.armLeft {
+  right: var(--crosshair-gap, 6px);
+}
+
+.centerDot {
+  top: 50%;
+  left: 50%;
+  width: var(--dot-size, 2px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+}
+
+.crosshairScoped .armTop,
+.crosshairScoped .armBottom {
+  height: var(--crosshair-length, 48px);
+}
+
+.crosshairScoped .armRight,
+.crosshairScoped .armLeft {
+  width: var(--crosshair-length, 48px);
+}
+
+.crosshairPreview {
+  position: absolute;
+  inset: 50% auto auto 50%;
+}
+
+.crosshairStandard {
+  isolation: isolate;
+}
