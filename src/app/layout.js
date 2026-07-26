@@ -14,35 +14,34 @@ import './mobile-responsive.css';
 export const metadata = {
   title: 'Raf</>Console Studio',
   description: 'Raf</>Console Studio',
-
   applicationName: 'Raf Console Studio',
 
-  manifest: '/manifest.webmanifest?v=4',
+  manifest: '/manifest.webmanifest',
 
   icons: {
     icon: [
       {
-        url: '/favicon.ico?v=4',
+        url: '/favicon.ico?v=7',
         type: 'image/x-icon',
         sizes: 'any',
       },
       {
-        url: '/favicon.svg?v=4',
+        url: '/favicon.svg?v=7',
         type: 'image/svg+xml',
         sizes: 'any',
       },
       {
-        url: '/favicon-96x96.png?v=4',
+        url: '/favicon-96x96.png?v=7',
         type: 'image/png',
         sizes: '96x96',
       },
       {
-        url: '/web-app-manifest-192x192.png?v=4',
+        url: '/web-app-manifest-192x192.png?v=7',
         type: 'image/png',
         sizes: '192x192',
       },
       {
-        url: '/web-app-manifest-512x512.png?v=4',
+        url: '/web-app-manifest-512x512.png?v=7',
         type: 'image/png',
         sizes: '512x512',
       },
@@ -50,14 +49,14 @@ export const metadata = {
 
     shortcut: [
       {
-        url: '/favicon.ico?v=4',
+        url: '/favicon.ico?v=7',
         type: 'image/x-icon',
       },
     ],
 
     apple: [
       {
-        url: '/apple-touch-icon.png?v=4',
+        url: '/apple-touch-icon.png?v=7',
         type: 'image/png',
         sizes: '180x180',
       },

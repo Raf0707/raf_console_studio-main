@@ -3,25 +3,48 @@
     "site": "raf-console-studio",
     "public": "out",
     "trailingSlash": true,
+
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
+
     "headers": [
       {
         "source": "/app-ads.txt",
         "headers": [
-          { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
-          { "key": "Cache-Control", "value": "public, max-age=300, must-revalidate" }
+          {
+            "key": "Content-Type",
+            "value": "text/plain; charset=utf-8"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=300, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "/manifest.webmanifest",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/manifest+json; charset=utf-8"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
         ]
       }
     ],
+
     "redirects": [
-      { "source": "/app-ads.txt/", "destination": "/app-ads.txt", "type": 301 }
-    ],
-    "rewrites": [
-      { "source": "**", "destination": "/index.html" }
+      {
+        "source": "/app-ads.txt/",
+        "destination": "/app-ads.txt",
+        "type": 301
+      }
     ]
   }
 }

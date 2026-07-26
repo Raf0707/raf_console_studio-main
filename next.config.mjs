@@ -1,17 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // Важно для статического экспорта
-  //basePath: '/', // Указываем имя репозитория
-  trailingSlash: true, // Добавляет слеши к URL
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/main_ru',
-        permanent: true,
-      }
-    ]
-  }
-}
+  output: 'export',
 
-export default nextConfig
+  trailingSlash: true,
+
+  images: {
+    unoptimized: true,
+  },
+};
+
+export default nextConfig;
