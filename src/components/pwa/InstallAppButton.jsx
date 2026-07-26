@@ -111,16 +111,31 @@ export default function InstallAppButton({
     }
 
     setBusy(true);
+    setShowHelp(false);
 
     try {
       await deferredPrompt.prompt();
+
       const choice = await deferredPrompt.userChoice;
 
+      sharedDeferredPrompt = null;
+      deferredPromptRef.current = null;
+      publishPromptState();
+
       if (choice?.outcome === 'accepted') {
-        sharedDeferredPrompt = null;
-        deferredPromptRef.current = null;
-        publishPromptState();
+        setInstalled(true);
       }
+    } catch (error) {
+      console.warn(
+          '[InstallAppButton] Installation prompt failed:',
+          error,
+      );
+
+      sharedDeferredPrompt = null;
+      deferredPromptRef.current = null;
+      publishPromptState();
+
+      setShowHelp(true);
     } finally {
       setBusy(false);
       onAction?.();

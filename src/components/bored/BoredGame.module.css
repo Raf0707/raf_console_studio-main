@@ -18,10 +18,10 @@
   overflow: clip;
   color: var(--text);
   background:
-    radial-gradient(circle at 12% 7%, rgba(255, 255, 255, 0.11), transparent 29rem),
-    radial-gradient(circle at 86% 26%, rgba(255, 255, 255, 0.075), transparent 34rem),
-    radial-gradient(circle at 48% 78%, rgba(255, 255, 255, 0.04), transparent 38rem),
-    linear-gradient(155deg, #101012 0%, var(--page-bg-soft) 42%, var(--page-bg) 100%);
+          radial-gradient(circle at 12% 7%, rgba(255, 255, 255, 0.11), transparent 29rem),
+          radial-gradient(circle at 86% 26%, rgba(255, 255, 255, 0.075), transparent 34rem),
+          radial-gradient(circle at 48% 78%, rgba(255, 255, 255, 0.04), transparent 38rem),
+          linear-gradient(155deg, #101012 0%, var(--page-bg-soft) 42%, var(--page-bg) 100%);
   isolation: isolate;
 }
 
@@ -43,8 +43,8 @@
   pointer-events: none;
   opacity: 0.23;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
   background-size: clamp(3.5rem, 7vw, 6rem) clamp(3.5rem, 7vw, 6rem);
   mask-image: linear-gradient(to bottom, black, transparent 82%);
 }
@@ -102,8 +102,8 @@
   color: rgba(255, 255, 255, 0.62);
   background: rgba(255, 255, 255, 0.045);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    0 1rem 3rem rgba(0, 0, 0, 0.2);
+          inset 0 1px 0 rgba(255, 255, 255, 0.14),
+          0 1rem 3rem rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(1.3rem) saturate(150%);
   -webkit-backdrop-filter: blur(1.3rem) saturate(150%);
   font-size: 0.72rem;
@@ -142,12 +142,12 @@
 .settingsCard {
   border: 1px solid var(--glass-line);
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.018) 46%, rgba(255, 255, 255, 0.045)),
-    var(--glass);
+          linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.018) 46%, rgba(255, 255, 255, 0.045)),
+          var(--glass);
   box-shadow:
-    var(--shadow),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+          var(--shadow),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(2rem) saturate(145%);
   -webkit-backdrop-filter: blur(2rem) saturate(145%);
 }
@@ -218,10 +218,10 @@
   font-size: 0.82rem;
   font-weight: 650;
   transition:
-    color 220ms ease,
-    background-color 220ms ease,
-    box-shadow 220ms ease,
-    transform 220ms ease;
+          color 220ms ease,
+          background-color 220ms ease,
+          box-shadow 220ms ease,
+          transform 220ms ease;
 }
 
 .segmentButton:hover {
@@ -236,8 +236,8 @@
   color: #090909;
   background: rgba(255, 255, 255, 0.95);
   box-shadow:
-    inset 0 1px 0 white,
-    0 0.7rem 1.7rem rgba(0, 0, 0, 0.28);
+          inset 0 1px 0 white,
+          0 0.7rem 1.7rem rgba(0, 0, 0, 0.28);
 }
 
 .mainButton {
@@ -253,10 +253,10 @@
   font-size: 0.86rem;
   font-weight: 720;
   transition:
-    transform 180ms ease,
-    box-shadow 260ms ease,
-    background-color 260ms ease,
-    color 260ms ease;
+          transform 180ms ease,
+          box-shadow 260ms ease,
+          background-color 260ms ease,
+          color 260ms ease;
 }
 
 .mainButton:hover {
@@ -278,9 +278,9 @@
   color: #070707;
   background: rgba(255, 255, 255, 0.96);
   box-shadow:
-    inset 0 1px 0 white,
-    0 0.9rem 2.4rem rgba(0, 0, 0, 0.34),
-    0 0 2.4rem rgba(255, 255, 255, 0.08);
+          inset 0 1px 0 white,
+          0 0.9rem 2.4rem rgba(0, 0, 0, 0.34),
+          0 0 2.4rem rgba(255, 255, 255, 0.08);
 }
 
 .playButton {
@@ -292,8 +292,8 @@
   color: white;
   background: rgba(255, 255, 255, 0.09);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    0 0.9rem 2.4rem rgba(0, 0, 0, 0.34);
+          inset 0 1px 0 rgba(255, 255, 255, 0.15),
+          0 0.9rem 2.4rem rgba(0, 0, 0, 0.34);
 }
 
 .modeRail {
@@ -320,10 +320,10 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055);
   cursor: pointer;
   transition:
-    transform 240ms ease,
-    border-color 240ms ease,
-    background-color 240ms ease,
-    box-shadow 240ms ease;
+          transform 240ms ease,
+          border-color 240ms ease,
+          background-color 240ms ease,
+          box-shadow 240ms ease;
 }
 
 .modeCard::after {
@@ -353,11 +353,11 @@
 .modeCardActive {
   border-color: rgba(255, 255, 255, 0.3);
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.035)),
-    rgba(0, 0, 0, 0.3);
+          linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.035)),
+          rgba(0, 0, 0, 0.3);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 1.2rem 3rem rgba(0, 0, 0, 0.28);
+          inset 0 1px 0 rgba(255, 255, 255, 0.2),
+          0 1.2rem 3rem rgba(0, 0, 0, 0.28);
 }
 
 .modeCardTop {
@@ -385,8 +385,8 @@
   color: rgba(255, 255, 255, 0.82);
   background: rgba(255, 255, 255, 0.065);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    0 0.8rem 1.8rem rgba(0, 0, 0, 0.2);
+          inset 0 1px 0 rgba(255, 255, 255, 0.15),
+          0 0.8rem 1.8rem rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(1rem);
   -webkit-backdrop-filter: blur(1rem);
 }
@@ -521,10 +521,10 @@
   font-size: 0.74rem;
   font-weight: 650;
   transition:
-    color 180ms ease,
-    border-color 180ms ease,
-    background-color 180ms ease,
-    transform 180ms ease;
+          color 180ms ease,
+          border-color 180ms ease,
+          background-color 180ms ease,
+          transform 180ms ease;
 }
 
 .presetBar button:hover,
@@ -564,8 +564,8 @@
   padding: clamp(1rem, 2vw, 1.45rem);
   border-radius: 1.55rem;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 1.5rem 3.5rem rgba(0, 0, 0, 0.25);
+          inset 0 1px 0 rgba(255, 255, 255, 0.12),
+          0 1.5rem 3.5rem rgba(0, 0, 0, 0.25);
 }
 
 .settingsCardTitle {
@@ -687,8 +687,8 @@
   border-radius: 50%;
   background: white;
   box-shadow:
-    0 0 0 0.25rem rgba(255, 255, 255, 0.08),
-    0 0.4rem 1rem rgba(0, 0, 0, 0.35);
+          0 0 0 0.25rem rgba(255, 255, 255, 0.08),
+          0 0.4rem 1rem rgba(0, 0, 0, 0.35);
 }
 
 .rangeInput::-moz-range-track {
@@ -704,8 +704,8 @@
   border-radius: 50%;
   background: white;
   box-shadow:
-    0 0 0 0.25rem rgba(255, 255, 255, 0.08),
-    0 0.4rem 1rem rgba(0, 0, 0, 0.35);
+          0 0 0 0.25rem rgba(255, 255, 255, 0.08),
+          0 0.4rem 1rem rgba(0, 0, 0, 0.35);
 }
 
 .toggleControl {
@@ -728,8 +728,8 @@
   background: rgba(0, 0, 0, 0.32);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   transition:
-    background-color 220ms ease,
-    border-color 220ms ease;
+          background-color 220ms ease,
+          border-color 220ms ease;
 }
 
 .toggleTrack span {
@@ -743,8 +743,8 @@
   box-shadow: 0 0.3rem 0.9rem rgba(0, 0, 0, 0.35);
   transform: translateY(-50%);
   transition:
-    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    background-color 220ms ease;
+          transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+          background-color 220ms ease;
 }
 
 .toggleControl input:checked + .toggleTrack {
@@ -798,8 +798,8 @@
   background: #050507;
   isolation: isolate;
   transition:
-    opacity 220ms ease,
-    transform 220ms ease;
+          opacity 220ms ease,
+          transform 220ms ease;
 }
 
 .fullscreenGameClosed {
@@ -820,10 +820,10 @@
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.08), transparent 42%),
-    radial-gradient(circle at 10% 12%, rgba(255, 255, 255, 0.09), transparent 26rem),
-    radial-gradient(circle at 92% 88%, rgba(255, 255, 255, 0.07), transparent 30rem),
-    linear-gradient(150deg, #0f0f12, #050507 66%, #020203);
+          radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.08), transparent 42%),
+          radial-gradient(circle at 10% 12%, rgba(255, 255, 255, 0.09), transparent 26rem),
+          radial-gradient(circle at 92% 88%, rgba(255, 255, 255, 0.07), transparent 30rem),
+          linear-gradient(150deg, #0f0f12, #050507 66%, #020203);
 }
 
 .fullscreenBackdrop::after {
@@ -844,17 +844,17 @@
   gap: clamp(0.55rem, 1.4vw, 1rem);
   min-height: var(--hud-height);
   padding:
-    max(0.65rem, env(safe-area-inset-top))
-    max(0.65rem, env(safe-area-inset-right))
-    0.65rem
-    max(0.65rem, env(safe-area-inset-left));
+          max(0.65rem, env(safe-area-inset-top))
+          max(0.65rem, env(safe-area-inset-right))
+          0.65rem
+          max(0.65rem, env(safe-area-inset-left));
   border-bottom: 1px solid rgba(255, 255, 255, 0.11);
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025)),
-    rgba(9, 9, 11, 0.72);
+          linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025)),
+          rgba(9, 9, 11, 0.72);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.13),
-    0 1rem 3rem rgba(0, 0, 0, 0.32);
+          inset 0 1px 0 rgba(255, 255, 255, 0.13),
+          0 1rem 3rem rgba(0, 0, 0, 0.32);
   backdrop-filter: blur(1.8rem) saturate(150%);
   -webkit-backdrop-filter: blur(1.8rem) saturate(150%);
 }
@@ -923,9 +923,9 @@
   background: rgba(255, 255, 255, 0.055);
   cursor: pointer;
   transition:
-    color 180ms ease,
-    background-color 180ms ease,
-    transform 180ms ease;
+          color 180ms ease,
+          background-color 180ms ease,
+          transform 180ms ease;
 }
 
 .closeButton:hover {
@@ -949,8 +949,8 @@
   overflow: hidden;
   border-top: 1px solid rgba(255, 255, 255, 0.025);
   background:
-    radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.065), transparent 38%),
-    linear-gradient(165deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.35));
+          radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.065), transparent 38%),
+          linear-gradient(165deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.35));
   isolation: isolate;
   touch-action: none;
   user-select: none;
@@ -981,8 +981,8 @@
   z-index: 0;
   opacity: 0.34;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.027) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.027) 1px, transparent 1px);
+          linear-gradient(rgba(255, 255, 255, 0.027) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.027) 1px, transparent 1px);
   background-size: clamp(2.7rem, 5vw, 4.2rem) clamp(2.7rem, 5vw, 4.2rem);
   mask-image: radial-gradient(circle at center, black, transparent 82%);
 }
@@ -1002,8 +1002,8 @@
 .arenaEdge {
   z-index: 20;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.035),
-    inset 0 0 5rem rgba(255, 255, 255, 0.025);
+          inset 0 0 0 1px rgba(255, 255, 255, 0.035),
+          inset 0 0 5rem rgba(255, 255, 255, 0.025);
 }
 
 .arenaState {
@@ -1072,8 +1072,8 @@
   line-height: 0.9;
   letter-spacing: -0.08em;
   text-shadow:
-    0 0 3rem rgba(255, 255, 255, 0.24),
-    0 2rem 5rem rgba(0, 0, 0, 0.4);
+          0 0 3rem rgba(255, 255, 255, 0.24),
+          0 2rem 5rem rgba(0, 0, 0, 0.4);
   animation: countdownPulse 950ms cubic-bezier(0.16, 0.8, 0.2, 1) both;
 }
 
@@ -1140,11 +1140,11 @@
   border-radius: 50%;
   background: transparent;
   box-shadow:
-    inset 0 0 0.45rem rgba(255, 255, 255, 0.24),
-    inset -1.1rem -1.1rem 2rem rgba(0, 0, 0, 0.26),
-    inset 0.8rem 0.8rem 1.6rem rgba(255, 255, 255, 0.12),
-    0 0 1.15rem rgba(255, 255, 255, 0.14),
-    0 1.2rem 2.4rem rgba(0, 0, 0, 0.28);
+          inset 0 0 0.45rem rgba(255, 255, 255, 0.24),
+          inset -1.1rem -1.1rem 2rem rgba(0, 0, 0, 0.26),
+          inset 0.8rem 0.8rem 1.6rem rgba(255, 255, 255, 0.12),
+          0 0 1.15rem rgba(255, 255, 255, 0.14),
+          0 1.2rem 2.4rem rgba(0, 0, 0, 0.28);
   filter: hue-rotate(var(--bubble-hue));
   transition: filter 100ms ease;
 }
@@ -1156,10 +1156,10 @@
   content: '';
   border-radius: inherit;
   background:
-    radial-gradient(circle at 31% 22%, rgba(255, 255, 255, 0.64), transparent 11%),
-    radial-gradient(circle at 45% 38%, rgba(255, 255, 255, 0.17), transparent 35%),
-    radial-gradient(circle at 65% 72%, rgba(255, 255, 255, 0.09), transparent 42%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.025) 52%, rgba(255, 255, 255, 0.13));
+          radial-gradient(circle at 31% 22%, rgba(255, 255, 255, 0.64), transparent 11%),
+          radial-gradient(circle at 45% 38%, rgba(255, 255, 255, 0.17), transparent 35%),
+          radial-gradient(circle at 65% 72%, rgba(255, 255, 255, 0.09), transparent 42%),
+          linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.025) 52%, rgba(255, 255, 255, 0.13));
   backdrop-filter: blur(0.42rem) saturate(170%);
   -webkit-backdrop-filter: blur(0.42rem) saturate(170%);
 }
@@ -1225,8 +1225,8 @@
   aspect-ratio: 1;
   background: white;
   box-shadow:
-    0 0 0.7rem white,
-    0 0 1.4rem rgba(255, 255, 255, 0.55);
+          0 0 0.7rem white,
+          0 0 1.4rem rgba(255, 255, 255, 0.55);
   transform: translate(-50%, -50%);
   animation: coreDisappear var(--bubble-life) linear both;
 }
@@ -1258,11 +1258,11 @@
 
 .bubbleChain .bubbleVisual {
   box-shadow:
-    inset 0 0 0.55rem rgba(255, 255, 255, 0.29),
-    inset -1.1rem -1.1rem 2rem rgba(0, 0, 0, 0.28),
-    0 0 0 0.22rem rgba(255, 255, 255, 0.045),
-    0 0 1.45rem rgba(255, 255, 255, 0.18),
-    0 1.2rem 2.4rem rgba(0, 0, 0, 0.3);
+          inset 0 0 0.55rem rgba(255, 255, 255, 0.29),
+          inset -1.1rem -1.1rem 2rem rgba(0, 0, 0, 0.28),
+          0 0 0 0.22rem rgba(255, 255, 255, 0.045),
+          0 0 1.45rem rgba(255, 255, 255, 0.18),
+          0 1.2rem 2.4rem rgba(0, 0, 0, 0.3);
 }
 
 .bubbleChain {
@@ -1281,8 +1281,8 @@
   pointer-events: none;
   opacity: 1;
   transition:
-    opacity var(--impact-fade) cubic-bezier(0.2, 0.7, 0.25, 1),
-    filter var(--impact-fade) ease;
+          opacity var(--impact-fade) cubic-bezier(0.2, 0.7, 0.25, 1),
+          filter var(--impact-fade) ease;
 }
 
 .impactReleased {
@@ -1296,8 +1296,8 @@
   z-index: 0;
   opacity: var(--flash-opacity);
   background:
-    radial-gradient(circle at var(--impact-x) var(--impact-y), rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.38) 10%, transparent 38%),
-    rgba(255, 255, 255, 0.14);
+          radial-gradient(circle at var(--impact-x) var(--impact-y), rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.38) 10%, transparent 38%),
+          rgba(255, 255, 255, 0.14);
   mix-blend-mode: screen;
 }
 
@@ -1312,9 +1312,9 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.86);
   box-shadow:
-    0 0 0.7rem white,
-    0 0 2rem rgba(255, 255, 255, 0.82),
-    0 0 4rem rgba(255, 255, 255, 0.38);
+          0 0 0.7rem white,
+          0 0 2rem rgba(255, 255, 255, 0.82),
+          0 0 4rem rgba(255, 255, 255, 0.38);
   transform: translate(-50%, -50%);
   animation: impactCorePulse 340ms ease-in-out infinite alternate;
 }
@@ -1420,6 +1420,38 @@
   48% { transform: translate3d(0.18rem, -0.1rem, 0); }
   72% { transform: translate3d(-0.08rem, 0.05rem, 0); }
   100% { transform: translate3d(0, 0, 0); }
+}
+
+
+/*
+ * Тряска применяется только к игровому миру.
+ * Пользовательский прицел находится вне .worldLayer, поэтому звук и эффект
+ * попадания больше не задерживают и не смещают курсор.
+ */
+.worldLayerShake {
+  animation: worldLayerShake 150ms ease-out both;
+}
+
+@keyframes worldLayerShake {
+  0% {
+    translate: 0 0;
+  }
+
+  24% {
+    translate: -0.22rem 0.12rem;
+  }
+
+  48% {
+    translate: 0.18rem -0.1rem;
+  }
+
+  72% {
+    translate: -0.08rem 0.05rem;
+  }
+
+  100% {
+    translate: 0 0;
+  }
 }
 
 @keyframes bubbleGrow {
@@ -1693,10 +1725,10 @@
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 0.35rem;
     padding:
-      max(0.45rem, env(safe-area-inset-top))
-      max(0.45rem, env(safe-area-inset-right))
-      0.45rem
-      max(0.45rem, env(safe-area-inset-left));
+            max(0.45rem, env(safe-area-inset-top))
+            max(0.45rem, env(safe-area-inset-right))
+            0.45rem
+            max(0.45rem, env(safe-area-inset-left));
   }
 
   .hudStats {
@@ -1836,10 +1868,10 @@
   font-size: 0.7rem;
   font-weight: 680;
   transition:
-    color 180ms ease,
-    border-color 180ms ease,
-    background-color 180ms ease,
-    transform 180ms ease;
+          color 180ms ease,
+          border-color 180ms ease,
+          background-color 180ms ease,
+          transform 180ms ease;
 }
 
 .captureButton:hover,
@@ -1912,13 +1944,13 @@
   border: 1px solid rgba(255, 255, 255, 0.88);
   border-radius: 50%;
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.7),
-    0 0 0.8rem rgba(255, 255, 255, 0.38);
+          0 0 0 1px rgba(0, 0, 0, 0.7),
+          0 0 0.8rem rgba(255, 255, 255, 0.38);
   transform: translate(-50%, -50%);
   transition:
-    width 100ms ease,
-    border-color 100ms ease,
-    box-shadow 100ms ease;
+          width 100ms ease,
+          border-color 100ms ease,
+          box-shadow 100ms ease;
 }
 
 .aimCursor::before,
@@ -1964,9 +1996,9 @@
   width: 2.2rem;
   border-color: white;
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.65),
-    0 0 1rem white,
-    0 0 2.8rem rgba(255, 255, 255, 0.55);
+          0 0 0 1px rgba(0, 0, 0, 0.65),
+          0 0 1rem white,
+          0 0 2.8rem rgba(255, 255, 255, 0.55);
   animation: dischargeCursorPulse 150ms steps(2, end) infinite;
 }
 
@@ -1976,20 +2008,20 @@
   z-index: 52;
   pointer-events: none;
   background:
-    radial-gradient(
-      circle clamp(8.8rem, 23vw, 18rem) at var(--aim-x) var(--aim-y),
-      transparent 0,
-      transparent 96%,
-      rgba(0, 0, 0, 0.55) 98%,
-      rgba(0, 0, 0, 0.96) 100%
-    ),
-    radial-gradient(
-      circle clamp(9.4rem, 24vw, 18.8rem) at var(--aim-x) var(--aim-y),
-      transparent 0,
-      transparent 98%,
-      rgba(255, 255, 255, 0.14) 99%,
-      transparent 100%
-    );
+          radial-gradient(
+                  circle clamp(8.8rem, 23vw, 18rem) at var(--aim-x) var(--aim-y),
+                  transparent 0,
+                  transparent 96%,
+                  rgba(0, 0, 0, 0.55) 98%,
+                  rgba(0, 0, 0, 0.96) 100%
+          ),
+          radial-gradient(
+                  circle clamp(9.4rem, 24vw, 18.8rem) at var(--aim-x) var(--aim-y),
+                  transparent 0,
+                  transparent 98%,
+                  rgba(255, 255, 255, 0.14) 99%,
+                  transparent 100%
+          );
 }
 
 .scopeLens {
@@ -2002,11 +2034,11 @@
   border: 1px solid rgba(255, 255, 255, 0.36);
   border-radius: 50%;
   background:
-    radial-gradient(circle, transparent 58%, rgba(255, 255, 255, 0.025) 100%);
+          radial-gradient(circle, transparent 58%, rgba(255, 255, 255, 0.025) 100%);
   box-shadow:
-    inset 0 0 3.5rem rgba(0, 0, 0, 0.46),
-    0 0 0 0.18rem rgba(0, 0, 0, 0.8),
-    0 0 2.2rem rgba(0, 0, 0, 0.75);
+          inset 0 0 3.5rem rgba(0, 0, 0, 0.46),
+          0 0 0 0.18rem rgba(0, 0, 0, 0.8),
+          0 0 2.2rem rgba(0, 0, 0, 0.75);
   transform: translate(-50%, -50%);
 }
 
@@ -2038,8 +2070,8 @@
   border-radius: 50%;
   background: white;
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.7),
-    0 0 0.65rem white;
+          0 0 0 1px rgba(0, 0, 0, 0.7),
+          0 0 0.65rem white;
 }
 
 .bubbleSniper {
@@ -2049,10 +2081,10 @@
 .bubbleSniper .bubbleVisual {
   border-width: 2px;
   box-shadow:
-    inset 0 0 0.65rem rgba(255, 255, 255, 0.32),
-    inset -0.8rem -0.8rem 1.6rem rgba(0, 0, 0, 0.3),
-    0 0 0 0.22rem rgba(255, 255, 255, 0.07),
-    0 0 1.25rem rgba(255, 255, 255, 0.2);
+          inset 0 0 0.65rem rgba(255, 255, 255, 0.32),
+          inset -0.8rem -0.8rem 1.6rem rgba(0, 0, 0, 0.3),
+          0 0 0 0.22rem rgba(255, 255, 255, 0.07),
+          0 0 1.25rem rgba(255, 255, 255, 0.2);
 }
 
 .sniperTargetCore {
@@ -2066,8 +2098,8 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.2);
   box-shadow:
-    0 0 0 0.18rem rgba(0, 0, 0, 0.22),
-    0 0 0.7rem white;
+          0 0 0 0.18rem rgba(0, 0, 0, 0.22),
+          0 0 0.7rem white;
   transform: translate(-50%, -50%);
 }
 
@@ -2150,13 +2182,13 @@
 
   .scopeOverlay {
     background:
-      radial-gradient(
-        circle min(38vw, 11.5rem) at var(--aim-x) var(--aim-y),
-        transparent 0,
-        transparent 96%,
-        rgba(0, 0, 0, 0.55) 98%,
-        rgba(0, 0, 0, 0.96) 100%
-      );
+            radial-gradient(
+                    circle min(38vw, 11.5rem) at var(--aim-x) var(--aim-y),
+                    transparent 0,
+                    transparent 96%,
+                    rgba(0, 0, 0, 0.55) 98%,
+                    rgba(0, 0, 0, 0.96) 100%
+            );
   }
 
   .arenaStatusRail {
@@ -2200,23 +2232,23 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1.25rem;
   background:
-    radial-gradient(circle at center, rgba(255, 255, 255, 0.085), transparent 34%),
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    rgba(0, 0, 0, 0.28);
+          radial-gradient(circle at center, rgba(255, 255, 255, 0.085), transparent 34%),
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          rgba(0, 0, 0, 0.28);
   background-size: auto, 1.2rem 1.2rem, 1.2rem 1.2rem, auto;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.065),
-    inset 0 0 3rem rgba(0, 0, 0, 0.25);
+          inset 0 1px 0 rgba(255, 255, 255, 0.065),
+          inset 0 0 3rem rgba(0, 0, 0, 0.25);
 }
 
 .sniperPreviewStage {
   min-height: 15rem;
   background:
-    radial-gradient(circle at center, transparent 0 34%, rgba(0, 0, 0, 0.72) 35% 100%),
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    rgba(0, 0, 0, 0.35);
+          radial-gradient(circle at center, transparent 0 34%, rgba(0, 0, 0, 0.72) 35% 100%),
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          rgba(0, 0, 0, 0.35);
   background-size: auto, 1.2rem 1.2rem, 1.2rem 1.2rem, auto;
 }
 
@@ -2229,9 +2261,9 @@
   border: 1px solid rgba(255, 255, 255, 0.34);
   border-radius: 50%;
   box-shadow:
-    0 0 0 0.18rem rgba(0, 0, 0, 0.78),
-    inset 0 0 2.5rem rgba(0, 0, 0, 0.45),
-    0 0 1.5rem rgba(255, 255, 255, 0.06);
+          0 0 0 0.18rem rgba(0, 0, 0, 0.78),
+          inset 0 0 2.5rem rgba(0, 0, 0, 0.45),
+          0 0 1.5rem rgba(255, 255, 255, 0.06);
   transform: translate(-50%, -50%);
 }
 
@@ -2263,8 +2295,8 @@
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 50%;
   box-shadow:
-    0 0 0 0.18rem rgba(0, 0, 0, 0.4),
-    0 0 0.85rem currentColor;
+          0 0 0 0.18rem rgba(0, 0, 0, 0.4),
+          0 0 0.85rem currentColor;
 }
 
 .rgbSettingsGrid {
@@ -2282,11 +2314,11 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1.6rem;
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.018)),
-    rgba(8, 8, 11, 0.52);
+          linear-gradient(145deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.018)),
+          rgba(8, 8, 11, 0.52);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 1.2rem 4rem rgba(0, 0, 0, 0.24);
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          0 1.2rem 4rem rgba(0, 0, 0, 0.24);
   backdrop-filter: blur(1.45rem) saturate(1.1);
   -webkit-backdrop-filter: blur(1.45rem) saturate(1.1);
 }
@@ -2375,10 +2407,10 @@
   font-size: 0.7rem;
   font-weight: 760;
   transition:
-    transform 160ms ease,
-    border-color 160ms ease,
-    background-color 160ms ease,
-    color 160ms ease;
+          transform 160ms ease,
+          border-color 160ms ease,
+          background-color 160ms ease,
+          color 160ms ease;
 }
 
 .presetPrimaryButton {
@@ -2508,8 +2540,8 @@
 
 .aimCursorDischargingModern {
   filter:
-    drop-shadow(0 0 0.45rem rgba(255, 255, 255, 0.95))
-    drop-shadow(0 0 1.4rem rgba(255, 255, 255, 0.62));
+          drop-shadow(0 0 0.45rem rgba(255, 255, 255, 0.95))
+          drop-shadow(0 0 1.4rem rgba(255, 255, 255, 0.62));
   animation: dischargeCursorPulse 150ms steps(2, end) infinite;
 }
 
@@ -2523,16 +2555,16 @@
   opacity: 1;
   filter: none;
   transition:
-    opacity 70ms linear,
-    filter 90ms linear;
+          opacity 70ms linear,
+          filter 90ms linear;
 }
 
 .reactionTargetDetected .bubbleVisual {
   box-shadow:
-    inset 0 0 0.75rem rgba(255, 255, 255, 0.36),
-    inset -0.8rem -0.8rem 1.6rem rgba(0, 0, 0, 0.3),
-    0 0 0 0.24rem rgba(255, 255, 255, 0.1),
-    0 0 1.9rem rgba(255, 255, 255, 0.42);
+          inset 0 0 0.75rem rgba(255, 255, 255, 0.36),
+          inset -0.8rem -0.8rem 1.6rem rgba(0, 0, 0, 0.3),
+          0 0 0 0.24rem rgba(255, 255, 255, 0.1),
+          0 0 1.9rem rgba(255, 255, 255, 0.42);
 }
 
 .scopeOverlayInaccurate .scopeLens {
@@ -2545,8 +2577,8 @@
   content: '';
   border-radius: inherit;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 38%),
-    radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.05), transparent 24%);
+          linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 38%),
+          radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.05), transparent 24%);
   mix-blend-mode: screen;
 }
 
@@ -2568,8 +2600,8 @@
   border-radius: 1.05rem;
   background: rgba(7, 7, 9, 0.66);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 0.85rem 2.4rem rgba(0, 0, 0, 0.32);
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          0 0.85rem 2.4rem rgba(0, 0, 0, 0.32);
   backdrop-filter: blur(1.2rem);
   -webkit-backdrop-filter: blur(1.2rem);
   transform: translateX(-50%);
@@ -2687,8 +2719,8 @@
   border-radius: 50%;
   background: radial-gradient(circle, rgba(255, 255, 255, 0.035), transparent 66%);
   box-shadow:
-    0 0 0 0.18rem rgba(0, 0, 0, 0.78),
-    inset 0 0 2.5rem rgba(0, 0, 0, 0.45),
-    0 0 1.5rem rgba(255, 255, 255, 0.06);
+          0 0 0 0.18rem rgba(0, 0, 0, 0.78),
+          inset 0 0 2.5rem rgba(0, 0, 0, 0.45),
+          0 0 1.5rem rgba(255, 255, 255, 0.06);
   transform: translate(-50%, -50%);
 }

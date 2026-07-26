@@ -14,9 +14,66 @@ import './mobile-responsive.css';
 export const metadata = {
   title: 'Raf</>Console Studio',
   description: 'Raf</>Console Studio',
-  manifest: '/manifest.webmanifest',
+
+  applicationName: 'Raf Console Studio',
+
+  manifest: '/manifest.webmanifest?v=4',
+
   icons: {
-    icon: '/logo.svg',
+    icon: [
+      {
+        url: '/favicon.ico?v=4',
+        type: 'image/x-icon',
+        sizes: 'any',
+      },
+      {
+        url: '/favicon.svg?v=4',
+        type: 'image/svg+xml',
+        sizes: 'any',
+      },
+      {
+        url: '/favicon-96x96.png?v=4',
+        type: 'image/png',
+        sizes: '96x96',
+      },
+      {
+        url: '/web-app-manifest-192x192.png?v=4',
+        type: 'image/png',
+        sizes: '192x192',
+      },
+      {
+        url: '/web-app-manifest-512x512.png?v=4',
+        type: 'image/png',
+        sizes: '512x512',
+      },
+    ],
+
+    shortcut: [
+      {
+        url: '/favicon.ico?v=4',
+        type: 'image/x-icon',
+      },
+    ],
+
+    apple: [
+      {
+        url: '/apple-touch-icon.png?v=4',
+        type: 'image/png',
+        sizes: '180x180',
+      },
+    ],
+  },
+
+  appleWebApp: {
+    capable: true,
+    title: 'Raf Console',
+    statusBarStyle: 'black-translucent',
+  },
+
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-title': 'Raf Console',
   },
 };
 
@@ -35,29 +92,37 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
-      <body
-        className={`${inter.className} min-h-screen overflow-x-hidden bg-neutral-950 text-white antialiased`}
+      <html
+          lang="ru"
+          className="dark"
+          suppressHydrationWarning
       >
-        <ThemeProvider
+      <body
+          className={`${inter.className} min-h-screen overflow-x-hidden bg-neutral-950 text-white antialiased`}
+      >
+      <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem={false}
           forcedTheme="dark"
           disableTransitionOnChange
-        >
-          <OfflineManager />
-          <RouteResponsiveController />
-          <InitialLoadGate />
+      >
+        <OfflineManager />
+        <RouteResponsiveController />
+        <InitialLoadGate />
 
-          <Header />
-          <div id="raf-page-root">{children}</div>
-          <Footer />
+        <Header />
 
-          {/* Глобальные волны, плазма и остальные pointer-анимации сохранены. */}
-          <GlobalPointerEffects />
-        </ThemeProvider>
+        <div id="raf-page-root">
+          {children}
+        </div>
+
+        <Footer />
+
+        {/* Глобальные волны, плазма и остальные pointer-анимации сохранены. */}
+        <GlobalPointerEffects />
+      </ThemeProvider>
       </body>
-    </html>
+      </html>
   );
 }
