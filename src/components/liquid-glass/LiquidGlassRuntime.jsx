@@ -81,6 +81,14 @@ function findHeaderGlass(header) {
   );
 }
 
+function containsProjectCard(node) {
+  return node instanceof HTMLElement
+    && (
+      node.classList.contains('project-card')
+      || Boolean(node.querySelector('.project-card'))
+    );
+}
+
 export default function LiquidGlassRuntime() {
   const pathname = usePathname();
 
@@ -94,15 +102,24 @@ export default function LiquidGlassRuntime() {
     let headerInstance = null;
     let cardsInstance = null;
     let cardsRoot = null;
+    let cardElements = [];
     let headerScene = null;
     let cardsScene = null;
     let reinitTimer = null;
+    let cardsInitVersion = 0;
 
     document.documentElement.dataset.liquidGlass = 'loading';
 
     const destroyCards = () => {
+      cardsInitVersion += 1;
       cardsInstance?.destroy();
       cardsInstance = null;
+
+      cardElements.forEach((card) => {
+        card.classList.remove('raf-liquidglass-surface');
+        delete card.dataset.config;
+      });
+      cardElements = [];
 
       if (cardsRoot) {
         cardsRoot.classList.remove('raf-liquidglass-root');
@@ -122,7 +139,7 @@ export default function LiquidGlassRuntime() {
         );
 
         if (cancelled) {
-          return;
+          return null;
         }
 
         const { LiquidGlass } = module;
@@ -145,6 +162,7 @@ export default function LiquidGlassRuntime() {
 
         const initializeCards = async () => {
           destroyCards();
+          const initVersion = cardsInitVersion;
 
           const root = document.querySelector('.projects-grid');
           const cards = root
@@ -157,20 +175,31 @@ export default function LiquidGlassRuntime() {
             return;
           }
 
-          cardsRoot = root;
-          cardsRoot.classList.add('raf-liquidglass-root');
-          cardsScene = createScene('raf-liquidglass-cards-scene');
-          cardsRoot.insertBefore(cardsScene, cardsRoot.firstChild);
+          const scene = createScene('raf-liquidglass-cards-scene');
+
+          root.classList.add('raf-liquidglass-root');
+          root.insertBefore(scene, root.firstChild);
 
           cards.forEach((card) => {
             card.classList.add('raf-liquidglass-surface');
             card.dataset.config = JSON.stringify(CARD_CONFIG);
           });
 
-          cardsInstance = await LiquidGlass.init({
-            root: cardsRoot,
+          cardsRoot = root;
+          cardsScene = scene;
+          cardElements = cards;
+
+          const instance = await LiquidGlass.init({
+            root,
             glassElements: cards,
           });
+
+          if (cancelled || initVersion !== cardsInitVersion) {
+            instance.destroy();
+            return;
+          }
+
+          cardsInstance = instance;
         };
 
         await initializeCards();
@@ -182,10 +211,10 @@ export default function LiquidGlassRuntime() {
         const observer = new MutationObserver((mutations) => {
           const projectsChanged = mutations.some((mutation) => (
             mutation.type === 'childList'
-            && (
-              mutation.target.classList?.contains('projects-grid')
-              || mutation.target.closest?.('.projects-grid')
-            )
+            && [
+              ...mutation.addedNodes,
+              ...mutation.removedNodes,
+            ].some(containsProjectCard)
           ));
 
           if (!projectsChanged) {
@@ -194,7 +223,8 @@ export default function LiquidGlassRuntime() {
 
           window.clearTimeout(reinitTimer);
           reinitTimer = window.setTimeout(() => {
-            initializeCards().catch(() => {
+            initializeCards().catch((error) => {
+              console.warn('[LiquidGlass] Card refresh failed:', error);
               document.documentElement.dataset.liquidGlass = 'partial';
             });
           }, 90);
