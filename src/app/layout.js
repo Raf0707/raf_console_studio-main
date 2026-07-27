@@ -6,6 +6,7 @@ import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 import GlobalPointerEffects from '@/components/effects/GlobalPointerEffects';
 import InitialLoadGate from '@/components/loading/InitialLoadGate';
+import LiquidGlassRuntime from '@/components/liquid-glass/LiquidGlassRuntime';
 import RouteResponsiveController from '@/components/responsive/RouteResponsiveController';
 
 import './globals.css';
@@ -109,6 +110,7 @@ export default function RootLayout({ children }) {
         <OfflineManager />
         <RouteResponsiveController />
         <InitialLoadGate />
+        <LiquidGlassRuntime />
 
         <Header />
 
