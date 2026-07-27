@@ -8,6 +8,7 @@ import GlobalPointerEffects from '@/components/effects/GlobalPointerEffects';
 import InitialLoadGate from '@/components/loading/InitialLoadGate';
 import LiquidGlassRuntime from '@/components/liquid-glass/LiquidGlassRuntime';
 import RouteResponsiveController from '@/components/responsive/RouteResponsiveController';
+import NavigationLoadingProvider from '@/components/loading/NavigationLoadingProvider';
 
 import './globals.css';
 import './mobile-responsive.css';
@@ -112,17 +113,19 @@ export default function RootLayout({ children }) {
           <RouteResponsiveController />
           <InitialLoadGate />
 
-          <div id="raf-liquid-root">
-            <Header />
+          <NavigationLoadingProvider>
+            <div id="raf-liquid-root">
+              <Header />
 
-            <div id="raf-page-root">
-              {children}
+              <div id="raf-page-root">
+                {children}
+              </div>
+
+              <Footer />
             </div>
 
-            <Footer />
-          </div>
-
-          <LiquidGlassRuntime />
+            <LiquidGlassRuntime />
+          </NavigationLoadingProvider>
 
           {/* Глобальные волны, плазма и остальные pointer-анимации сохранены. */}
           <GlobalPointerEffects />

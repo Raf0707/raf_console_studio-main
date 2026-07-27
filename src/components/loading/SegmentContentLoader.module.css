@@ -1,0 +1,133 @@
+.loader {
+    position: absolute;
+
+    z-index: 30;
+
+    inset: 0;
+
+    display: flex;
+
+    min-height: 20rem;
+
+    align-items: center;
+    justify-content: center;
+
+    pointer-events: none;
+
+    visibility: hidden;
+
+    opacity: 0;
+
+    transition:
+            opacity 160ms ease,
+            visibility 0s linear 160ms;
+}
+
+.loaderVisible {
+    pointer-events: auto;
+
+    visibility: visible;
+
+    opacity: 1;
+
+    transition:
+            opacity 160ms ease,
+            visibility 0s linear 0s;
+}
+
+.glass {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.8rem;
+
+    padding:
+            0.75rem 1rem;
+
+    border:
+            1px solid
+            rgba(255, 255, 255, 0.16);
+
+    border-radius: 999px;
+
+    color:
+            rgba(255, 255, 255, 0.62);
+
+    background:
+            rgba(255, 255, 255, 0.045);
+
+    box-shadow:
+            inset 0 1px 0
+            rgba(255, 255, 255, 0.18),
+
+            0 1rem 2.8rem
+            rgba(0, 0, 0, 0.36);
+
+    backdrop-filter:
+            blur(20px)
+            saturate(125%);
+
+    -webkit-backdrop-filter:
+            blur(20px)
+            saturate(125%);
+}
+
+.drop {
+    width: 1rem;
+    height: 1rem;
+
+    border:
+            1px solid
+            rgba(255, 255, 255, 0.48);
+
+    border-radius:
+            55% 45% 52% 48% /
+    46% 57% 43% 54%;
+
+    background:
+            radial-gradient(
+                    circle at 30% 20%,
+                    rgba(255, 255, 255, 0.62),
+                    transparent 44%
+            ),
+            rgba(255, 255, 255, 0.07);
+
+    animation:
+            segmentLoaderDrop
+            1.1s
+            ease-in-out
+            infinite;
+}
+
+.text {
+    font-size: 0.72rem;
+    font-weight: 650;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+@keyframes segmentLoaderDrop {
+    0%,
+    100% {
+        transform:
+                rotate(0deg)
+                scale(1);
+    }
+
+    35% {
+        transform:
+                rotate(12deg)
+                scaleX(1.2)
+                scaleY(0.82);
+    }
+
+    68% {
+        transform:
+                rotate(-8deg)
+                scaleX(0.88)
+                scaleY(1.14);
+    }
+}

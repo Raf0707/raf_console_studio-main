@@ -1,6 +1,13 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+    useTransition,
+} from 'react';
 import './ProjectsPage.css';
 import {
     ArrowUpRight,
@@ -715,12 +722,143 @@ function ProjectCard({ project, type, status }) {
 /*                                   СТРАНИЦА                                  */
 /* -------------------------------------------------------------------------- */
 
+function ProjectsLoadingState() {
+    return (
+        <div
+            className="projects-loading"
+            role="status"
+            aria-live="polite"
+            aria-label="Загрузка проектов"
+        >
+            <div
+                className="projects-loading__indicator"
+                aria-hidden="true"
+            >
+                <span className="projects-loading__ring projects-loading__ring--outer" />
+                <span className="projects-loading__ring projects-loading__ring--middle" />
+                <span className="projects-loading__ring projects-loading__ring--inner" />
+                <span className="projects-loading__core" />
+            </div>
+
+            <h3 className="projects-loading__title">
+                Загружаем проекты
+            </h3>
+
+            <p className="projects-loading__description">
+                Подготавливаем выбранный раздел и проверяем доступные проекты.
+            </p>
+        </div>
+    );
+}
+
 export default function Page() {
     const [section, setSection] = useState('apps');
     const [platform, setPlatform] = useState('android');
     const [category, setCategory] = useState('all');
     const [appStatus, setAppStatus] = useState('published');
     const [siteStatus, setSiteStatus] = useState('published');
+
+    const [isProjectsLoading, setIsProjectsLoading] =
+        useState(false);
+
+    const [isFilterPending, startFilterTransition] =
+        useTransition();
+
+    const loadingTimerRef = useRef(null);
+    const loadingRequestRef = useRef(0);
+
+    useEffect(() => {
+        return () => {
+            if (loadingTimerRef.current !== null) {
+                window.clearTimeout(loadingTimerRef.current);
+            }
+        };
+    }, []);
+
+    const runProjectFilterChange = useCallback((updateState) => {
+        /*
+         * Каждый новый клик отменяет завершение предыдущей загрузки.
+         * Благодаря идентификатору устаревший таймер не сможет
+         * вернуть старое состояние интерфейса.
+         */
+        loadingRequestRef.current += 1;
+
+        const requestId = loadingRequestRef.current;
+
+        if (loadingTimerRef.current !== null) {
+            window.clearTimeout(loadingTimerRef.current);
+        }
+
+        /*
+         * Сначала включаем загрузчик.
+         * Панель SegmentButton при этом остаётся смонтированной.
+         */
+        setIsProjectsLoading(true);
+
+        /*
+         * Состояние выбранного сегмента меняем сразу.
+         * Именно это состояние является источником истины
+         * для выбранной кнопки и стеклянного пузырька.
+         */
+        updateState();
+
+        /*
+         * Расчёт и перерисовку списка выполняем отдельно.
+         */
+        startFilterTransition(() => {
+            loadingTimerRef.current = window.setTimeout(() => {
+                if (loadingRequestRef.current !== requestId) {
+                    return;
+                }
+
+                setIsProjectsLoading(false);
+                loadingTimerRef.current = null;
+            }, 320);
+        });
+    }, []);
+
+    const handleSectionChange = useCallback((nextSection) => {
+        runProjectFilterChange(() => {
+            setSection(nextSection);
+
+            /*
+             * При переходе между главными разделами
+             * сразу устанавливаем настоящий начальный набор,
+             * а не только визуальное положение пузырька.
+             */
+            if (nextSection === 'apps') {
+                setPlatform('android');
+                setCategory('all');
+                setAppStatus('published');
+            } else {
+                setSiteStatus('published');
+            }
+        });
+    }, [runProjectFilterChange]);
+
+    const handlePlatformChange = useCallback((nextPlatform) => {
+        runProjectFilterChange(() => {
+            setPlatform(nextPlatform);
+        });
+    }, [runProjectFilterChange]);
+
+    const handleCategoryChange = useCallback((nextCategory) => {
+        runProjectFilterChange(() => {
+            setCategory(nextCategory);
+        });
+    }, [runProjectFilterChange]);
+
+    const handleAppStatusChange = useCallback((nextStatus) => {
+        runProjectFilterChange(() => {
+            setAppStatus(nextStatus);
+        });
+    }, [runProjectFilterChange]);
+
+    const handleSiteStatusChange = useCallback((nextStatus) => {
+        runProjectFilterChange(() => {
+            setSiteStatus(nextStatus);
+        });
+    }, [runProjectFilterChange]);
 
     const visibleProjects = useMemo(() => {
         if (section === 'sites') {
@@ -757,6 +895,9 @@ export default function Page() {
         appStatus,
         siteStatus,
     ]);
+
+    const showProjectsLoader =
+        isProjectsLoading || isFilterPending;
 
     const currentStatus =
         section === 'sites'
@@ -959,7 +1100,7 @@ export default function Page() {
                     <SegmentButton
                         label="Тип проекта"
                         value={section}
-                        onChange={setSection}
+                        onChange={handleSectionChange}
                         options={[
                             {
                                 value: 'apps',
@@ -978,7 +1119,7 @@ export default function Page() {
                                 <SegmentButton
                                     label="Платформа"
                                     value={platform}
-                                    onChange={setPlatform}
+                                    onChange={handlePlatformChange}
                                     options={[
                                         {
                                             value: 'android',
@@ -1002,7 +1143,7 @@ export default function Page() {
                                 <SegmentButton
                                     label="Категория"
                                     value={category}
-                                    onChange={setCategory}
+                                    onChange={handleCategoryChange}
                                     columns="0.72fr 0.82fr 1.7fr"
                                     options={[
                                         {
@@ -1024,7 +1165,7 @@ export default function Page() {
                             <SegmentButton
                                 label="Статус приложения"
                                 value={appStatus}
-                                onChange={setAppStatus}
+                                onChange={handleAppStatusChange}
                                 options={[
                                     {
                                         value: 'published',
@@ -1046,7 +1187,7 @@ export default function Page() {
                             <SegmentButton
                                 label="Статус сайта"
                                 value={siteStatus}
-                                onChange={setSiteStatus}
+                                onChange={handleSiteStatusChange}
                                 options={[
                                     {
                                         value: 'published',
@@ -1098,17 +1239,20 @@ export default function Page() {
                             <Globe2 className="h-4 w-4" />
                         )}
 
-                        {visibleProjects.length}{' '}
-                        {visibleProjects.length === 1
-                            ? 'проект'
-                            : visibleProjects.length >= 2 &&
-                            visibleProjects.length <= 4
-                                ? 'проекта'
-                                : 'проектов'}
+                        {showProjectsLoader ? (
+                            <span>Загрузка</span>
+                        ) : (
+                            <span>
+                                {visibleProjects.length}{' '}
+                                {getProjectsWord(visibleProjects.length)}
+                            </span>
+                        )}
                     </div>
                 </div>
 
-                {visibleProjects.length > 0 ? (
+                {showProjectsLoader ? (
+                    <ProjectsLoadingState />
+                ) : visibleProjects.length > 0 ? (
                     <div className="projects-grid mt-7 grid auto-rows-fr gap-5 sm:grid-cols-2 xl:grid-cols-3">
                         {visibleProjects.map((project) => (
                             <ProjectCard
@@ -1154,4 +1298,23 @@ export default function Page() {
             </section>
         </main>
     );
+}
+
+function getProjectsWord(count) {
+    const lastTwoDigits = count % 100;
+    const lastDigit = count % 10;
+
+    if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
+        return 'проектов';
+    }
+
+    if (lastDigit === 1) {
+        return 'проект';
+    }
+
+    if (lastDigit >= 2 && lastDigit <= 4) {
+        return 'проекта';
+    }
+
+    return 'проектов';
 }
