@@ -11,6 +11,7 @@ import RouteResponsiveController from '@/components/responsive/RouteResponsiveCo
 
 import './globals.css';
 import './mobile-responsive.css';
+import '@/components/liquid-glass/liquid-glass.css';
 
 export const metadata = {
   title: 'Raf</>Console Studio',
@@ -92,38 +93,41 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-      <html
-          lang="ru"
-          className="dark"
-          suppressHydrationWarning
-      >
+    <html
+      lang="ru"
+      className="dark"
+      suppressHydrationWarning
+    >
       <body
-          className={`${inter.className} min-h-screen overflow-x-hidden bg-neutral-950 text-white antialiased`}
+        className={`${inter.className} min-h-screen overflow-x-hidden bg-neutral-950 text-white antialiased`}
       >
-      <ThemeProvider
+        <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem={false}
           forcedTheme="dark"
           disableTransitionOnChange
-      >
-        <OfflineManager />
-        <RouteResponsiveController />
-        <InitialLoadGate />
-        <LiquidGlassRuntime />
+        >
+          <OfflineManager />
+          <RouteResponsiveController />
+          <InitialLoadGate />
 
-        <Header />
+          <div id="raf-liquid-root">
+            <Header />
 
-        <div id="raf-page-root">
-          {children}
-        </div>
+            <div id="raf-page-root">
+              {children}
+            </div>
 
-        <Footer />
+            <Footer />
+          </div>
 
-        {/* Глобальные волны, плазма и остальные pointer-анимации сохранены. */}
-        <GlobalPointerEffects />
-      </ThemeProvider>
+          <LiquidGlassRuntime />
+
+          {/* Глобальные волны, плазма и остальные pointer-анимации сохранены. */}
+          <GlobalPointerEffects />
+        </ThemeProvider>
       </body>
-      </html>
+    </html>
   );
 }
