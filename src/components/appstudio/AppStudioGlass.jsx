@@ -67,11 +67,11 @@ export function GlassSurface({
     return (
         <Component
             className={cn(
-                'relative overflow-hidden rounded-[2rem] border border-white/[0.12] bg-black/[0.38]',
-                'shadow-[0_28px_90px_-40px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.12)]',
-                'backdrop-blur-2xl backdrop-saturate-150',
+                'raf-studio-liquid-card relative overflow-hidden rounded-[2rem] border border-transparent bg-black/[0.22]',
+                'shadow-[0_28px_90px_-40px_rgba(0,0,0,0.82),inset_0_1px_0_rgba(255,255,255,0.1)]',
+                'backdrop-blur-md backdrop-saturate-125',
                 interactive &&
-                'transition duration-500 hover:-translate-y-1 hover:border-white/[0.2] hover:bg-black/[0.5]',
+                'transition duration-500 hover:bg-black/[0.28]',
                 className,
             )}
         >
@@ -113,10 +113,10 @@ function SectionHeading({ eyebrow, title, description, align = 'center' }) {
 
 function GlassButton({ children, onClick, href, variant = 'primary', className }) {
     const styles = cn(
-        'group inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold transition duration-300',
+        'raf-studio-glass-button group inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold transition duration-300',
         variant === 'primary'
-            ? 'bg-white text-black shadow-[0_14px_32px_-16px_rgba(255,255,255,.35)] hover:bg-white/80'
-            : 'border border-white/15 bg-white/[0.07] text-white backdrop-blur-xl hover:bg-white/[0.12]',
+            ? 'bg-white/[0.14] text-white shadow-[inset_0_1px_0_rgba(255,255,255,.38),0_14px_32px_-16px_rgba(255,255,255,.22)] backdrop-blur-md hover:bg-white/[0.2]'
+            : 'bg-white/[0.06] text-white backdrop-blur-md hover:bg-white/[0.11]',
         className,
     );
 
@@ -152,9 +152,9 @@ function ServiceSegment({ activeService, labels, onChange }) {
         <div
             className="
             mx-auto flex w-full max-w-xl flex-col gap-1.5
-            rounded-[2rem] border border-white/15 bg-black/45 p-1.5
+            rounded-[2rem] bg-black/25 p-1.5
             shadow-[inset_0_1px_0_rgba(255,255,255,.1),0_22px_60px_-34px_rgba(0,0,0,.95)]
-            backdrop-blur-2xl
+            backdrop-blur-md
             sm:flex-row sm:gap-0 sm:rounded-full
           "
         >
@@ -201,7 +201,7 @@ function Hero({ content, activeService, segmentLabels, onServiceChange, onPrimar
 
                 <div className="grid items-center gap-12 lg:grid-cols-[1.12fr_.88fr]">
                     <div className="space-y-8 text-center lg:text-left">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/55 shadow-sm backdrop-blur-xl">
+                        <div className="inline-flex items-center gap-2 rounded-full bg-white/[0.06] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/55 shadow-sm backdrop-blur-xl">
                             <Sparkles className="h-4 w-4" />
                             {content.badge}
                         </div>
@@ -235,7 +235,7 @@ function Hero({ content, activeService, segmentLabels, onServiceChange, onPrimar
                     </div>
 
                     <GlassSurface className="mx-auto w-full max-w-xl p-3 sm:p-4">
-                        <div className="rounded-[1.55rem] border border-white/[0.1] bg-gradient-to-br from-white/[0.09] via-white/[0.03] to-black/30 p-5 sm:p-7">
+                        <div className="rounded-[1.55rem] bg-gradient-to-br from-white/[0.055] via-white/[0.018] to-black/20 p-5 sm:p-7">
                             <div className="mb-7 flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
@@ -273,12 +273,12 @@ function PreviewTile({ icon: Icon, label, large = false }) {
     return (
         <div
             className={cn(
-                'group relative overflow-hidden rounded-[1.4rem] border border-white/[0.1] bg-black/20 p-5 shadow-[0_14px_30px_-24px_rgba(0,0,0,.7)] backdrop-blur-xl',
+                'raf-studio-liquid-card group relative overflow-hidden rounded-[1.4rem] border border-transparent bg-black/12 p-5 shadow-[0_14px_30px_-24px_rgba(0,0,0,.62)] backdrop-blur-sm',
                 large ? 'min-h-44' : 'min-h-32',
             )}
         >
             <div className="flex h-full flex-col justify-between gap-8">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.08]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/[0.08]">
                     <Icon className="h-5 w-5 text-white/75" />
                 </div>
                 <p className="max-w-40 text-sm font-semibold leading-5 text-white/70">{label}</p>
@@ -299,7 +299,7 @@ function Intro({ content, form }) {
                 <div className="space-y-7">
                     {content.items.map((item) => (
                         <div key={item.title} className="flex gap-4">
-              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.06]">
+              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/[0.06]">
                 <Check className="h-4 w-4" />
               </span>
                             <div>
@@ -310,14 +310,14 @@ function Intro({ content, form }) {
                     ))}
                 </div>
 
-                <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white px-4 py-2 text-sm font-semibold text-black">
+                <div className="raf-studio-glass-button mt-8 inline-flex items-center gap-2 rounded-full bg-white/[0.12] px-4 py-2 text-sm font-semibold text-white backdrop-blur-md">
                     <BadgeCheck className="h-4 w-4" />
                     {content.warranty}
                 </div>
             </GlassSurface>
 
             <GlassSurface className="p-3 sm:p-4">
-                <div className="rounded-[1.5rem] border border-white/[0.08] bg-black/15 p-1">
+                <div className="rounded-[1.5rem] bg-black/10 p-1">
                     {form}
                 </div>
             </GlassSurface>
@@ -342,7 +342,7 @@ function FeatureGrid({ content }) {
                         <GlassSurface key={item.title} interactive className="h-full p-7">
                             <div className="flex h-full flex-col">
                                 <div className="mb-8 flex items-center justify-between">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.07]">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/[0.07]">
                     <Icon className="h-5 w-5 text-white/75" />
                   </span>
                                     <span className="text-xs font-medium text-white/25">0{index + 1}</span>
@@ -361,7 +361,7 @@ function FeatureGrid({ content }) {
 function AiSection({ content, onAction }) {
     return (
         <section>
-            <GlassSurface className="p-7 sm:p-10 lg:p-12">
+            <GlassSurface className="raf-studio-no-outer-outline p-7 sm:p-10 lg:p-12">
                 <div className="grid items-center gap-10 lg:grid-cols-[1fr_.8fr]">
                     <div>
                         <SectionHeading
@@ -379,7 +379,7 @@ function AiSection({ content, onAction }) {
                         {content.points.map((point) => (
                             <div
                                 key={point}
-                                className="flex min-h-28 items-start gap-3 rounded-[1.4rem] border border-white/10 bg-white/[0.045] p-5"
+                                className="raf-studio-liquid-card flex min-h-28 items-start gap-3 rounded-[1.4rem] border border-transparent bg-white/[0.03] p-5 backdrop-blur-sm"
                             >
                                 <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-white/65" />
                                 <p className="text-sm font-medium leading-6 text-white/65">{point}</p>
@@ -409,7 +409,7 @@ function Process({ content }) {
                         <GlassSurface key={item.title} interactive className="h-full p-6">
                             <div className="flex h-full flex-col">
                                 <div className="mb-8 flex items-center justify-between">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.07]">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/[0.07]">
                     <Icon className="h-4 w-4" />
                   </span>
                                     <span className="text-sm font-semibold text-white/25">{index + 1}</span>
@@ -467,7 +467,7 @@ function Services({ content }) {
             <div className="grid gap-5 lg:grid-cols-2">
                 {content.items.map((service) => (
                     <GlassSurface key={service.title} className="p-7 sm:p-8">
-            <span className="inline-flex rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/45">
+            <span className="inline-flex rounded-full bg-white/[0.06] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/45">
               {service.tag}
             </span>
                         <h3 className="mt-6 text-2xl font-semibold tracking-[-0.035em] text-white">{service.title}</h3>
@@ -501,7 +501,7 @@ function DirectContact({ content }) {
                         href="https://t.me/ibn_Rustum"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex min-w-28 flex-col items-center gap-3 rounded-[1.5rem] border border-white/10 bg-white/[0.05] p-4 transition hover:bg-white/[0.1]"
+                        className="raf-studio-glass-button flex min-w-28 flex-col items-center gap-3 rounded-[1.5rem] bg-white/[0.05] p-4 transition hover:bg-white/[0.1]"
                     >
                         <Send className="h-5 w-5" />
                         <span className="text-sm font-medium">Telegram</span>
@@ -511,7 +511,7 @@ function DirectContact({ content }) {
                         href="https://wa.me/79162736856"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex min-w-28 flex-col items-center gap-3 rounded-[1.5rem] border border-white/10 bg-white/[0.05] p-4 transition hover:bg-white/[0.1]"
+                        className="raf-studio-glass-button flex min-w-28 flex-col items-center gap-3 rounded-[1.5rem] bg-white/[0.05] p-4 transition hover:bg-white/[0.1]"
                     >
                         <MessageSquare className="h-5 w-5" />
                         <span className="text-sm font-medium">WhatsApp</span>
@@ -531,7 +531,7 @@ function Faq({ content }) {
                 {content.items.map((item) => (
                     <details
                         key={item.question}
-                        className="group rounded-[1.5rem] border border-white/10 bg-black/[0.3] px-6 py-5 backdrop-blur-xl"
+                        className="raf-studio-liquid-card raf-studio-no-outer-outline group rounded-[1.5rem] border-0 bg-black/[0.2] px-6 py-5 backdrop-blur-sm"
                     >
                         <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-white">
                             {item.question}
@@ -630,6 +630,301 @@ export function AppStudioGlass({ content, forms, initialService = 'mobile' }) {
 
     return (
         <main className="relative isolate min-h-screen overflow-hidden bg-neutral-950 text-white">
+
+            <style jsx global>{`
+                .raf-studio-liquid-card {
+                    position: relative;
+                    isolation: isolate;
+
+                    /*
+                     * Жёстко ограничиваем все псевдоэлементы границами
+                     * конкретной карточки. Блик больше не может рисоваться
+                     * поверх соседних элементов или фона страницы.
+                     */
+                    overflow: hidden !important;
+                    overflow: clip !important;
+                    contain: paint;
+                    clip-path: inset(0 round 1.5rem);
+
+                    transform: none;
+                    translate: none;
+                    scale: 1 1;
+                    transform-origin: center;
+                    transition:
+                            scale 620ms cubic-bezier(0.2, 0.88, 0.18, 1),
+                            border-radius 620ms cubic-bezier(0.2, 0.88, 0.18, 1),
+                            background-color 420ms ease,
+                            box-shadow 420ms ease !important;
+                    will-change: scale, border-radius;
+                }
+
+                /*
+                 * Плавный блик перенесён с главной страницы.
+                 * Он проходит через карточку непрерывно, без остановки
+                 * и без резкого ускорения в центре.
+                 */
+                .raf-studio-liquid-card::before {
+                    position: absolute;
+                    z-index: 0;
+
+                    inset: -50% auto -50% -48%;
+                    width: 44%;
+
+                    pointer-events: none;
+                    content: '';
+
+                    border-radius: inherit;
+
+                    /*
+                     * В покое световая полоса полностью невидима.
+                     * Она появляется только внутри анимации прохода.
+                     */
+                    opacity: 0;
+
+                    background:
+                            linear-gradient(
+                                    90deg,
+                                    transparent,
+                                    rgba(255, 255, 255, 0.86),
+                                    transparent
+                            );
+
+                    transform: rotate(18deg);
+
+                    will-change: left, opacity;
+                }
+
+                .raf-studio-liquid-card:hover::before {
+                    animation:
+                            rafStudioLightSweep
+                            900ms
+                            cubic-bezier(0.2, 0.7, 0.2, 1)
+                            both;
+                }
+
+                .raf-studio-liquid-card::after {
+                    position: absolute;
+                    z-index: 0;
+                    top: 5%;
+                    bottom: 5%;
+                    left: 0;
+                    width: 1px;
+                    pointer-events: none;
+                    content: '';
+                    border-radius: 999px;
+                    background:
+                            linear-gradient(
+                                    180deg,
+                                    transparent,
+                                    rgba(255, 255, 255, 0.68) 20%,
+                                    rgba(255, 255, 255, 0.3) 72%,
+                                    transparent
+                            );
+                    box-shadow:
+                            0 0 0.7rem rgba(255, 255, 255, 0.28),
+                            0 0 1.6rem rgba(255, 255, 255, 0.12);
+                    opacity: 0.68;
+                }
+
+                .raf-studio-liquid-card:hover {
+                    animation:
+                            rafStudioLiquidHover
+                            780ms
+                            cubic-bezier(0.2, 0.88, 0.18, 1)
+                            both;
+                }
+
+                .raf-studio-liquid-card:hover::after {
+                    animation:
+                            rafStudioEdgeFlow
+                            900ms
+                            cubic-bezier(0.2, 0.88, 0.18, 1)
+                            both;
+                }
+
+                .raf-studio-liquid-card > * {
+                    position: relative;
+                    z-index: 2;
+                }
+
+                /*
+                 * Убираем только внешнюю обводку у большого AI-блока
+                 * и карточек FAQ. Внутреннее стекло, блики и жидкая
+                 * деформация продолжают работать.
+                 */
+                .raf-studio-no-outer-outline {
+                    border: 0 !important;
+                    overflow: hidden !important;
+                    overflow: clip !important;
+                    contain: paint;
+                    clip-path: inset(0 round 2rem);
+                    outline: 0 !important;
+                    box-shadow:
+                            0 1.8rem 5rem -3.4rem rgba(0, 0, 0, 0.72) !important;
+                }
+
+                details.raf-studio-liquid-card {
+                    clip-path: inset(0 round 1.5rem);
+                }
+
+                .raf-studio-no-outer-outline.raf-studio-liquid-card {
+                    clip-path: inset(0 round 2rem);
+                }
+
+                .raf-studio-no-outer-outline::after {
+                    display: none !important;
+                    content: none !important;
+                }
+
+                .raf-studio-glass-button {
+                    position: relative;
+                    isolation: isolate;
+                    overflow: hidden;
+                    border: 0 !important;
+                    box-shadow:
+                            inset 0 1px 0 rgba(255, 255, 255, 0.34),
+                            inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+                            0 0.8rem 2rem -1.2rem rgba(0, 0, 0, 0.5);
+                    backdrop-filter: blur(6px) saturate(118%);
+                    -webkit-backdrop-filter: blur(6px) saturate(118%);
+                }
+
+                .raf-studio-glass-button::before {
+                    position: absolute;
+                    z-index: -1;
+                    inset: -45% auto -45% -42%;
+                    width: 36%;
+                    pointer-events: none;
+                    content: '';
+                    background:
+                            linear-gradient(
+                                    90deg,
+                                    transparent,
+                                    rgba(255, 255, 255, 0.62),
+                                    transparent
+                            );
+                    transform: skewX(-22deg);
+                    transition:
+                            left 620ms cubic-bezier(0.2, 0.8, 0.2, 1);
+                }
+
+                .raf-studio-glass-button:hover::before {
+                    left: 122%;
+                }
+
+                .raf-studio-glass-button:hover {
+                    animation:
+                            rafStudioButtonDrop
+                            620ms
+                            cubic-bezier(0.2, 0.88, 0.18, 1)
+                            both;
+                }
+
+                @keyframes rafStudioLightSweep {
+                    0% {
+                        left: -48%;
+                        opacity: 0;
+                    }
+
+                    8% {
+                        opacity: 0.12;
+                    }
+
+                    18% {
+                        opacity: 0.38;
+                    }
+
+                    78% {
+                        opacity: 0.38;
+                    }
+
+                    92% {
+                        opacity: 0.12;
+                    }
+
+                    100% {
+                        left: 125%;
+                        opacity: 0;
+                    }
+                }
+
+                @keyframes rafStudioLiquidHover {
+                    0% {
+                        scale: 1 1;
+                    }
+                    18% {
+                        scale: 0.992 1.012;
+                    }
+                    40% {
+                        scale: 1.026 0.982;
+                    }
+                    61% {
+                        scale: 1.012 1.004;
+                    }
+                    79% {
+                        scale: 1.021 0.991;
+                    }
+                    100% {
+                        scale: 1.016 0.996;
+                    }
+                }
+
+                @keyframes rafStudioEdgeFlow {
+                    0% {
+                        opacity: 0.68;
+                        transform: translateX(0) scaleY(1);
+                    }
+                    32% {
+                        opacity: 1;
+                        transform: translateX(0.18rem) scaleY(0.82);
+                    }
+                    58% {
+                        opacity: 0.56;
+                        transform: translateX(-0.08rem) scaleY(1.1);
+                    }
+                    100% {
+                        opacity: 0.78;
+                        transform: translateX(0) scaleY(1);
+                    }
+                }
+
+                @keyframes rafStudioButtonDrop {
+                    0% {
+                        transform: scaleX(1) scaleY(1);
+                    }
+                    18% {
+                        transform: scaleX(0.97) scaleY(1.04);
+                    }
+                    38% {
+                        transform: scaleX(1.045) scaleY(0.965);
+                    }
+                    62% {
+                        transform: scaleX(0.99) scaleY(1.015);
+                    }
+                    100% {
+                        transform: scaleX(1) scaleY(1);
+                    }
+                }
+
+                @media (hover: none), (pointer: coarse) {
+                    .raf-studio-liquid-card:hover,
+                    .raf-studio-liquid-card:hover::before,
+                    .raf-studio-liquid-card:hover::after,
+                    .raf-studio-glass-button:hover {
+                        animation: none !important;
+                    }
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .raf-studio-liquid-card,
+                    .raf-studio-liquid-card::before,
+                    .raf-studio-liquid-card::after,
+                    .raf-studio-glass-button {
+                        animation: none !important;
+                        transition: none !important;
+                    }
+                }
+            `}</style>
             <div className="pointer-events-none fixed inset-0 -z-20 bg-[radial-gradient(circle_at_18%_12%,rgba(255,255,255,.08),transparent_26%),radial-gradient(circle_at_82%_30%,rgba(255,255,255,.05),transparent_24%),linear-gradient(to_bottom,#050505,#101010_45%,#050505)]" />
             <div className="pointer-events-none fixed inset-0 -z-10 opacity-[0.16] [background-image:linear-gradient(rgba(255,255,255,.055)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.04)_1px,transparent_1px)] [background-size:72px_72px] [mask-image:linear-gradient(to_bottom,black,transparent_90%)]" />
 

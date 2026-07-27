@@ -734,28 +734,28 @@
     background:
             linear-gradient(
                     135deg,
-                    rgba(255, 255, 255, 0.5),
-                    rgba(255, 255, 255, 0.12) 46%,
-                    rgba(38, 38, 38, 0.09)
+                    rgba(255, 255, 255, 0.28),
+                    rgba(255, 255, 255, 0.055) 46%,
+                    rgba(38, 38, 38, 0.035)
             ),
-            var(--surface);
+            rgba(245, 245, 245, 0.12);
 
     box-shadow:
             inset 0 1px 0
-            rgba(255, 255, 255, 0.84),
+            rgba(255, 255, 255, 0.52),
             inset 0 -1px 0
-            rgba(0, 0, 0, 0.06),
+            rgba(0, 0, 0, 0.045),
             var(--shadow);
 
     backdrop-filter:
-            blur(2rem)
-            saturate(0)
-            contrast(1.04);
+            blur(0.38rem)
+            saturate(0.18)
+            contrast(1.035);
 
     -webkit-backdrop-filter:
-            blur(2rem)
-            saturate(0)
-            contrast(1.04);
+            blur(0.38rem)
+            saturate(0.18)
+            contrast(1.035);
 }
 
 .glassPanel::before {
@@ -804,17 +804,17 @@
     background:
             linear-gradient(
                     135deg,
-                    rgba(255, 255, 255, 0.12),
-                    rgba(255, 255, 255, 0.035) 48%,
-                    rgba(0, 0, 0, 0.18)
+                    rgba(255, 255, 255, 0.052),
+                    rgba(255, 255, 255, 0.009) 48%,
+                    rgba(0, 0, 0, 0.035)
             ),
-            var(--surface);
+            rgba(10, 10, 10, 0.095);
 
     box-shadow:
             inset 0 1px 0
-            rgba(255, 255, 255, 0.16),
+            rgba(255, 255, 255, 0.1),
             inset 0 -1px 0
-            rgba(0, 0, 0, 0.42),
+            rgba(0, 0, 0, 0.3),
             var(--shadow);
 }
 
@@ -867,9 +867,21 @@
 
     box-shadow:
             inset 0 1px 0
-            rgba(255, 255, 255, 0.92),
+            rgba(255, 255, 255, 0.1),
+            inset 0 -1px 0
+            rgba(0, 0, 0, 0.28),
             0 3rem 7rem
             rgba(22, 22, 22, 0.22);
+}
+
+:global(.dark) .serviceCard:hover {
+    box-shadow:
+            inset 0 1px 0
+            rgba(255, 255, 255, 0.1),
+            inset 0 -1px 0
+            rgba(0, 0, 0, 0.34),
+            0 3rem 7rem
+            rgba(0, 0, 0, 0.48);
 }
 
 .serviceCard > *:not(.cardReflection) {
@@ -1525,6 +1537,136 @@
             translate(0.18rem, 0.18rem);
 }
 
+
+/* -------------------------------------------------------------------------- */
+/*                  ЖИДКАЯ ДЕФОРМАЦИЯ ВСЕХ КАРТОЧЕК                          */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * Анимация добавлена поверх существующих эффектов.
+ *
+ * Она использует отдельное CSS-свойство scale, поэтому не отменяет:
+ * - translateY и rotateX у карточек услуг;
+ * - translateX у контактных карточек;
+ * - движение блика .glassPanel::before;
+ * - движение .cardReflection;
+ * - первоначальный cardReveal.
+ */
+.serviceCard,
+.aboutPanel,
+.contactCard {
+    --liquid-radius-base: 2rem;
+    --liquid-radius-a: 1.85rem 2.15rem 2.05rem 1.95rem;
+    --liquid-radius-b: 2.2rem 1.8rem 2.15rem 1.85rem;
+    --liquid-radius-c: 1.92rem 2.08rem 1.86rem 2.14rem;
+    --liquid-radius-d: 2.08rem 1.92rem 2.04rem 1.96rem;
+    --liquid-radius-end: 2.04rem 1.96rem 2rem 2rem;
+
+    scale: 1 1;
+    transform-origin: center;
+    will-change: scale, border-radius;
+}
+
+.serviceCard {
+    --liquid-radius-base: clamp(1.7rem, 3vw, 3rem);
+    --liquid-radius-a: 2.75rem 3.2rem 3.05rem 2.82rem;
+    --liquid-radius-b: 3.22rem 2.72rem 3.12rem 2.84rem;
+    --liquid-radius-c: 2.84rem 3.12rem 2.78rem 3.18rem;
+    --liquid-radius-d: 3.12rem 2.86rem 3.04rem 2.94rem;
+    --liquid-radius-end: 3.04rem 2.94rem 3rem 3rem;
+}
+
+.aboutPanel {
+    --liquid-radius-base: clamp(2rem, 4vw, 4rem);
+    --liquid-radius-a: 3.72rem 4.24rem 4.08rem 3.84rem;
+    --liquid-radius-b: 4.28rem 3.68rem 4.18rem 3.76rem;
+    --liquid-radius-c: 3.82rem 4.16rem 3.74rem 4.24rem;
+    --liquid-radius-d: 4.16rem 3.86rem 4.08rem 3.92rem;
+    --liquid-radius-end: 4.08rem 3.92rem 4rem 4rem;
+}
+
+.contactCard {
+    --liquid-radius-base: 1.7rem;
+    --liquid-radius-a: 1.56rem 1.84rem 1.78rem 1.62rem;
+    --liquid-radius-b: 1.88rem 1.52rem 1.82rem 1.58rem;
+    --liquid-radius-c: 1.6rem 1.8rem 1.56rem 1.84rem;
+    --liquid-radius-d: 1.8rem 1.6rem 1.76rem 1.64rem;
+    --liquid-radius-end: 1.76rem 1.64rem 1.7rem 1.7rem;
+}
+
+.serviceCard:hover,
+.aboutPanel:hover,
+.contactCard:hover {
+    animation:
+            homeCardLiquidHover
+            780ms
+            cubic-bezier(
+                    0.2,
+                    0.88,
+                    0.18,
+                    1
+            )
+            both;
+}
+
+/*
+ * После ухода курсора карточка мягко собирается обратно.
+ * Существующие transition конкретных карточек остаются активны.
+ */
+.serviceCard:not(:hover),
+.aboutPanel:not(:hover),
+.contactCard:not(:hover) {
+    scale: 1 1;
+    border-radius: var(--liquid-radius-base);
+    transition:
+            scale 620ms
+            cubic-bezier(
+                    0.2,
+                    0.88,
+                    0.18,
+                    1
+            ),
+            border-radius 620ms
+            cubic-bezier(
+                    0.2,
+                    0.88,
+                    0.18,
+                    1
+            );
+}
+
+@keyframes homeCardLiquidHover {
+    0% {
+        scale: 1 1;
+        border-radius: var(--liquid-radius-base);
+    }
+
+    18% {
+        scale: 0.992 1.012;
+        border-radius: var(--liquid-radius-a);
+    }
+
+    40% {
+        scale: 1.026 0.982;
+        border-radius: var(--liquid-radius-b);
+    }
+
+    61% {
+        scale: 1.012 1.004;
+        border-radius: var(--liquid-radius-c);
+    }
+
+    79% {
+        scale: 1.021 0.991;
+        border-radius: var(--liquid-radius-d);
+    }
+
+    100% {
+        scale: 1.016 0.996;
+        border-radius: var(--liquid-radius-end);
+    }
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                АНИМАЦИИ                                    */
 /* -------------------------------------------------------------------------- */
@@ -1538,6 +1680,64 @@
     100% {
         transform:
                 translateY(310%);
+    }
+}
+
+@keyframes serviceCardLiquidHover {
+    0% {
+        transform:
+                translateY(0)
+                rotateX(0)
+                scaleX(1)
+                scaleY(1);
+    }
+
+    15% {
+        transform:
+                translateY(-0.22rem)
+                rotateX(0.4deg)
+                scaleX(0.975)
+                scaleY(1.018);
+    }
+
+    34% {
+        transform:
+                translateY(-0.72rem)
+                rotateX(1.5deg)
+                scaleX(1.035)
+                scaleY(0.974);
+    }
+
+    52% {
+        transform:
+                translateY(-0.58rem)
+                rotateX(1.1deg)
+                scaleX(0.988)
+                scaleY(1.012);
+    }
+
+    70% {
+        transform:
+                translateY(-0.72rem)
+                rotateX(1.5deg)
+                scaleX(1.014)
+                scaleY(0.991);
+    }
+
+    86% {
+        transform:
+                translateY(-0.68rem)
+                rotateX(1.4deg)
+                scaleX(0.996)
+                scaleY(1.004);
+    }
+
+    100% {
+        transform:
+                translateY(-0.7rem)
+                rotateX(1.5deg)
+                scaleX(1)
+                scaleY(1);
     }
 }
 
@@ -1751,6 +1951,19 @@
 
     .contactArrow {
         display: none;
+    }
+}
+
+
+@media (max-width: 32rem) {
+    .serviceCard,
+    .aboutPanel {
+        --liquid-radius-base: 1.7rem;
+        --liquid-radius-a: 1.56rem 1.84rem 1.78rem 1.62rem;
+        --liquid-radius-b: 1.88rem 1.52rem 1.82rem 1.58rem;
+        --liquid-radius-c: 1.6rem 1.8rem 1.56rem 1.84rem;
+        --liquid-radius-d: 1.8rem 1.6rem 1.76rem 1.64rem;
+        --liquid-radius-end: 1.76rem 1.64rem 1.7rem 1.7rem;
     }
 }
 
