@@ -572,3 +572,877 @@
         transition-duration: 1ms !important;
     }
 }
+
+/* ==========================================================================
+   LIQUID GLASS MOTION — CONTACTS
+   ========================================================================== */
+
+/*
+ * Все эффекты ниже являются progressive enhancement:
+ * исходная разметка русской и английской страниц не меняется.
+ *
+ * contain: paint + clip-path не позволяют блику выходить
+ * за пределы конкретной карточки.
+ */
+.contactCard,
+.developerCard {
+    overflow: hidden !important;
+    contain: paint;
+    clip-path: inset(0 round clamp(1.45rem, 3vw, 2.2rem));
+    transform-origin: center;
+    will-change: transform, border-radius, box-shadow;
+}
+
+.developerCard {
+    clip-path: inset(0 round clamp(1.6rem, 3.5vw, 2.7rem));
+}
+
+/*
+ * Более прозрачное и менее матовое стекло.
+ */
+.contactCard {
+    border-color: rgba(255, 255, 255, 0.14);
+
+    background:
+            radial-gradient(
+                    22rem ellipse at -7% 42%,
+                    rgba(255, 255, 255, 0.105),
+                    rgba(255, 255, 255, 0.028) 25%,
+                    transparent 55%
+            ),
+            radial-gradient(
+                    17rem ellipse at 108% 82%,
+                    rgba(255, 255, 255, 0.055),
+                    transparent 60%
+            ),
+            linear-gradient(
+                    148deg,
+                    rgba(255, 255, 255, 0.052) 0%,
+                    rgba(255, 255, 255, 0.016) 34%,
+                    rgba(2, 3, 6, 0.16) 72%,
+                    rgba(0, 0, 0, 0.24) 100%
+            );
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.25),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.035),
+            inset 1.6rem 0 3.4rem -2.25rem rgba(255, 255, 255, 0.3),
+            inset -1.25rem 0 3rem -2.35rem rgba(255, 255, 255, 0.12),
+            0 1.8rem 4.8rem -2.7rem rgba(0, 0, 0, 0.82);
+
+    backdrop-filter:
+            blur(0.42rem)
+            saturate(112%)
+            contrast(104%);
+
+    -webkit-backdrop-filter:
+            blur(0.42rem)
+            saturate(112%)
+            contrast(104%);
+
+    transition:
+            transform 620ms cubic-bezier(0.2, 0.88, 0.18, 1),
+            border-radius 620ms cubic-bezier(0.2, 0.88, 0.18, 1),
+            border-color 340ms ease,
+            box-shadow 420ms ease,
+            background 420ms ease;
+}
+
+.developerCard {
+    border-color: rgba(255, 255, 255, 0.145);
+
+    background:
+            radial-gradient(
+                    30rem ellipse at -4% 58%,
+                    rgba(255, 255, 255, 0.095),
+                    rgba(255, 255, 255, 0.024) 26%,
+                    transparent 58%
+            ),
+            radial-gradient(
+                    22rem ellipse at 105% 15%,
+                    rgba(255, 255, 255, 0.05),
+                    transparent 60%
+            ),
+            linear-gradient(
+                    128deg,
+                    rgba(255, 255, 255, 0.052),
+                    rgba(255, 255, 255, 0.014) 50%,
+                    rgba(0, 0, 0, 0.18)
+            );
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.24),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.03),
+            inset 2rem 0 4rem -2.7rem rgba(255, 255, 255, 0.3),
+            0 2rem 5.4rem -3rem rgba(0, 0, 0, 0.86);
+
+    backdrop-filter:
+            blur(0.48rem)
+            saturate(112%)
+            contrast(104%);
+
+    -webkit-backdrop-filter:
+            blur(0.48rem)
+            saturate(112%)
+            contrast(104%);
+
+    transition:
+            transform 620ms cubic-bezier(0.2, 0.88, 0.18, 1),
+            border-radius 620ms cubic-bezier(0.2, 0.88, 0.18, 1),
+            border-color 340ms ease,
+            box-shadow 420ms ease,
+            background 420ms ease;
+}
+
+/*
+ * Мягкая реакция стеклянной поверхности.
+ * Существующее появление карточек cardEntrance сохраняется.
+ */
+.contactCard:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+
+    background:
+            radial-gradient(
+                    22rem ellipse at -5% 42%,
+                    rgba(255, 255, 255, 0.135),
+                    rgba(255, 255, 255, 0.035) 25%,
+                    transparent 55%
+            ),
+            radial-gradient(
+                    17rem ellipse at 106% 80%,
+                    rgba(255, 255, 255, 0.07),
+                    transparent 60%
+            ),
+            linear-gradient(
+                    148deg,
+                    rgba(255, 255, 255, 0.068) 0%,
+                    rgba(255, 255, 255, 0.021) 34%,
+                    rgba(2, 3, 6, 0.14) 72%,
+                    rgba(0, 0, 0, 0.21) 100%
+            );
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.31),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+            inset 1.9rem 0 3.8rem -2.35rem rgba(255, 255, 255, 0.38),
+            inset -1.25rem 0 3rem -2.35rem rgba(255, 255, 255, 0.14),
+            0 2.25rem 5.4rem -2.9rem rgba(0, 0, 0, 0.9);
+
+    animation:
+            contactCardLiquidHover
+            780ms
+            cubic-bezier(0.2, 0.88, 0.18, 1)
+            both;
+}
+
+.developerCard:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.3),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+            inset 2.25rem 0 4.4rem -2.8rem rgba(255, 255, 255, 0.38),
+            0 2.4rem 6rem -3rem rgba(0, 0, 0, 0.92);
+
+    animation:
+            developerCardLiquidHover
+            780ms
+            cubic-bezier(0.2, 0.88, 0.18, 1)
+            both;
+}
+
+/*
+ * Существующий cardShine теперь полностью невидим в покое.
+ * Он проявляется только во время одного непрерывного прохода.
+ */
+.cardShine {
+    z-index: 1;
+
+    top: -22%;
+    bottom: -22%;
+    left: -72%;
+
+    width: 38%;
+    height: auto;
+
+    border-radius: 42%;
+
+    opacity: 0;
+
+    background:
+            linear-gradient(
+                    104deg,
+                    transparent 0%,
+                    transparent 28%,
+                    rgba(255, 255, 255, 0.018) 38%,
+                    rgba(255, 255, 255, 0.13) 47%,
+                    rgba(255, 255, 255, 0.34) 50%,
+                    rgba(255, 255, 255, 0.11) 54%,
+                    rgba(255, 255, 255, 0.014) 63%,
+                    transparent 74%,
+                    transparent 100%
+            );
+
+    filter: blur(0.11rem);
+
+    transform:
+            translate3d(0, 0, 0)
+            rotate(14deg);
+
+    transition: none;
+
+    will-change:
+            transform,
+            opacity;
+}
+
+.contactCard:hover .cardShine {
+    left: -72%;
+    opacity: 0;
+
+    animation:
+            contactGlassLightSweep
+            920ms
+            cubic-bezier(0.2, 0.78, 0.2, 1)
+            both;
+}
+
+/*
+ * Для широкой карточки разработчиков блик создаётся
+ * отдельным псевдоэлементом и также остаётся внутри неё.
+ */
+.developerCard::after {
+    position: absolute;
+    z-index: 1;
+
+    top: -24%;
+    bottom: -24%;
+    left: -48%;
+
+    width: 25%;
+
+    pointer-events: none;
+    content: '';
+
+    border-radius: 45%;
+
+    opacity: 0;
+
+    background:
+            linear-gradient(
+                    104deg,
+                    transparent 0%,
+                    transparent 28%,
+                    rgba(255, 255, 255, 0.014) 38%,
+                    rgba(255, 255, 255, 0.11) 47%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    rgba(255, 255, 255, 0.09) 54%,
+                    rgba(255, 255, 255, 0.012) 63%,
+                    transparent 74%,
+                    transparent 100%
+            );
+
+    filter: blur(0.12rem);
+
+    transform:
+            translate3d(0, 0, 0)
+            rotate(13deg);
+
+    will-change:
+            transform,
+            opacity;
+}
+
+.developerCard:hover::after {
+    animation:
+            developerGlassLightSweep
+            980ms
+            cubic-bezier(0.2, 0.78, 0.2, 1)
+            both;
+}
+
+/*
+ * Содержимое всегда находится над световым слоем.
+ */
+.contactCard > :not(.cardShine),
+.developerCard > :not(.developerGlow) {
+    position: relative;
+    z-index: 2;
+}
+
+/*
+ * Более чистые внутренние стеклянные элементы.
+ */
+.iconShell,
+.developerMark,
+.arrowShell {
+    backdrop-filter:
+            blur(0.32rem)
+            saturate(116%);
+
+    -webkit-backdrop-filter:
+            blur(0.32rem)
+            saturate(116%);
+}
+
+.iconShell,
+.developerMark {
+    border-color: rgba(255, 255, 255, 0.18);
+
+    background:
+            radial-gradient(
+                    circle at 28% 10%,
+                    rgba(255, 255, 255, 0.18),
+                    transparent 46%
+            ),
+            linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.085),
+                    rgba(255, 255, 255, 0.022)
+            );
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.3),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.035),
+            0 0.75rem 1.8rem -1rem rgba(0, 0, 0, 0.52);
+}
+
+.arrowShell {
+    overflow: hidden;
+
+    border-color: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.72);
+
+    background:
+            radial-gradient(
+                    circle at 30% 10%,
+                    rgba(255, 255, 255, 0.13),
+                    transparent 48%
+            ),
+            rgba(255, 255, 255, 0.028);
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.22),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.025);
+}
+
+.contactCard:hover .iconShell {
+    background:
+            radial-gradient(
+                    circle at 28% 10%,
+                    rgba(255, 255, 255, 0.25),
+                    transparent 48%
+            ),
+            linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.11),
+                    rgba(255, 255, 255, 0.03)
+            );
+
+    animation:
+            smallGlassDrop
+            620ms
+            cubic-bezier(0.2, 0.88, 0.18, 1)
+            both;
+}
+
+.contactCard:hover .arrowShell {
+    border-color: rgba(255, 255, 255, 0.28);
+    color: rgba(255, 255, 255, 0.96);
+
+    background:
+            radial-gradient(
+                    circle at 30% 8%,
+                    rgba(255, 255, 255, 0.2),
+                    transparent 48%
+            ),
+            rgba(255, 255, 255, 0.055);
+
+    animation:
+            glassButtonDrop
+            620ms
+            cubic-bezier(0.2, 0.88, 0.18, 1)
+            both;
+}
+
+/*
+ * Кнопка Telegram — прозрачное стекло вместо белой заливки.
+ */
+.developerButton {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    contain: paint;
+
+    border-color: rgba(255, 255, 255, 0.27);
+
+    color: rgba(255, 255, 255, 0.92);
+
+    background:
+            radial-gradient(
+                    ellipse at 25% 0%,
+                    rgba(255, 255, 255, 0.18),
+                    rgba(255, 255, 255, 0.045) 38%,
+                    transparent 66%
+            ),
+            linear-gradient(
+                    140deg,
+                    rgba(255, 255, 255, 0.09),
+                    rgba(255, 255, 255, 0.025) 52%,
+                    rgba(255, 255, 255, 0.055)
+            );
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.42),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.035),
+            0 1rem 2.5rem -1.25rem rgba(0, 0, 0, 0.72);
+
+    backdrop-filter:
+            blur(0.38rem)
+            saturate(118%)
+            contrast(104%);
+
+    -webkit-backdrop-filter:
+            blur(0.38rem)
+            saturate(118%)
+            contrast(104%);
+
+    transform-origin: center;
+
+    transition:
+            border-color 300ms ease,
+            color 300ms ease,
+            background 300ms ease,
+            box-shadow 360ms ease,
+            transform 540ms cubic-bezier(0.2, 0.88, 0.18, 1);
+}
+
+.developerButton::before {
+    position: absolute;
+    z-index: -1;
+
+    top: -60%;
+    bottom: -60%;
+    left: -62%;
+
+    width: 34%;
+
+    pointer-events: none;
+    content: '';
+
+    opacity: 0;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.34),
+                    transparent
+            );
+
+    filter: blur(0.08rem);
+    transform: rotate(18deg);
+}
+
+.developerButton:hover {
+    border-color: rgba(255, 255, 255, 0.44);
+    color: #ffffff;
+
+    background:
+            radial-gradient(
+                    ellipse at 25% 0%,
+                    rgba(255, 255, 255, 0.24),
+                    rgba(255, 255, 255, 0.06) 38%,
+                    transparent 66%
+            ),
+            linear-gradient(
+                    140deg,
+                    rgba(255, 255, 255, 0.12),
+                    rgba(255, 255, 255, 0.035) 52%,
+                    rgba(255, 255, 255, 0.075)
+            );
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.55),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.045),
+            0 1.2rem 2.8rem -1.25rem rgba(0, 0, 0, 0.8);
+
+    animation:
+            glassButtonDrop
+            650ms
+            cubic-bezier(0.2, 0.88, 0.18, 1)
+            both;
+}
+
+.developerButton:hover::before {
+    animation:
+            buttonGlassLightSweep
+            760ms
+            cubic-bezier(0.2, 0.78, 0.2, 1)
+            both;
+}
+
+/*
+ * Верхний статус также становится более прозрачной
+ * компактной стеклянной кнопкой-индикатором.
+ */
+.eyebrow {
+    border-color: rgba(255, 255, 255, 0.17);
+
+    background:
+            radial-gradient(
+                    ellipse at 24% 0%,
+                    rgba(255, 255, 255, 0.14),
+                    transparent 58%
+            ),
+            rgba(255, 255, 255, 0.025);
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.24),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.025),
+            0 0.8rem 2.4rem -1.4rem rgba(0, 0, 0, 0.58);
+
+    backdrop-filter:
+            blur(0.36rem)
+            saturate(112%);
+
+    -webkit-backdrop-filter:
+            blur(0.36rem)
+            saturate(112%);
+}
+
+/* --------------------------------------------------------------------------
+   KEYFRAMES
+   -------------------------------------------------------------------------- */
+
+@keyframes contactCardLiquidHover {
+    0% {
+        transform:
+                translateY(0)
+                scaleX(1)
+                scaleY(1);
+
+        border-radius:
+                clamp(1.45rem, 3vw, 2.2rem);
+    }
+
+    18% {
+        transform:
+                translateY(-0.1rem)
+                scaleX(0.992)
+                scaleY(1.012);
+
+        border-radius:
+                1.85rem 2.15rem
+                2.05rem 1.95rem;
+    }
+
+    40% {
+        transform:
+                translateY(-0.38rem)
+                scaleX(1.026)
+                scaleY(0.982);
+
+        border-radius:
+                2.2rem 1.8rem
+                2.15rem 1.85rem;
+    }
+
+    61% {
+        transform:
+                translateY(-0.3rem)
+                scaleX(1.012)
+                scaleY(1.004);
+
+        border-radius:
+                1.92rem 2.08rem
+                1.86rem 2.14rem;
+    }
+
+    79% {
+        transform:
+                translateY(-0.38rem)
+                scaleX(1.021)
+                scaleY(0.991);
+
+        border-radius:
+                2.08rem 1.92rem
+                2.04rem 1.96rem;
+    }
+
+    100% {
+        transform:
+                translateY(-0.34rem)
+                scaleX(1.016)
+                scaleY(0.996);
+
+        border-radius:
+                2.04rem 1.96rem
+                2rem 2rem;
+    }
+}
+
+@keyframes developerCardLiquidHover {
+    0% {
+        transform:
+                scaleX(1)
+                scaleY(1);
+
+        border-radius:
+                clamp(1.6rem, 3.5vw, 2.7rem);
+    }
+
+    18% {
+        transform:
+                scaleX(0.993)
+                scaleY(1.012);
+
+        border-radius:
+                2.35rem 2.75rem
+                2.55rem 2.45rem;
+    }
+
+    40% {
+        transform:
+                scaleX(1.02)
+                scaleY(0.983);
+
+        border-radius:
+                2.8rem 2.3rem
+                2.72rem 2.38rem;
+    }
+
+    61% {
+        transform:
+                scaleX(1.01)
+                scaleY(1.003);
+
+        border-radius:
+                2.4rem 2.68rem
+                2.34rem 2.74rem;
+    }
+
+    79% {
+        transform:
+                scaleX(1.016)
+                scaleY(0.992);
+
+        border-radius:
+                2.68rem 2.42rem
+                2.62rem 2.48rem;
+    }
+
+    100% {
+        transform:
+                scaleX(1.012)
+                scaleY(0.997);
+
+        border-radius:
+                2.6rem 2.5rem
+                2.56rem 2.54rem;
+    }
+}
+
+@keyframes contactGlassLightSweep {
+    0% {
+        opacity: 0;
+        transform:
+                translate3d(0, 0, 0)
+                rotate(14deg);
+    }
+
+    12% {
+        opacity: 0.12;
+    }
+
+    42% {
+        opacity: 0.82;
+    }
+
+    82% {
+        opacity: 0.24;
+    }
+
+    100% {
+        opacity: 0;
+        transform:
+                translate3d(470%, 0, 0)
+                rotate(14deg);
+    }
+}
+
+@keyframes developerGlassLightSweep {
+    0% {
+        opacity: 0;
+        transform:
+                translate3d(0, 0, 0)
+                rotate(13deg);
+    }
+
+    12% {
+        opacity: 0.1;
+    }
+
+    43% {
+        opacity: 0.76;
+    }
+
+    84% {
+        opacity: 0.2;
+    }
+
+    100% {
+        opacity: 0;
+        transform:
+                translate3d(610%, 0, 0)
+                rotate(13deg);
+    }
+}
+
+@keyframes buttonGlassLightSweep {
+    0% {
+        opacity: 0;
+        transform:
+                translateX(0)
+                rotate(18deg);
+    }
+
+    16% {
+        opacity: 0.12;
+    }
+
+    45% {
+        opacity: 0.76;
+    }
+
+    82% {
+        opacity: 0.2;
+    }
+
+    100% {
+        opacity: 0;
+        transform:
+                translateX(520%)
+                rotate(18deg);
+    }
+}
+
+@keyframes smallGlassDrop {
+    0% {
+        transform:
+                scaleX(1)
+                scaleY(1)
+                rotate(0);
+    }
+
+    22% {
+        transform:
+                scaleX(1.13)
+                scaleY(0.89)
+                rotate(-2deg);
+    }
+
+    48% {
+        transform:
+                scaleX(0.94)
+                scaleY(1.08)
+                rotate(1deg);
+    }
+
+    72% {
+        transform:
+                scaleX(1.045)
+                scaleY(0.975)
+                rotate(-1deg);
+    }
+
+    100% {
+        transform:
+                scaleX(1.025)
+                scaleY(0.99)
+                rotate(-1deg);
+    }
+}
+
+@keyframes glassButtonDrop {
+    0% {
+        transform:
+                translateY(0)
+                scaleX(1)
+                scaleY(1);
+    }
+
+    20% {
+        transform:
+                translateY(-0.06rem)
+                scaleX(1.09)
+                scaleY(0.91);
+    }
+
+    44% {
+        transform:
+                translateY(-0.15rem)
+                scaleX(0.96)
+                scaleY(1.06);
+    }
+
+    68% {
+        transform:
+                translateY(-0.17rem)
+                scaleX(1.035)
+                scaleY(0.98);
+    }
+
+    100% {
+        transform:
+                translateY(-0.16rem)
+                scaleX(1.015)
+                scaleY(0.995);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   TOUCH / REDUCED MOTION
+   -------------------------------------------------------------------------- */
+
+@media (hover: none), (pointer: coarse) {
+    .contactCard:hover,
+    .developerCard:hover,
+    .contactCard:hover .iconShell,
+    .contactCard:hover .arrowShell,
+    .developerButton:hover {
+        animation: none !important;
+        transform: none !important;
+    }
+
+    .contactCard:hover .cardShine,
+    .developerCard:hover::after,
+    .developerButton:hover::before {
+        animation: none !important;
+        opacity: 0 !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .contactCard,
+    .developerCard,
+    .contactCard:hover,
+    .developerCard:hover,
+    .contactCard:hover .iconShell,
+    .contactCard:hover .arrowShell,
+    .developerButton,
+    .developerButton:hover,
+    .cardShine,
+    .developerCard::after,
+    .developerButton::before {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+    }
+
+    .cardShine,
+    .developerCard::after,
+    .developerButton::before {
+        opacity: 0 !important;
+    }
+}

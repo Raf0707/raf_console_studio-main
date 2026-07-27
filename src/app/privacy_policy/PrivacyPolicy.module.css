@@ -275,11 +275,15 @@
     text-wrap: balance;
 }
 
-.heroContent h1 span {
+.titleSecondary {
     display: block;
 
-    color:
-            rgba(255, 255, 255, 0.32);
+    color: rgba(255, 255, 255, 0.32);
+
+    font-size: 0.78em;
+    line-height: 1.02;
+
+    letter-spacing: -0.065em;
 }
 
 .heroContent p {
@@ -1952,6 +1956,11 @@
                 clamp(3.15rem, 16vw, 5.8rem);
     }
 
+    .titleSecondary {
+        font-size: 0.64em;
+        letter-spacing: -0.055em;
+    }
+
     .heroFooter {
         align-items: stretch;
         flex-direction: column;
@@ -2046,5 +2055,902 @@
     .licenseContent a svg {
         transition-duration:
                 1ms !important;
+    }
+}
+
+/* ========================================================================== */
+/*                    RAF LIQUID GLASS — POLICY ENHANCEMENT                    */
+/* ========================================================================== */
+
+/*
+ * Общая физика стекла:
+ * — меньше матового blur;
+ * — выше прозрачность;
+ * — мягкая жидкая деформация;
+ * — блик появляется только во время движения;
+ * — блик всегда обрезается границами конкретного элемента.
+ */
+
+.hero,
+.navigationCard,
+.introduction,
+.policySection,
+.purposeCard,
+.consentCard,
+.securityGrid > div,
+.serviceItem,
+.worldCard,
+.licenseCard,
+.contactCard,
+.documentFooter,
+.notice,
+.warningNotice,
+.primaryNotice,
+.checkList li,
+.updateCard,
+.introductionMark,
+.heroIcon,
+.sectionIcon,
+.noticeIcon,
+.warningNotice > span,
+.serviceItem > span,
+.licenseMark,
+.contactIcon,
+.contactArrow,
+.consentIndex,
+.licenseContent a {
+    position: relative;
+    isolation: isolate;
+}
+
+/* Основные крупные поверхности */
+.hero,
+.navigationCard,
+.introduction,
+.policySection,
+.documentFooter {
+    overflow: hidden !important;
+    overflow: clip !important;
+    contain: paint;
+
+    background:
+            radial-gradient(
+                    ellipse at 13% -8%,
+                    rgba(255, 255, 255, 0.095),
+                    transparent 38%
+            ),
+            radial-gradient(
+                    ellipse at 94% 110%,
+                    rgba(255, 255, 255, 0.045),
+                    transparent 46%
+            ),
+            linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.052),
+                    rgba(255, 255, 255, 0.012) 48%,
+                    rgba(0, 0, 0, 0.035)
+            ) !important;
+
+    backdrop-filter:
+            blur(0.38rem)
+            saturate(112%)
+            contrast(103%) !important;
+
+    -webkit-backdrop-filter:
+            blur(0.38rem)
+            saturate(112%)
+            contrast(103%) !important;
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.16),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.025),
+            inset 1.1rem 0 2.6rem -2.15rem rgba(255, 255, 255, 0.2),
+            0 1.8rem 5rem -3rem rgba(0, 0, 0, 0.8) !important;
+
+    transform: none;
+    translate: none;
+    scale: 1 1;
+    transform-origin: center;
+
+    transition:
+            scale 620ms cubic-bezier(0.2, 0.88, 0.18, 1),
+            border-radius 620ms cubic-bezier(0.2, 0.88, 0.18, 1),
+            border-color 340ms ease,
+            box-shadow 420ms ease,
+            background 420ms ease !important;
+
+    will-change: scale, border-radius;
+}
+
+/* Вложенные карточки и уведомления */
+.purposeCard,
+.consentCard,
+.securityGrid > div,
+.serviceItem,
+.worldCard,
+.licenseCard,
+.contactCard,
+.notice,
+.warningNotice,
+.primaryNotice,
+.checkList li,
+.updateCard {
+    overflow: hidden !important;
+    overflow: clip !important;
+    contain: paint;
+
+    background:
+            radial-gradient(
+                    ellipse at 15% -6%,
+                    rgba(255, 255, 255, 0.075),
+                    transparent 40%
+            ),
+            linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.04),
+                    rgba(255, 255, 255, 0.009) 52%,
+                    rgba(0, 0, 0, 0.025)
+            ) !important;
+
+    backdrop-filter:
+            blur(0.22rem)
+            saturate(110%) !important;
+
+    -webkit-backdrop-filter:
+            blur(0.22rem)
+            saturate(110%) !important;
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.12),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.02),
+            0 1.3rem 3.2rem -2.5rem rgba(0, 0, 0, 0.72) !important;
+
+    scale: 1 1;
+    transform-origin: center;
+
+    transition:
+            scale 620ms cubic-bezier(0.2, 0.88, 0.18, 1),
+            border-radius 620ms cubic-bezier(0.2, 0.88, 0.18, 1),
+            border-color 340ms ease,
+            box-shadow 420ms ease,
+            background 420ms ease !important;
+
+    will-change: scale, border-radius;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                    БЛИКИ — ТОЛЬКО ВО ВРЕМЯ ДВИЖЕНИЯ                        */
+/* -------------------------------------------------------------------------- */
+
+.hero::before,
+.navigationCard::before,
+.introduction::before,
+.policySection::before,
+.documentFooter::before,
+.purposeCard::before,
+.consentCard::before,
+.securityGrid > div::before,
+.serviceItem::before,
+.worldCard::before,
+.licenseCard::before,
+.contactCard::before,
+.notice::before,
+.warningNotice::before,
+.primaryNotice::before,
+.checkList li::after,
+.updateCard::before {
+    position: absolute;
+    z-index: 0;
+
+    top: -46%;
+    bottom: -46%;
+    left: -62%;
+
+    width: 34%;
+
+    pointer-events: none;
+    content: '';
+
+    border-radius: 999px;
+
+    opacity: 0;
+
+    background:
+            linear-gradient(
+                    102deg,
+                    transparent 0%,
+                    transparent 31%,
+                    rgba(255, 255, 255, 0.02) 39%,
+                    rgba(255, 255, 255, 0.18) 47%,
+                    rgba(255, 255, 255, 0.42) 50%,
+                    rgba(255, 255, 255, 0.14) 54%,
+                    rgba(255, 255, 255, 0.018) 61%,
+                    transparent 69%,
+                    transparent 100%
+            );
+
+    filter: blur(0.04rem);
+
+    transform:
+            translate3d(0, 0, 0)
+            rotate(15deg);
+
+    will-change:
+            transform,
+            opacity;
+}
+
+/*
+ * Сохраняем существующие декоративные слои hero/introduction/consent,
+ * поэтому для элементов, где ::before уже критичен, добавляем мягкую
+ * композицию через mix-blend-mode вместо удаления дизайна.
+ */
+.hero::before,
+.introduction::before,
+.consentCard::before {
+    mix-blend-mode: screen;
+}
+
+/* Блик всегда находится за содержимым. */
+.hero > *,
+.navigationCard > *,
+.introduction > *,
+.policySection > *,
+.documentFooter > *,
+.purposeCard > *,
+.consentCard > *,
+.securityGrid > div > *,
+.serviceItem > *,
+.worldCard > *,
+.licenseCard > *,
+.contactCard > *,
+.notice > *,
+.warningNotice > *,
+.primaryNotice > *,
+.checkList li > *,
+.updateCard > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                          ЖИДКАЯ ДЕФОРМАЦИЯ                                  */
+/* -------------------------------------------------------------------------- */
+
+@media (hover: hover) and (pointer: fine) {
+    .hero:hover,
+    .navigationCard:hover,
+    .introduction:hover,
+    .policySection:hover,
+    .documentFooter:hover {
+        animation:
+                policyLiquidLarge
+                780ms
+                cubic-bezier(0.2, 0.88, 0.18, 1)
+                both;
+    }
+
+    .purposeCard:hover,
+    .consentCard:hover,
+    .securityGrid > div:hover,
+    .serviceItem:hover,
+    .worldCard:hover,
+    .licenseCard:hover,
+    .contactCard:hover,
+    .notice:hover,
+    .warningNotice:hover,
+    .primaryNotice:hover,
+    .checkList li:hover,
+    .updateCard:hover {
+        animation:
+                policyLiquidSmall
+                760ms
+                cubic-bezier(0.2, 0.88, 0.18, 1)
+                both;
+    }
+
+    .hero:hover::before,
+    .navigationCard:hover::before,
+    .introduction:hover::before,
+    .policySection:hover::before,
+    .documentFooter:hover::before,
+    .purposeCard:hover::before,
+    .consentCard:hover::before,
+    .securityGrid > div:hover::before,
+    .serviceItem:hover::before,
+    .worldCard:hover::before,
+    .licenseCard:hover::before,
+    .contactCard:hover::before,
+    .notice:hover::before,
+    .warningNotice:hover::before,
+    .primaryNotice:hover::before,
+    .checkList li:hover::after,
+    .updateCard:hover::before {
+        animation:
+                policyGlassShine
+                900ms
+                cubic-bezier(0.18, 0.72, 0.18, 1)
+                both;
+    }
+}
+
+@keyframes policyLiquidLarge {
+    0% {
+        scale: 1 1;
+        border-radius: inherit;
+    }
+
+    18% {
+        scale: 0.993 1.009;
+    }
+
+    40% {
+        scale: 1.016 0.986;
+    }
+
+    61% {
+        scale: 1.008 1.002;
+    }
+
+    79% {
+        scale: 1.013 0.994;
+    }
+
+    100% {
+        scale: 1.01 0.997;
+    }
+}
+
+@keyframes policyLiquidSmall {
+    0% {
+        scale: 1 1;
+    }
+
+    18% {
+        scale: 0.988 1.014;
+    }
+
+    40% {
+        scale: 1.022 0.982;
+    }
+
+    61% {
+        scale: 1.009 1.004;
+    }
+
+    79% {
+        scale: 1.016 0.992;
+    }
+
+    100% {
+        scale: 1.012 0.997;
+    }
+}
+
+@keyframes policyGlassShine {
+    0% {
+        opacity: 0;
+        transform:
+                translate3d(0, 0, 0)
+                rotate(15deg);
+    }
+
+    12% {
+        opacity: 0.32;
+    }
+
+    48% {
+        opacity: 0.9;
+    }
+
+    82% {
+        opacity: 0.28;
+    }
+
+    100% {
+        left: 132%;
+        opacity: 0;
+        transform:
+                translate3d(0, 0, 0)
+                rotate(15deg);
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                           СТЕКЛЯННЫЕ КНОПКИ                                 */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * Ссылки в лицензии, навигации и карточках контактов получают
+ * единый прозрачный жидкий стиль без белой плотной заливки.
+ */
+.navigationLink,
+.licenseContent a,
+.contactCard,
+.contactArrow {
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.navigationLink,
+.licenseContent a {
+    border:
+            1px solid
+            rgba(255, 255, 255, 0.13);
+
+    border-radius: 999px;
+
+    background:
+            radial-gradient(
+                    circle at 25% 5%,
+                    rgba(255, 255, 255, 0.07),
+                    transparent 44%
+            ),
+            rgba(255, 255, 255, 0.018);
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.16),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+            0 0.7rem 1.8rem -1.15rem rgba(0, 0, 0, 0.72);
+
+    backdrop-filter:
+            blur(0.28rem)
+            saturate(112%);
+
+    -webkit-backdrop-filter:
+            blur(0.28rem)
+            saturate(112%);
+
+    transition:
+            scale 520ms cubic-bezier(0.2, 0.88, 0.18, 1),
+            border-color 280ms ease,
+            background 280ms ease,
+            color 280ms ease,
+            box-shadow 340ms ease !important;
+}
+
+.licenseContent a {
+    padding:
+            0.72rem
+            1rem;
+}
+
+.navigationLink::after,
+.licenseContent a::before {
+    position: absolute;
+    z-index: 0;
+
+    top: -70%;
+    bottom: -70%;
+    left: -55%;
+
+    width: 32%;
+
+    pointer-events: none;
+    content: '';
+
+    opacity: 0;
+
+    background:
+            linear-gradient(
+                    95deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.32),
+                    transparent
+            );
+
+    transform: rotate(14deg);
+}
+
+.navigationLink > *,
+.licenseContent a > * {
+    position: relative;
+    z-index: 2;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .navigationLink:hover,
+    .licenseContent a:hover {
+        border-color:
+                rgba(255, 255, 255, 0.25);
+
+        color:
+                rgba(255, 255, 255, 0.95);
+
+        background:
+                radial-gradient(
+                        circle at 26% 4%,
+                        rgba(255, 255, 255, 0.11),
+                        transparent 46%
+                ),
+                rgba(255, 255, 255, 0.034);
+
+        box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.24),
+                0 1rem 2.3rem -1.35rem rgba(0, 0, 0, 0.74);
+
+        scale: 1.018 0.992;
+        transform: none;
+    }
+
+    .navigationLink:hover::after,
+    .licenseContent a:hover::before {
+        animation:
+                policyButtonShine
+                720ms
+                cubic-bezier(0.18, 0.72, 0.18, 1)
+                both;
+    }
+
+    .contactArrow:hover {
+        color:
+                rgba(255, 255, 255, 0.96);
+
+        background:
+                linear-gradient(
+                        145deg,
+                        rgba(255, 255, 255, 0.15),
+                        rgba(255, 255, 255, 0.035)
+                );
+
+        border:
+                1px solid
+                rgba(255, 255, 255, 0.18);
+
+        transform:
+                rotate(5deg)
+                scale(1.06);
+    }
+}
+
+@keyframes policyButtonShine {
+    0% {
+        left: -55%;
+        opacity: 0;
+    }
+
+    18% {
+        opacity: 0.58;
+    }
+
+    82% {
+        opacity: 0.36;
+    }
+
+    100% {
+        left: 132%;
+        opacity: 0;
+    }
+}
+
+/* Кнопки-иконки становятся более прозрачными и стеклянными. */
+.heroIcon,
+.sectionIcon,
+.introductionMark,
+.noticeIcon,
+.warningNotice > span,
+.serviceItem > span,
+.licenseMark,
+.contactIcon,
+.contactArrow,
+.consentIndex {
+    background:
+            radial-gradient(
+                    circle at 28% 12%,
+                    rgba(255, 255, 255, 0.15),
+                    rgba(255, 255, 255, 0.035) 36%,
+                    transparent 66%
+            ),
+            rgba(255, 255, 255, 0.018) !important;
+
+    backdrop-filter:
+            blur(0.2rem)
+            saturate(115%) !important;
+
+    -webkit-backdrop-filter:
+            blur(0.2rem)
+            saturate(115%) !important;
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.24),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+            0 0.7rem 1.8rem -1.2rem rgba(0, 0, 0, 0.68) !important;
+
+    transition:
+            transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+            border-color 280ms ease,
+            background 280ms ease,
+            box-shadow 340ms ease !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .policySection:hover .sectionIcon,
+    .introduction:hover .introductionMark,
+    .contactCard:hover .contactIcon,
+    .contactCard:hover .contactArrow,
+    .serviceItem:hover > span,
+    .licenseCard:hover .licenseMark {
+        border-color:
+                rgba(255, 255, 255, 0.24);
+
+        transform:
+                scale(1.055)
+                rotate(-1.5deg);
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                         TOUCH / REDUCED MOTION                              */
+/* -------------------------------------------------------------------------- */
+
+@media (hover: none), (pointer: coarse) {
+    .hero,
+    .navigationCard,
+    .introduction,
+    .policySection,
+    .documentFooter,
+    .purposeCard,
+    .consentCard,
+    .securityGrid > div,
+    .serviceItem,
+    .worldCard,
+    .licenseCard,
+    .contactCard,
+    .notice,
+    .warningNotice,
+    .primaryNotice,
+    .checkList li,
+    .updateCard {
+        scale: 1 1 !important;
+        animation: none !important;
+    }
+
+    .hero::before,
+    .navigationCard::before,
+    .introduction::before,
+    .policySection::before,
+    .documentFooter::before,
+    .purposeCard::before,
+    .consentCard::before,
+    .securityGrid > div::before,
+    .serviceItem::before,
+    .worldCard::before,
+    .licenseCard::before,
+    .contactCard::before,
+    .notice::before,
+    .warningNotice::before,
+    .primaryNotice::before,
+    .checkList li::after,
+    .updateCard::before,
+    .navigationLink::after,
+    .licenseContent a::before {
+        display: none !important;
+        animation: none !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero,
+    .navigationCard,
+    .introduction,
+    .policySection,
+    .documentFooter,
+    .purposeCard,
+    .consentCard,
+    .securityGrid > div,
+    .serviceItem,
+    .worldCard,
+    .licenseCard,
+    .contactCard,
+    .notice,
+    .warningNotice,
+    .primaryNotice,
+    .checkList li,
+    .updateCard,
+    .navigationLink,
+    .licenseContent a,
+    .heroIcon,
+    .sectionIcon,
+    .introductionMark,
+    .contactIcon,
+    .contactArrow {
+        animation: none !important;
+        transition-duration: 1ms !important;
+        scale: 1 1 !important;
+        transform: none !important;
+    }
+
+    .hero::before,
+    .navigationCard::before,
+    .introduction::before,
+    .policySection::before,
+    .documentFooter::before,
+    .purposeCard::before,
+    .consentCard::before,
+    .securityGrid > div::before,
+    .serviceItem::before,
+    .worldCard::before,
+    .licenseCard::before,
+    .contactCard::before,
+    .notice::before,
+    .warningNotice::before,
+    .primaryNotice::before,
+    .checkList li::after,
+    .updateCard::before,
+    .navigationLink::after,
+    .licenseContent a::before {
+        display: none !important;
+        animation: none !important;
+    }
+}
+
+/* ========================================================================== */
+/*                    POLICY LIQUID GLASS — GEOMETRY FIX                       */
+/* ========================================================================== */
+
+/*
+ * Декоративные элементы должны оставаться вне потока.
+ * Общий liquid-слой выше назначал position: relative всем прямым детям,
+ * из-за чего glow и орбиты начинали увеличивать высоту карточек.
+ */
+.heroGlow {
+    position: absolute !important;
+    top: -22rem !important;
+    left: 26% !important;
+    z-index: -1 !important;
+}
+
+.worldOrbit,
+.worldOrbitSecondary {
+    position: absolute !important;
+    z-index: 0 !important;
+}
+
+.worldOrbit {
+    right: -4rem !important;
+    bottom: -8rem !important;
+}
+
+.worldOrbitSecondary {
+    right: 1rem !important;
+    bottom: -5rem !important;
+}
+
+/* Более компактная первая карточка политики. */
+.hero {
+    min-height: clamp(27rem, 48vw, 38rem) !important;
+}
+
+.heroContent {
+    padding-block: clamp(2.6rem, 6vw, 5rem) !important;
+}
+
+/* Карточка международной передачи снова зависит только от содержимого. */
+.worldCard {
+    min-height: 0 !important;
+    padding: clamp(1.15rem, 2.4vw, 1.75rem) !important;
+}
+
+/*
+ * Единый реальный радиус отсечения.
+ * clip-path дополнительно страхует браузеры, в которых анимируемый
+ * псевдоэлемент на один кадр может прорисоваться за rounded overflow.
+ */
+.hero {
+    --policy-liquid-radius: clamp(1.8rem, 4vw, 3.4rem);
+}
+
+.navigationCard {
+    --policy-liquid-radius: 1.6rem;
+}
+
+.introduction {
+    --policy-liquid-radius: clamp(1.5rem, 3vw, 2.2rem);
+}
+
+.policySection {
+    --policy-liquid-radius: clamp(1.5rem, 3vw, 2.35rem);
+}
+
+.documentFooter {
+    --policy-liquid-radius: 1.5rem;
+}
+
+.purposeCard,
+.securityGrid > div {
+    --policy-liquid-radius: 1.2rem;
+}
+
+.consentCard,
+.worldCard,
+.licenseCard {
+    --policy-liquid-radius: 1.4rem;
+}
+
+.serviceItem {
+    --policy-liquid-radius: 1.2rem;
+}
+
+.contactCard {
+    --policy-liquid-radius: 1.2rem;
+}
+
+.notice,
+.warningNotice {
+    --policy-liquid-radius: 1.1rem;
+}
+
+.primaryNotice {
+    --policy-liquid-radius: 1.2rem;
+}
+
+.checkList li {
+    --policy-liquid-radius: 1.15rem;
+}
+
+.updateCard {
+    --policy-liquid-radius: 1rem;
+}
+
+.hero,
+.navigationCard,
+.introduction,
+.policySection,
+.documentFooter,
+.purposeCard,
+.consentCard,
+.securityGrid > div,
+.serviceItem,
+.worldCard,
+.licenseCard,
+.contactCard,
+.notice,
+.warningNotice,
+.primaryNotice,
+.checkList li,
+.updateCard {
+    overflow: hidden !important;
+    border-radius: var(--policy-liquid-radius) !important;
+    clip-path: inset(0 round var(--policy-liquid-radius));
+    -webkit-clip-path: inset(0 round var(--policy-liquid-radius));
+}
+
+/*
+ * Блик начинается и заканчивается внутри внутренней области стекла,
+ * поэтому он не касается самой геометрической кромки карточки.
+ */
+.hero::before,
+.navigationCard::before,
+.introduction::before,
+.policySection::before,
+.documentFooter::before,
+.purposeCard::before,
+.consentCard::before,
+.securityGrid > div::before,
+.serviceItem::before,
+.worldCard::before,
+.licenseCard::before,
+.contactCard::before,
+.notice::before,
+.warningNotice::before,
+.primaryNotice::before,
+.checkList li::after,
+.updateCard::before {
+    top: 5% !important;
+    bottom: 5% !important;
+    height: auto !important;
+    border-radius: calc(var(--policy-liquid-radius) * 0.82) !important;
+    clip-path: inset(0 round calc(var(--policy-liquid-radius) * 0.82));
+    -webkit-clip-path: inset(0 round calc(var(--policy-liquid-radius) * 0.82));
+}
+
+/* На узких экранах первая карточка остаётся компактной. */
+@media (max-width: 48rem) {
+    .hero {
+        min-height: clamp(28rem, 112vw, 34rem) !important;
+    }
+
+    .heroContent {
+        padding-block: clamp(2.5rem, 10vw, 4rem) !important;
     }
 }
