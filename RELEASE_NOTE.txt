@@ -1,0 +1,13 @@
+Этот 7й коммит является финальным для 2й версии моего сайта
+Ошибки с поведением курсора в разделе "От скуки" и отображением иконок были исправлены
+Вторая версия сайта считается законченной и завершенной
+Все замечания и предложения прошу писать в телеграм https://t.me/rafConsoleStudio
+Откат к этому коммиту для работы со второй версией сайта допустим
+Претензий со стороны пользователей и тестировщиков не имею
+
+This 7th commit marks the finalization of version 2 of my website.
+Issues regarding cursor behavior in the "Out of Boredom" section and icon display have been fixed.
+Version 2 of the site is now considered complete.
+Please send any comments or suggestions via Telegram: https://t.me/rafConsoleStudio
+Reverting to this commit is acceptable for working with version 2 of the site.
+I have no outstanding issues raised by users or testers.
