@@ -10,10 +10,10 @@
   opacity: var(--crosshair-opacity, 1);
   filter: blur(var(--crosshair-blur, 0));
   transform:
-    translate(
-      calc(-50% + var(--crosshair-recoil-x, 0px)),
-      calc(-50% + var(--crosshair-recoil-y, 0px))
-    );
+          translate(
+                  calc(-50% + var(--crosshair-recoil-x, 0px)),
+                  calc(-50% + var(--crosshair-recoil-y, 0px))
+          );
   transform-origin: center;
   will-change: transform, filter;
 }
@@ -25,9 +25,9 @@
   border-radius: 999px;
   background: var(--crosshair-color, white);
   box-shadow:
-    0 0 0 var(--crosshair-outline, 0px) rgba(0, 0, 0, 0.92),
-    0 0 var(--crosshair-glow, 2.5px)
-      rgba(var(--crosshair-rgb, 255, 255, 255), 0.52);
+          0 0 0 var(--crosshair-outline, 0px) rgba(0, 0, 0, 0.92),
+          0 0 var(--crosshair-glow, 2.5px)
+          rgba(var(--crosshair-rgb, 255, 255, 255), 0.52);
 }
 
 .armTop,
@@ -87,4 +87,78 @@
 
 .crosshairStandard {
   isolation: isolate;
+}
+
+
+/* ========================================================================== */
+/*                RAF LIQUID GLASS — CROSSHAIR OPTICAL FINISH                 */
+/* ========================================================================== */
+
+/*
+ * The crosshair keeps exact geometry and pointer tracking.
+ * Only its rendered material receives a sharper glass-light response.
+ */
+
+.crosshair {
+  isolation: isolate;
+}
+
+.arm,
+.centerDot {
+  background:
+          linear-gradient(
+                  145deg,
+                  rgba(var(--crosshair-rgb, 255, 255, 255), 1),
+                  rgba(var(--crosshair-rgb, 255, 255, 255), 0.76)
+          );
+
+  box-shadow:
+          0 0 0 var(--crosshair-outline, 0px) rgba(0, 0, 0, 0.92),
+          inset 0 1px 0 rgba(255, 255, 255, 0.62),
+          0 0 var(--crosshair-glow, 2.5px)
+          rgba(var(--crosshair-rgb, 255, 255, 255), 0.58);
+
+  transition:
+          opacity 120ms linear,
+          filter 120ms linear,
+          box-shadow 180ms ease;
+}
+
+.crosshairStandard .arm::after,
+.crosshairStandard .centerDot::after {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+  content: '';
+
+  border-radius: inherit;
+
+  opacity: 0.58;
+
+  background:
+          linear-gradient(
+                  120deg,
+                  rgba(255, 255, 255, 0.7),
+                  transparent 44%,
+                  rgba(255, 255, 255, 0.12)
+          );
+
+  mix-blend-mode: screen;
+}
+
+.crosshairScoped .arm,
+.crosshairScoped .centerDot {
+  box-shadow:
+          0 0 0 var(--crosshair-outline, 0px) rgba(0, 0, 0, 0.92),
+          inset 0 1px 0 rgba(255, 255, 255, 0.52),
+          0 0 calc(var(--crosshair-glow, 2.5px) * 1.15)
+          rgba(var(--crosshair-rgb, 255, 255, 255), 0.64);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arm,
+  .centerDot {
+    transition-duration: 1ms !important;
+  }
 }

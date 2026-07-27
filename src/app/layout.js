@@ -128,7 +128,7 @@ export default function RootLayout({ children }) {
           </NavigationLoadingProvider>
 
           {/* Глобальные волны, плазма и остальные pointer-анимации сохранены. */}
-          <GlobalPointerEffects />
+          {/*<GlobalPointerEffects />*/}
         </ThemeProvider>
       </body>
     </html>

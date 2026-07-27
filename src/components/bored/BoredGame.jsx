@@ -811,6 +811,7 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
   const longDischargeTimerRef = useRef(null);
   const lastDragImpactAtRef = useRef(0);
   const aimPositionRef = useRef({ x: 50, y: 50 });
+  const lastPointerClientRef = useRef({ x: null, y: null });
   const scopeActiveRef = useRef(false);
   const pointerLockedRef = useRef(false);
   const overlayOpenRef = useRef(false);
@@ -2018,29 +2019,43 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
         }
 
         const activePress = activePressRef.current;
-        const hasNativeMovement =
+        const arena = arenaRef.current;
+        const pointerLockActive =
             event.pointerType === 'mouse' &&
-            Number.isFinite(event.movementX) &&
-            Number.isFinite(event.movementY);
-        const movementX = hasNativeMovement
-            ? event.movementX
-            : activePress
-                ? event.clientX - activePress.lastClientX
-                : 0;
-        const movementY = hasNativeMovement
-            ? event.movementY
-            : activePress
-                ? event.clientY - activePress.lastClientY
-                : 0;
+            arena !== null &&
+            document.pointerLockElement === arena;
 
-        if (event.pointerType === 'mouse') {
-          if (hasNativeMovement) {
-            moveAimBy(movementX, movementY);
-          } else {
-            setAimFromClientPoint(event.clientX, event.clientY);
-          }
+        const previousClient = lastPointerClientRef.current;
+        const absoluteMovementX =
+            previousClient.x === null ? 0 : event.clientX - previousClient.x;
+        const absoluteMovementY =
+            previousClient.y === null ? 0 : event.clientY - previousClient.y;
+
+        const movementX = pointerLockActive
+            ? Number.isFinite(event.movementX)
+                ? event.movementX
+                : 0
+            : absoluteMovementX;
+        const movementY = pointerLockActive
+            ? Number.isFinite(event.movementY)
+                ? event.movementY
+                : 0
+            : absoluteMovementY;
+
+        /*
+         * Relative movement is valid only while Pointer Lock is genuinely active.
+         * In the normal browser mode the virtual aim must follow the real pointer
+         * directly; otherwise movementX/movementY drift and the aim can become
+         * stuck on one axis.
+         */
+        if (pointerLockActive) {
+          moveAimBy(movementX, movementY);
         } else {
           setAimFromClientPoint(event.clientX, event.clientY);
+          lastPointerClientRef.current = {
+            x: event.clientX,
+            y: event.clientY,
+          };
         }
 
         registerAimMovement(movementX, movementY);
@@ -2302,6 +2317,7 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
     const handlePointerLockChange = () => {
       const locked = document.pointerLockElement === arenaRef.current;
       pointerLockedRef.current = locked;
+      lastPointerClientRef.current = { x: null, y: null };
       setPointerLocked(locked);
     };
 
@@ -4034,6 +4050,13 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
               onPointerUp={handleArenaPointerUp}
               onPointerCancel={handleArenaPointerUp}
               onPointerEnter={(event) => {
+                if (event.pointerType === 'mouse') {
+                  lastPointerClientRef.current = {
+                    x: event.clientX,
+                    y: event.clientY,
+                  };
+                }
+
                 if (
                     phase === 'running' &&
                     event.pointerType === 'mouse' &&
@@ -4041,6 +4064,14 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
                     !activePressRef.current
                 ) {
                   setAimFromClientPoint(event.clientX, event.clientY);
+                }
+              }}
+              onPointerLeave={(event) => {
+                if (
+                    event.pointerType === 'mouse' &&
+                    document.pointerLockElement !== arenaRef.current
+                ) {
+                  lastPointerClientRef.current = { x: null, y: null };
                 }
               }}
               onContextMenu={(event) => event.preventDefault()}
