@@ -297,7 +297,10 @@ export default function PrivacyPolicy() {
 
                     <h1>
                         Privacy
-                        <span> Policy</span>
+
+                        <span className={styles.titleSecondary}>
+                            Policy
+                        </span>
                     </h1>
 
                     <p>

@@ -176,53 +176,53 @@ function HeaderContent() {
               ? [
                 {
                   label: 'Главная',
-                  href: '/main_ru',
+                  href: '/main_ru/',
                 },
                 {
                   label: 'Студия',
-                  href: '/studio_ru',
+                  href: '/studio_ru/',
                 },
                 {
                   label: 'Проекты',
-                  href: '/projects_ru',
+                  href: '/projects_ru/',
                 },
                 {
                   label: 'Контакты',
-                  href: '/contacts_ru',
+                  href: '/contacts_ru/',
                 },
                 {
                   label: 'Политика',
-                  href: '/privacy_policy_ru',
+                  href: '/privacy_policy_ru/',
                 },
                 {
                   label: 'От скуки',
-                  href: '/bored_ru',
+                  href: '/bored_ru/',
                 },
               ]
               : [
                 {
                   label: 'Home',
-                  href: '/main',
+                  href: '/main/',
                 },
                 {
                   label: 'Studio',
-                  href: '/studio',
+                  href: '/studio/',
                 },
                 {
                   label: 'Projects',
-                  href: '/projects',
+                  href: '/projects/',
                 },
                 {
                   label: 'Contacts',
-                  href: '/contacts',
+                  href: '/contacts/',
                 },
                 {
                   label: 'Policy',
-                  href: '/privacy_policy',
+                  href: '/privacy_policy/',
                 },
                 {
                   label: 'AntiBoredom',
-                  href: '/bored',
+                  href: '/bored/',
                 },
               ]
       ),

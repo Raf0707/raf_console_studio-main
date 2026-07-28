@@ -3402,3 +3402,18 @@
     will-change: auto !important;
   }
 }
+
+.titlePrimary,
+.titleSecondary {
+  display: block;
+}
+
+.titleSecondary {
+  margin-top: 0.08em;
+
+  color: rgba(255, 255, 255, 0.42);
+
+  font-size: 0.84em;
+  font-weight: 500;
+  line-height: 1;
+}

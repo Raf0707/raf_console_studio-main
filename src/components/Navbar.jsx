@@ -23,6 +23,31 @@ function normalizePathname(pathname) {
   return pathname.replace(/\/+$/, '');
 }
 
+function ensureTrailingSlash(href) {
+  if (
+      !href ||
+      href === '/' ||
+      href.startsWith('#') ||
+      href.startsWith('http://') ||
+      href.startsWith('https://') ||
+      href.startsWith('mailto:') ||
+      href.startsWith('tel:')
+  ) {
+    return href;
+  }
+
+  const match = href.match(/^([^?#]*)(.*)$/);
+
+  if (!match) {
+    return href;
+  }
+
+  const pathname = match[1];
+  const suffix = match[2];
+
+  return `${pathname.replace(/\/+$/, '')}/${suffix}`;
+}
+
 function isActivePath(pathname, href) {
   return normalizePathname(pathname) === normalizePathname(href);
 }
@@ -83,7 +108,7 @@ export default function Navbar({
             return (
               <Link
                 key={link.href}
-                href={link.href}
+                href={ensureTrailingSlash(link.href)}
                 prefetch
                 aria-current={active ? 'page' : undefined}
                 onPointerDown={() => activateDrop(index)}
@@ -147,7 +172,7 @@ export default function Navbar({
                     <li key={link.href}>
                       <DrawerClose asChild>
                         <Link
-                          href={link.href}
+                            href={ensureTrailingSlash(link.href)}
                           prefetch
                           aria-current={active ? 'page' : undefined}
                           className={`${styles.mobileLink} ${active ? styles.mobileLinkActive : ''}`}

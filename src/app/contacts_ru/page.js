@@ -96,7 +96,7 @@ export default function ContactPage() {
 
                     <span>
                         {' '}
-                        что-то значимое.
+                        что-то значимое
                     </span>
                 </h1>
 

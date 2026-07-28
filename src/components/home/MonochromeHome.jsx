@@ -21,8 +21,9 @@ const CONTENT = {
     eyebrow:
         'Raf</>Console Studio · Digital Product Lab',
 
-    title:
-        'От идеи — к цифровому продукту',
+    titlePrimary: 'От идеи —',
+    titleSecondaryFirst: 'к цифровому',
+    titleSecondarySecond: 'продукту',
 
     subtitle:
         'Проектируем сайты и приложения, в которых технология, архитектура и визуальный язык работают как единая система.',
@@ -161,8 +162,9 @@ const CONTENT = {
     eyebrow:
         'Raf</>Console Studio · Digital Product Lab',
 
-    title:
-        'From idea to digital product',
+    titlePrimary: 'From idea',
+    titleSecondaryFirst: 'to digital',
+    titleSecondarySecond: 'product',
 
     subtitle:
         'We design websites and applications where technology, architecture and visual language work as one system.',
@@ -426,16 +428,25 @@ export default function MonochromeHome({
 
             <h1
                 id="hero-title"
-                className={`
-              ${styles.heroTitle}
-              ${
+                className={`${styles.heroTitle} ${
                     isRussian
                         ? styles.heroTitleRussian
                         : styles.heroTitleEnglish
-                }
-            `}
+                }`}
             >
-              {copy.title}
+                <span className={styles.heroTitlePrimary}>
+                  {copy.titlePrimary}
+                </span>
+
+                  <span className={styles.heroTitleSecondary}>
+                  <span className={styles.heroTitleLine}>
+                    {copy.titleSecondaryFirst}
+                  </span>
+
+                  <span className={styles.heroTitleLine}>
+                    {copy.titleSecondarySecond}
+                  </span>
+                </span>
             </h1>
 
             <p className={styles.heroSubtitle}>

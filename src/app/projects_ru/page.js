@@ -869,10 +869,6 @@ export default function Page() {
                 : workingSites;
         }
 
-        if (appStatus === 'moderation') {
-            return [];
-        }
-
         const source =
             appStatus === 'published'
                 ? publishedApps
@@ -914,9 +910,7 @@ export default function Page() {
     const statusTitle =
         currentStatus === 'published'
             ? 'Опубликованные проекты'
-            : currentStatus === 'moderation'
-                ? 'На модерации'
-                : 'Проекты в работе';
+            : 'Проекты в работе';
 
     return (
         <main
@@ -1065,7 +1059,16 @@ export default function Page() {
     "
                     >
                         Проекты, превращающие идеи
-                        <span className="mt-2 block font-normal text-white/42">
+
+                        <span
+                            className="
+            mt-[0.08em] block
+            text-[0.84em]
+            font-medium
+            leading-none
+            text-white/[0.42]
+        "
+                        >
         в цифровые продукты
     </span>
                     </h1>
@@ -1172,10 +1175,6 @@ export default function Page() {
                                     {
                                         value: 'published',
                                         label: 'Опубликованные',
-                                    },
-                                    {
-                                        value: 'moderation',
-                                        label: 'На модерации',
                                     },
                                     {
                                         value: 'working',

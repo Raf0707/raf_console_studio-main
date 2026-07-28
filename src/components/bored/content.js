@@ -1,7 +1,11 @@
 export const BORED_CONTENT = {
   ru: {
     eyebrow: 'Raf</>Console Playground',
-    title: 'Лопай шарики. Снимай напряжение.',
+    titlePrimary:
+        'Лопай шарики',
+
+    titleSecondary:
+        'Снимай напряжение',
     subtitle:
       'Восемь режимов, полноэкранная арена, короткие и непрерывные электрические разряды, а также AIM-настройки под мышь и прицел.',
     scoring: 'Режим игры',
@@ -502,7 +506,11 @@ export const BORED_CONTENT = {
   },
   en: {
     eyebrow: 'Raf</>Console Playground',
-    title: 'Pop bubbles. Clear your head.',
+    titlePrimary:
+        'Pop bubbles',
+
+    titleSecondary:
+        'Clear your head',
     subtitle:
       'Eight modes, a fullscreen arena, short and continuous electrical discharges, plus mouse and scope AIM controls.',
     scoring: 'Play style',

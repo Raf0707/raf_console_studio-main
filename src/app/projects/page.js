@@ -19,7 +19,7 @@ import {
     Star,
 } from 'lucide-react';
 
-;
+
 
 /* -------------------------------------------------------------------------- */
 /*                                PROJECT DATA                                */
@@ -861,10 +861,6 @@ export default function Page() {
                 : workingSites;
         }
 
-        if (appStatus === 'moderation') {
-            return [];
-        }
-
         const source =
             appStatus === 'published'
                 ? publishedApps
@@ -906,9 +902,7 @@ export default function Page() {
     const statusTitle =
         currentStatus === 'published'
             ? 'Published projects'
-            : currentStatus === 'moderation'
-                ? 'In review'
-                : 'Projects in development';
+            : 'Projects in development';
 
     return (
         <main
@@ -1035,9 +1029,17 @@ export default function Page() {
     "
                     >
                         Projects that turn ideas
-                        <span className="mt-2 block font-normal text-white/42">
-        into digital products
-    </span>
+                        <span
+                            className="
+        mt-[0.08em] block
+        text-[0.84em]
+        font-medium
+        leading-none
+        text-white/[0.42]
+    "
+                        >
+    into digital products
+</span>
                     </h1>
 
                     <p
@@ -1141,10 +1143,6 @@ export default function Page() {
                                     {
                                         value: 'published',
                                         label: 'Published',
-                                    },
-                                    {
-                                        value: 'moderation',
-                                        label: 'In review',
                                     },
                                     {
                                         value: 'working',

@@ -12,7 +12,11 @@ export const appStudioContentRu = {
     mobile: {
       hero: {
         badge: 'Студия мобильных приложений',
-        title: 'Создаём приложения, которыми приятно пользоваться.',
+        titlePrimary:
+            'Создаём приложения,',
+
+        titleSecondary:
+            'которыми приятно пользоваться',
         subtitle: 'Проектируем продукт, интерфейс и архитектуру как единую систему — от идеи до публикации и роста.',
         primaryAction: 'Рассчитать приложение',
         secondaryAction: 'Посмотреть процесс',
@@ -98,7 +102,11 @@ export const appStudioContentRu = {
     web: {
       hero: {
         badge: 'Веб-студия',
-        title: 'Создаём сайты, которые быстро работают и продают.',
+        titlePrimary:
+            'Создаём сайты,',
+
+        titleSecondary:
+            'которые быстро работают и продают',
         subtitle: 'Проектируем структуру, интерфейс, контент и техническую основу как единую цифровую систему для бизнеса.',
         primaryAction: 'Рассчитать сайт',
         secondaryAction: 'Посмотреть процесс',
@@ -198,7 +206,8 @@ export const appStudioContentEn = {
     mobile: {
       hero: {
         badge: 'Mobile app studio',
-        title: 'We build apps that feel premium and run reliably.',
+        titlePrimary: 'We build apps',
+        titleSecondary: 'that feel premium and run reliably',
         subtitle: 'Product, interface and architecture are designed as one system — from the first idea to release and growth.',
         primaryAction: 'Estimate my app',
         secondaryAction: 'View the process',
@@ -279,7 +288,8 @@ export const appStudioContentEn = {
     web: {
       hero: {
         badge: 'Web studio',
-        title: 'We build websites that load fast and convert.',
+        titlePrimary: 'We build websites',
+        titleSecondary: 'that load fast and convert',
         subtitle: 'Structure, interface, content and technology are designed as one digital business system.',
         primaryAction: 'Estimate my website',
         secondaryAction: 'View the process',

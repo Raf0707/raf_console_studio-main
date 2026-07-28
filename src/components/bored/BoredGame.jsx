@@ -2870,7 +2870,15 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
               <Zap className={styles.eyebrowIcon} />
               <span>{content.eyebrow}</span>
             </div>
-            <h1 className={styles.title}>{content.title}</h1>
+            <h1 className={styles.title}>
+                <span className={styles.titlePrimary}>
+                    {content.titlePrimary}
+                </span>
+
+                          <span className={styles.titleSecondary}>
+                    {content.titleSecondary}
+                </span>
+            </h1>
             <p className={styles.subtitle}>{content.subtitle}</p>
           </section>
 

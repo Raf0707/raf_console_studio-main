@@ -208,7 +208,13 @@ function Hero({ content, activeService, segmentLabels, onServiceChange, onPrimar
 
                         <div className="space-y-5">
                             <h1 className="text-balance text-5xl font-semibold leading-[0.94] tracking-[-0.065em] text-white sm:text-6xl lg:text-7xl">
-                                {content.title}
+    <span className="block">
+        {content.titlePrimary}
+    </span>
+
+                                <span className="mt-[0.08em] block text-[0.84em] font-medium leading-none text-white/[0.42]">
+        {content.titleSecondary}
+    </span>
                             </h1>
                             <p className="mx-auto max-w-2xl text-pretty text-lg leading-8 text-white/55 lg:mx-0">
                                 {content.subtitle}
