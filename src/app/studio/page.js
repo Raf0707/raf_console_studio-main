@@ -7,6 +7,8 @@ import {
   appStudioContentEn,
 } from '@/components/appstudio';
 
+;
+
 export default function StudioPage() {
   return (
     <AppStudioGlass

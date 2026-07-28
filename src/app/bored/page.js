@@ -1,4 +1,5 @@
 import BoredWithPendulum from '@/components/bored/BoredWithPendulum';
+;
 
 export const metadata = {
   title: 'AntiBoredom — Raf</>Console Studio',

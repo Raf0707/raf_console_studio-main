@@ -1,6 +1,7 @@
 'use client';
 
 import styles from './PrivacyPolicy.module.css';
+;
 
 const navigationItems = [
     {

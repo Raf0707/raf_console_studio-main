@@ -2,6 +2,7 @@
 
 import {
     createContext,
+    Suspense,
     useCallback,
     useContext,
     useEffect,
@@ -91,18 +92,48 @@ export function useNavigationLoading() {
     return context;
 }
 
+function NavigationCompletionWatcher({
+                                         finishLoading,
+                                     }) {
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    const mountedRef = useRef(false);
+
+    /*
+     * Преобразуем параметры в строку.
+     * Так эффект сработает и при изменении query-параметров,
+     * например:
+     * /studio?type=apps
+     * /studio?type=sites
+     */
+    const search = searchParams.toString();
+
+    useEffect(() => {
+        if (!mountedRef.current) {
+            mountedRef.current = true;
+            return;
+        }
+
+        finishLoading();
+    }, [
+        pathname,
+        search,
+        finishLoading,
+    ]);
+
+    return null;
+}
+
 export default function NavigationLoadingProvider({
                                                       children,
                                                   }) {
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
 
     const [isLoading, setIsLoading] =
         useState(false);
 
     const navigationIdRef = useRef(0);
     const timeoutRef = useRef(null);
-    const mountedRef = useRef(false);
 
     const startLoading = useCallback(() => {
         navigationIdRef.current += 1;
@@ -163,18 +194,7 @@ export default function NavigationLoadingProvider({
      * После фактической смены маршрута
      * закрываем loader только после paint.
      */
-    useEffect(() => {
-        if (!mountedRef.current) {
-            mountedRef.current = true;
-            return;
-        }
 
-        finishLoading();
-    }, [
-        pathname,
-        searchParams,
-        finishLoading,
-    ]);
 
     /*
      * Loader запускается сразу при pointerdown,
@@ -261,6 +281,12 @@ export default function NavigationLoadingProvider({
         <NavigationLoadingContext.Provider
             value={value}
         >
+            <Suspense fallback={null}>
+                <NavigationCompletionWatcher
+                    finishLoading={finishLoading}
+                />
+            </Suspense>
+
             {children}
 
             <div

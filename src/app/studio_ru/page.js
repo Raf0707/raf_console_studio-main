@@ -7,6 +7,8 @@ import {
   appStudioContentRu,
 } from '@/components/appstudio';
 
+;
+
 export default function StudioPage() {
   return (
     <AppStudioGlass
