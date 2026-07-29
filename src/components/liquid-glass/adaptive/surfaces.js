@@ -8,6 +8,7 @@ const SURFACE_SELECTOR = [
     '.raf-liquid-button',
     '.raf-liquid-card',
     '.project-card',
+    '[data-raf-glass-surface]',
     '[class*="glass"]',
     '[class*="Glass"]',
     '[class*="card"]',
@@ -36,6 +37,7 @@ export function isActuallyVisible(element, rect) {
 }
 
 function surfaceKind(element) {
+    if (element.matches('[data-raf-glass-surface="mobile-drawer"]')) return 1.18;
     if (element.matches('.raf-liquid-header-panel')) return 0.96;
     if (element.matches('.raf-nav-drop')) return 0.82;
     if (element.matches('.raf-liquid-segment, [data-liquid-segment="true"]')) return 0.72;
@@ -44,7 +46,11 @@ function surfaceKind(element) {
 }
 
 export function collectSurfaces(maxSurfaces) {
-    const root = document.querySelector('#raf-liquid-root') || document.body;
+    /*
+     * Drawer/Sheet-компоненты рендерятся через portal вне #raf-liquid-root.
+     * Поэтому поиск выполняется по document, а не только по корню страницы.
+     */
+    const root = document;
     const unique = new Set();
     const candidates = [];
 
@@ -64,7 +70,7 @@ export function collectSurfaces(maxSurfaces) {
         const explicitSurface = element.matches(
             '.raf-liquid-header-panel, .raf-nav-drop, .raf-liquid-segment, '
             + '[data-liquid-segment="true"], .raf-liquid-button, '
-            + '.raf-liquid-card, .project-card',
+            + '.raf-liquid-card, .project-card, [data-raf-glass-surface]',
         );
         const backdrop = style.backdropFilter || style.webkitBackdropFilter || 'none';
         const radiusValue = Number.parseFloat(style.borderTopLeftRadius) || 0;
@@ -81,7 +87,8 @@ export function collectSurfaces(maxSurfaces) {
         element.classList.add('raf-shader-surface');
 
         let priority = 100;
-        if (kind < 0.6) priority += 360;
+        if (element.matches('[data-raf-glass-surface="mobile-drawer"]')) priority += 1200;
+        else if (kind < 0.6) priority += 360;
         else if (kind < 0.8) priority += 520;
         else if (kind < 0.9) priority += 620;
         else if (element.matches('.raf-liquid-header-panel')) priority += 900;
