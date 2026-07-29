@@ -1,0 +1,32 @@
+uniform shader content;
+uniform float2 size;
+uniform float time;
+uniform float strength;
+
+float safeLength(float2 value) {
+    return max(length(value), 0.0001);
+}
+
+half4 main(float2 position) {
+    float2 safeSize = max(size, float2(1.0));
+    float2 uv = position / safeSize;
+    float2 centered = uv * 2.0 - 1.0;
+    centered.x *= safeSize.x / safeSize.y;
+
+    float radial = safeLength(centered);
+    float lens = pow(clamp(1.0 - radial, 0.0, 1.0), 1.55);
+    float2 normal = centered / safeLength(centered);
+    float2 tangent = float2(-normal.y, normal.x);
+    float wave = sin(dot(position, tangent) * 0.035 + time * 0.72);
+
+    float2 offset = normal * lens * strength * 10.0;
+    offset += tangent * wave * lens * strength * 1.8;
+
+    half4 refracted = content.eval(position + offset);
+    float topLight = pow(clamp(1.0 - uv.y, 0.0, 1.0), 5.0);
+    float rim = smoothstep(0.78, 1.0, radial);
+
+    refracted.rgb *= half(1.04 + lens * 0.1);
+    refracted.rgb += half3(topLight * 0.055 + rim * 0.035);
+    return refracted;
+}
