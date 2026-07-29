@@ -242,6 +242,37 @@ html.raf-glass-shader [class*='contactCard']:not(:hover) {
     animation: none !important;
 }
 
+/* The large Privacy Policy hero uses the same transparent shader glass as the document cards. */
+html.raf-glass-shader [class*='PrivacyPolicy_hero'].raf-shader-surface {
+    background-color: rgba(255, 255, 255, 0.002) !important;
+    background-image:
+        radial-gradient(
+            ellipse at 13% -10%,
+            rgba(255, 255, 255, 0.055),
+            transparent 36%
+        ),
+        radial-gradient(
+            ellipse at 92% 110%,
+            rgba(255, 255, 255, 0.022),
+            transparent 46%
+        ),
+        linear-gradient(
+            140deg,
+            rgba(255, 255, 255, 0.011),
+            rgba(255, 255, 255, 0.001) 54%,
+            rgba(255, 255, 255, 0.004)
+        ) !important;
+    border-color: rgba(255, 255, 255, 0.16) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+        inset 1.4rem 0 2.8rem -2.2rem rgba(255, 255, 255, 0.18),
+        inset -1.4rem 0 2.8rem -2.2rem rgba(255, 255, 255, 0.07),
+        0 1.8rem 4.8rem -3rem rgba(0, 0, 0, 0.56) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
 /* Policy document cards receive the same transparent refraction as the navigation card. */
 html.raf-glass-shader [class*='policySection'].raf-shader-surface,
 html.raf-glass-shader [class*='introduction'].raf-shader-surface {
