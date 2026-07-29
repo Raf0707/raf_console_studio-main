@@ -206,3 +206,93 @@ html.raf-glass-minimal .raf-liquid-card {
         display: none !important;
     }
 }
+
+/* ========================================================================== 
+   PAGE SURFACES — NAVBAR, CONTACTS, POLICY, STUDIO
+   ========================================================================== */
+
+/* Desktop navbar is always the same transparent shader surface on every page. */
+html.raf-glass-shader [class*='desktopNav'].raf-shader-surface {
+    background-color: rgba(255, 255, 255, 0.002) !important;
+    background-image:
+        radial-gradient(
+            ellipse at 16% -16%,
+            rgba(255, 255, 255, 0.055),
+            transparent 36%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.012),
+            rgba(255, 255, 255, 0.001) 52%,
+            rgba(255, 255, 255, 0.006)
+        ) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Contact cards keep their hover liquid motion, but the entrance animation no longer restarts after mouse leave. */
+html.raf-glass-shader [class*='contactCard'].raf-shader-surface,
+html.raf-glass-shader [class*='developerCard'].raf-shader-surface {
+    background-color: rgba(255, 255, 255, 0.003) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.raf-glass-shader [class*='contactCard']:not(:hover) {
+    animation: none !important;
+}
+
+/* Policy document cards receive the same transparent refraction as the navigation card. */
+html.raf-glass-shader [class*='policySection'].raf-shader-surface,
+html.raf-glass-shader [class*='introduction'].raf-shader-surface {
+    background-color: rgba(255, 255, 255, 0.003) !important;
+    background-image:
+        radial-gradient(
+            ellipse at 14% -12%,
+            rgba(255, 255, 255, 0.05),
+            transparent 38%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.012),
+            rgba(255, 255, 255, 0.001) 54%,
+            rgba(255, 255, 255, 0.005)
+        ) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Studio uses the Projects-style grid while preserving every existing card animation. */
+html.raf-glass-shader #raf-page-root:has(.raf-studio-liquid-card) {
+    background-color: transparent !important;
+    background-image:
+        linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0.055) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.055) 1px,
+            transparent 1px
+        ) !important;
+    background-size: 4.5rem 4.5rem !important;
+}
+
+html.raf-glass-shader .raf-studio-liquid-card.raf-shader-surface {
+    background-color: rgba(255, 255, 255, 0.003) !important;
+    background-image:
+        radial-gradient(
+            ellipse at 16% -12%,
+            rgba(255, 255, 255, 0.05),
+            transparent 38%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.012),
+            rgba(255, 255, 255, 0.001) 55%,
+            rgba(255, 255, 255, 0.005)
+        ) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
