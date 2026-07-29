@@ -4,6 +4,13 @@ const SURFACE_SELECTOR = [
     '[data-raf-glass-surface="mobile-drawer"]',
     '[data-raf-glass-surface="mobile-navigation-item"]',
 
+    '[class*="desktopNav"]',
+    '[class*="contactCard"]',
+    '[class*="developerCard"]',
+    '[class*="policySection"]',
+    '[class*="introduction"]',
+    '.raf-studio-liquid-card',
+
     '.raf-liquid-header-panel',
     '.raf-nav-drop',
     '.raf-liquid-segment',
@@ -50,6 +57,22 @@ export function isActuallyVisible(element, rect) {
 }
 
 function surfaceKind(element) {
+    if (element.matches('[class*="desktopNav"]')) {
+        return 0.96;
+    }
+
+    if (
+        element.matches(
+            '[class*="contactCard"], '
+            + '[class*="developerCard"], '
+            + '[class*="policySection"], '
+            + '[class*="introduction"], '
+            + '.raf-studio-liquid-card',
+        )
+    ) {
+        return 1.0;
+    }
+
     if (
         element.matches(
             '[data-raf-glass-surface="mobile-navigation-item"]',
@@ -121,6 +144,12 @@ export function collectSurfaces(maxSurfaces) {
         const explicitSurface = element.matches(
             '[data-raf-glass-surface="mobile-drawer"], '
             + '[data-raf-glass-surface="mobile-navigation-item"], '
+            + '[class*="desktopNav"], '
+            + '[class*="contactCard"], '
+            + '[class*="developerCard"], '
+            + '[class*="policySection"], '
+            + '[class*="introduction"], '
+            + '.raf-studio-liquid-card, '
             + '.raf-liquid-header-panel, '
             + '.raf-nav-drop, '
             + '.raf-liquid-segment, '
@@ -174,6 +203,29 @@ export function collectSurfaces(maxSurfaces) {
 
         let priority = 100;
 
+        if (element.matches('[class*="desktopNav"]')) {
+            priority += 2200;
+        }
+
+        if (
+            element.matches(
+                '[class*="policySection"], '
+                + '[class*="introduction"], '
+                + '.raf-studio-liquid-card',
+            )
+        ) {
+            priority += 1250;
+        }
+
+        if (
+            element.matches(
+                '[class*="contactCard"], '
+                + '[class*="developerCard"]',
+            )
+        ) {
+            priority += 1350;
+        }
+
         if (
             element.matches(
                 '[data-raf-glass-surface="mobile-drawer"]',
@@ -198,7 +250,7 @@ export function collectSurfaces(maxSurfaces) {
             priority += 620;
         } else if (
             element.matches(
-                '.raf-liquid-header-panel',
+                '.raf-liquid-header-panel, [class*="desktopNav"]',
             )
         ) {
             priority += 900;
