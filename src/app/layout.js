@@ -16,6 +16,7 @@ import './mobile-responsive.css';
 import '@/components/liquid-glass/liquid-glass.css';
 import '@/components/liquid-glass/adaptive-shaders.css';
 import '@/components/liquid-glass/privacy-policy-hero.css';
+import '@/components/liquid-glass/studio-crystal.css';
 import '@/components/liquid-glass/mobile-crystal-drawer.css';
 
 export const metadata = {
