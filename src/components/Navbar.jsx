@@ -66,6 +66,7 @@ export default function Navbar({
 
   const [visualIndex, setVisualIndex] = useState(routeIndex);
   const [impactId, setImpactId] = useState(0);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     setVisualIndex(routeIndex);
@@ -125,9 +126,13 @@ export default function Navbar({
       )}
 
       {showMobile && (
-        <Drawer>
+        <Drawer
+          open={mobileOpen}
+          onOpenChange={setMobileOpen}
+          shouldScaleBackground={false}
+        >
           <DrawerTrigger
-            className={styles.mobileTrigger}
+            className={`${styles.mobileTrigger} ${mobileOpen ? 'raf-mobile-drawer-open' : ''}`}
             aria-label={isRussian ? 'Открыть меню' : 'Open menu'}
           >
             <Menu className="h-5 w-5" />
@@ -136,7 +141,11 @@ export default function Navbar({
             </span>
           </DrawerTrigger>
 
-          <DrawerContent className={styles.drawerContent}>
+          <DrawerContent
+            className={styles.drawerContent}
+            data-raf-glass-surface="mobile-drawer"
+            data-raf-drawer-open={mobileOpen ? 'true' : 'false'}
+          >
             <div className={styles.drawerBody}>
               <div className={styles.drawerHeader}>
                 <p className={styles.drawerBrand}>
@@ -150,6 +159,7 @@ export default function Navbar({
                     variant="ghost"
                     size="icon"
                     className="rounded-full text-white/65 hover:bg-white/10 hover:text-white"
+                    data-raf-mobile-drawer-control="close"
                   >
                     <X className="h-5 w-5" />
                     <span className="sr-only">
@@ -172,9 +182,10 @@ export default function Navbar({
                     <li key={link.href}>
                       <DrawerClose asChild>
                         <Link
-                            href={ensureTrailingSlash(link.href)}
+                          href={ensureTrailingSlash(link.href)}
                           prefetch
                           aria-current={active ? 'page' : undefined}
+                          data-raf-mobile-drawer-item={active ? 'active' : 'idle'}
                           className={`${styles.mobileLink} ${active ? styles.mobileLinkActive : ''}`}
                         >
                           <span>{link.label}</span>
