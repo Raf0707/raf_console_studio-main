@@ -1,5 +1,8 @@
 import { clamp } from './capabilities';
 
+const PRIVACY_POLICY_HERO =
+    '[class*="PrivacyPolicy_hero"]';
+
 const SURFACE_SELECTOR = [
     '[data-raf-glass-surface="mobile-drawer"]',
     '[data-raf-glass-surface="mobile-navigation-item"]',
@@ -7,7 +10,6 @@ const SURFACE_SELECTOR = [
     '[class*="desktopNav"]',
     '[class*="contactCard"]',
     '[class*="developerCard"]',
-    '[class*="PrivacyPolicy_hero"]',
     '[class*="policySection"]',
     '[class*="introduction"]',
     '.raf-studio-liquid-card',
@@ -66,7 +68,6 @@ function surfaceKind(element) {
         element.matches(
             '[class*="contactCard"], '
             + '[class*="developerCard"], '
-            + '[class*="PrivacyPolicy_hero"], '
             + '[class*="policySection"], '
             + '[class*="introduction"], '
             + '.raf-studio-liquid-card',
@@ -122,6 +123,20 @@ export function collectSurfaces(maxSurfaces) {
      */
     const root = document;
 
+    /*
+     * Большая hero-карточка политики остаётся прозрачной CSS-карточкой.
+     * Её намеренно исключаем из WebGL, чтобы внутри не появлялись
+     * прямоугольные границы и угловатые зоны преломления.
+     */
+    root.querySelectorAll(PRIVACY_POLICY_HERO).forEach((element) => {
+        if (!(element instanceof HTMLElement)) {
+            return;
+        }
+
+        element.classList.remove('raf-shader-surface');
+        element.removeAttribute('data-raf-large-glass');
+    });
+
     const unique = new Set();
     const candidates = [];
 
@@ -129,6 +144,7 @@ export function collectSurfaces(maxSurfaces) {
         if (
             !(element instanceof HTMLElement)
             || unique.has(element)
+            || element.matches(PRIVACY_POLICY_HERO)
         ) {
             return;
         }
@@ -149,7 +165,6 @@ export function collectSurfaces(maxSurfaces) {
             + '[class*="desktopNav"], '
             + '[class*="contactCard"], '
             + '[class*="developerCard"], '
-            + '[class*="PrivacyPolicy_hero"], '
             + '[class*="policySection"], '
             + '[class*="introduction"], '
             + '.raf-studio-liquid-card, '
@@ -208,10 +223,6 @@ export function collectSurfaces(maxSurfaces) {
 
         if (element.matches('[class*="desktopNav"]')) {
             priority += 2200;
-        }
-
-        if (element.matches('[class*="PrivacyPolicy_hero"]')) {
-            priority += 1900;
         }
 
         if (
