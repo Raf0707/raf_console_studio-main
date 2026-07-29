@@ -7,6 +7,7 @@ import Footer from '@/components/layouts/Footer';
 import GlobalPointerEffects from '@/components/effects/GlobalPointerEffects';
 import InitialLoadGate from '@/components/loading/InitialLoadGate';
 import AdaptiveShaderRuntime from '@/components/liquid-glass/AdaptiveShaderRuntime';
+import FallbackSurfaceRuntime from '@/components/liquid-glass/FallbackSurfaceRuntime';
 import LiquidGlassRuntime from '@/components/liquid-glass/LiquidGlassRuntime';
 import RouteResponsiveController from '@/components/responsive/RouteResponsiveController';
 
@@ -125,6 +126,7 @@ export default function RootLayout({ children }) {
           </div>
 
           <AdaptiveShaderRuntime />
+          <FallbackSurfaceRuntime />
           <LiquidGlassRuntime />
 
           {/* Глобальные волны, плазма и остальные pointer-анимации сохранены. */}
