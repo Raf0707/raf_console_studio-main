@@ -13,7 +13,13 @@ export default function FallbackSurfaceRuntime() {
         const scan = () => {
             window.clearTimeout(timer);
             timer = window.setTimeout(() => {
-                collectSurfaces(MAX_SURFACES);
+                if (
+                    !document.documentElement.classList.contains(
+                        'raf-glass-shader',
+                    )
+                ) {
+                    collectSurfaces(MAX_SURFACES);
+                }
             }, 48);
         };
 
@@ -23,8 +29,6 @@ export default function FallbackSurfaceRuntime() {
             {
                 childList: true,
                 subtree: true,
-                attributes: true,
-                attributeFilter: ['class', 'style', 'hidden', 'aria-hidden'],
             },
         );
 
