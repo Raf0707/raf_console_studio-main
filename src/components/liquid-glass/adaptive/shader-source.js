@@ -67,7 +67,7 @@ vec3 backgroundAt(vec2 pixel, float timeValue) {
     float gridLine = 1.0 - smoothstep(0.474, 0.5, max(grid.x, grid.y));
     float diagonal = 0.5 + 0.5 * sin((uv.x * 1.15 + uv.y * 0.74) * 9.0 - timeValue * 0.11);
     float grain = hash21(floor(pixel * 0.72) + floor(timeValue * 2.0)) - 0.5;
-    float vignette = smoothstep(0.95, 0.18, length(centered));
+    float vignette = 1.0 - smoothstep(0.18, 0.95, length(centered));
 
     float luminance = 0.018;
     luminance += b1 * 0.105;
@@ -124,7 +124,8 @@ void main() {
             float topReflection = pow(clamp(1.0 - (normalized.y + 1.0) * 0.5, 0.0, 1.0), 4.0);
             float sideReflection = pow(clamp(1.0 - abs(normalized.x), 0.0, 1.0), 7.0) * 0.35;
             float innerShadow = innerBand * (0.018 + kind * 0.008);
-            float rim = smoothstep(1.8, -0.8, abs(distanceToShape)) * (0.08 + localStrength * 0.11);
+            float rim = (1.0 - smoothstep(0.0, 1.8, abs(distanceToShape)))
+                * (0.08 + localStrength * 0.11);
             float caustic = pow(max(0.0, sin((normalized.x - normalized.y) * 7.0 + u_time * 0.45)), 5.0);
             caustic *= lensCore * (0.018 + kind * 0.014) * localStrength;
 
