@@ -1,0 +1,208 @@
+/*
+ * RAF ADAPTIVE SHADER LAYER
+ * WebGL draws the monochrome scene and optical refraction. Existing CSS
+ * surfaces keep only edge light, inner shadow and content.
+ */
+
+:root {
+    --raf-shader-surface-fill: rgba(255, 255, 255, 0.012);
+    --raf-shader-surface-border: rgba(255, 255, 255, 0.18);
+    --raf-shader-inner-light: rgba(255, 255, 255, 0.26);
+    --raf-shader-inner-dark: rgba(0, 0, 0, 0.22);
+}
+
+.raf-adaptive-shader-canvas {
+    position: fixed;
+    z-index: 0;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    display: block;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0;
+    transform: translateZ(0);
+    transition: opacity 280ms ease;
+    contain: strict;
+}
+
+html.raf-glass-shader .raf-adaptive-shader-canvas {
+    opacity: 1;
+}
+
+html.raf-glass-fallback .raf-adaptive-shader-canvas,
+html.raf-glass-minimal .raf-adaptive-shader-canvas,
+html.raf-gpu-lost .raf-adaptive-shader-canvas,
+.raf-adaptive-shader-canvas[hidden] {
+    display: none !important;
+}
+
+#raf-liquid-root {
+    position: relative;
+    z-index: 1;
+    min-height: 100dvh;
+}
+
+html.raf-glass-shader,
+html.raf-glass-shader body,
+html.raf-glass-shader #raf-liquid-root,
+html.raf-glass-shader #raf-page-root,
+html.raf-glass-shader #raf-page-root > div,
+html.raf-glass-shader #raf-page-root > main,
+html.raf-glass-shader main {
+    background-color: transparent !important;
+}
+
+html.raf-glass-shader body::before,
+html.raf-glass-shader body::after,
+html.raf-glass-shader #raf-liquid-root::before,
+html.raf-glass-shader #raf-liquid-root::after {
+    opacity: 0.22;
+}
+
+html.raf-glass-shader .raf-shader-surface {
+    isolation: isolate;
+    background-color: var(--raf-shader-surface-fill) !important;
+    background-image:
+        radial-gradient(
+            ellipse at 18% 0%,
+            rgba(255, 255, 255, 0.105),
+            transparent 38%
+        ),
+        radial-gradient(
+            ellipse at 92% 112%,
+            rgba(255, 255, 255, 0.045),
+            transparent 46%
+        ),
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.026),
+            transparent 44%,
+            rgba(255, 255, 255, 0.014)
+        ) !important;
+    border-color: var(--raf-shader-surface-border) !important;
+    box-shadow:
+        inset 0 1px 0 var(--raf-shader-inner-light),
+        inset 0 -1px 0 var(--raf-shader-inner-dark),
+        inset 0.9rem 0 1.7rem -1.55rem rgba(255, 255, 255, 0.12),
+        inset -0.9rem 0 1.7rem -1.55rem rgba(255, 255, 255, 0.055),
+        0 1rem 2.8rem -1.9rem rgba(0, 0, 0, 0.46) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.raf-glass-shader .raf-shader-surface::before,
+html.raf-glass-shader .raf-shader-surface::after {
+    backface-visibility: hidden;
+}
+
+html.raf-glass-shader .project-card.raf-shader-surface,
+html.raf-glass-shader .raf-liquid-card.raf-shader-surface {
+    background-color: rgba(255, 255, 255, 0.008) !important;
+}
+
+html[data-raf-shader-quality='medium'] .raf-shader-surface::after {
+    filter: none !important;
+}
+
+html[data-raf-shader-quality='low'] .raf-shader-surface {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.18),
+        0 0.75rem 2rem -1.65rem rgba(0, 0, 0, 0.42) !important;
+}
+
+html[data-raf-shader-quality='low'] .raf-shader-surface::before,
+html[data-raf-shader-quality='low'] .raf-shader-surface::after {
+    filter: none !important;
+    mix-blend-mode: normal !important;
+}
+
+html.raf-glass-fallback .raf-shader-surface {
+    will-change: auto !important;
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 768px) {
+    html.raf-glass-fallback [data-raf-large-glass='true'],
+    html.raf-glass-fallback [data-raf-large-glass='true']:hover {
+        scale: 1 1 !important;
+        transform: none !important;
+        translate: none !important;
+        animation: none !important;
+    }
+
+    html.raf-glass-fallback [data-raf-large-glass='true']::before,
+    html.raf-glass-fallback [data-raf-large-glass='true']::after,
+    html.raf-glass-fallback [data-raf-large-glass='true']:hover::before,
+    html.raf-glass-fallback [data-raf-large-glass='true']:hover::after {
+        animation: none !important;
+    }
+}
+
+@media (hover: none), (pointer: coarse) {
+    html.raf-glass-fallback .project-card,
+    html.raf-glass-fallback .raf-liquid-card,
+    html.raf-glass-fallback .project-card::before,
+    html.raf-glass-fallback .project-card::after,
+    html.raf-glass-fallback .raf-liquid-card::before,
+    html.raf-glass-fallback .raf-liquid-card::after {
+        animation: none !important;
+        transform: none !important;
+        translate: none !important;
+        scale: 1 1 !important;
+    }
+}
+
+html.raf-glass-minimal *,
+html.raf-glass-minimal *::before,
+html.raf-glass-minimal *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
+}
+
+html.raf-glass-minimal .raf-water-cursor,
+html.raf-glass-minimal .raf-water-underlay,
+html.raf-glass-minimal .raf-water-ripple {
+    display: none !important;
+}
+
+html.raf-glass-minimal .raf-shader-surface,
+html.raf-glass-minimal .raf-liquid-header-panel,
+html.raf-glass-minimal .raf-liquid-segment,
+html.raf-glass-minimal [data-liquid-segment='true'],
+html.raf-glass-minimal .raf-liquid-button,
+html.raf-glass-minimal .project-card,
+html.raf-glass-minimal .raf-liquid-card {
+    background: rgba(18, 18, 20, 0.92) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.09),
+        0 0.75rem 1.8rem -1.45rem rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+    will-change: auto !important;
+}
+
+@media (max-width: 767px), (pointer: coarse) {
+    html.raf-glass-fallback .raf-shader-surface,
+    html.raf-glass-fallback .raf-liquid-header-panel,
+    html.raf-glass-fallback .raf-liquid-segment,
+    html.raf-glass-fallback [data-liquid-segment='true'],
+    html.raf-glass-fallback .raf-liquid-button,
+    html.raf-glass-fallback .project-card,
+    html.raf-glass-fallback .raf-liquid-card {
+        backdrop-filter: blur(7px) saturate(108%) !important;
+        -webkit-backdrop-filter: blur(7px) saturate(108%) !important;
+        will-change: auto !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .raf-adaptive-shader-canvas {
+        display: none !important;
+    }
+}
