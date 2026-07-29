@@ -1,0 +1,185 @@
+/*
+ * MOBILE CRYSTAL DRAWER
+ *
+ * The page remains sharp and readable behind the drawer. There is no blur:
+ * only a very light optical tint, edge reflections and inner shadows.
+ */
+
+[data-raf-glass-surface='mobile-drawer'] {
+    overflow: hidden;
+    background-color: rgba(6, 7, 10, 0.035) !important;
+    background-image:
+        radial-gradient(
+            ellipse at 14% -8%,
+            rgba(255, 255, 255, 0.105),
+            transparent 34%
+        ),
+        radial-gradient(
+            ellipse at 94% 108%,
+            rgba(255, 255, 255, 0.032),
+            transparent 42%
+        ),
+        linear-gradient(
+            155deg,
+            rgba(255, 255, 255, 0.022),
+            rgba(255, 255, 255, 0.004) 48%,
+            rgba(0, 0, 0, 0.018)
+        ) !important;
+    border-color: rgba(255, 255, 255, 0.22) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.42),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+        inset 1.1rem 0 2.1rem -2rem rgba(255, 255, 255, 0.14),
+        inset -1.1rem 0 2.1rem -2rem rgba(255, 255, 255, 0.07),
+        0 -1rem 2.8rem -2.25rem rgba(0, 0, 0, 0.48) !important;
+    backdrop-filter:
+        brightness(88%)
+        contrast(112%)
+        saturate(108%) !important;
+    -webkit-backdrop-filter:
+        brightness(88%)
+        contrast(112%)
+        saturate(108%) !important;
+    isolation: isolate;
+}
+
+[data-raf-glass-surface='mobile-drawer']::before {
+    opacity: 1 !important;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.07),
+            rgba(255, 255, 255, 0.01) 12%,
+            transparent 28%
+        ),
+        radial-gradient(
+            ellipse at 22% 0%,
+            rgba(255, 255, 255, 0.055),
+            transparent 42%
+        ) !important;
+    filter: none !important;
+}
+
+[data-raf-glass-surface='mobile-drawer']::after {
+    opacity: 0.78 !important;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.82),
+        transparent
+    ) !important;
+    filter: none !important;
+}
+
+[data-raf-glass-surface='mobile-drawer'] > div:first-child {
+    background: rgba(255, 255, 255, 0.42) !important;
+    box-shadow: 0 0 0.8rem rgba(255, 255, 255, 0.13);
+}
+
+[data-raf-glass-surface='mobile-drawer'] [class*='drawerBody'] {
+    background: transparent !important;
+}
+
+[data-raf-glass-surface='mobile-drawer'] [class*='drawerInstall'],
+[data-raf-glass-surface='mobile-drawer'] [data-raf-mobile-drawer-control],
+[data-raf-glass-surface='mobile-drawer'] [data-raf-mobile-drawer-item] {
+    background-color: rgba(255, 255, 255, 0.008) !important;
+    background-image:
+        radial-gradient(
+            ellipse at 16% -12%,
+            rgba(255, 255, 255, 0.075),
+            transparent 42%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.018),
+            transparent 58%,
+            rgba(0, 0, 0, 0.012)
+        ) !important;
+    border-color: rgba(255, 255, 255, 0.14) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.17),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+        0 0.7rem 1.8rem -1.55rem rgba(0, 0, 0, 0.46) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+[data-raf-glass-surface='mobile-drawer'] [data-raf-mobile-drawer-item] {
+    color: rgba(255, 255, 255, 0.86) !important;
+    text-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.72),
+        0 0 0.65rem rgba(0, 0, 0, 0.32);
+}
+
+[data-raf-glass-surface='mobile-drawer']
+[data-raf-mobile-drawer-item='active'] {
+    background-color: rgba(255, 255, 255, 0.016) !important;
+    background-image:
+        radial-gradient(
+            ellipse at 18% -10%,
+            rgba(255, 255, 255, 0.15),
+            transparent 44%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.038),
+            rgba(255, 255, 255, 0.008) 58%,
+            transparent
+        ) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.31),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+        0 0.8rem 2rem -1.65rem rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Full shader mode: crystal-clear surface, with refraction drawn by WebGL. */
+html.raf-glass-shader [data-raf-glass-surface='mobile-drawer'] {
+    background-color: rgba(255, 255, 255, 0.002) !important;
+    background-image:
+        radial-gradient(
+            ellipse at 16% -4%,
+            rgba(255, 255, 255, 0.075),
+            transparent 34%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.012),
+            transparent 54%,
+            rgba(255, 255, 255, 0.004)
+        ) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* CSS fallback stays sharp: only brightness/contrast, never frosted blur. */
+html.raf-glass-fallback [data-raf-glass-surface='mobile-drawer'] {
+    background-color: rgba(5, 6, 9, 0.055) !important;
+    backdrop-filter:
+        brightness(84%)
+        contrast(110%)
+        saturate(106%) !important;
+    -webkit-backdrop-filter:
+        brightness(84%)
+        contrast(110%)
+        saturate(106%) !important;
+}
+
+/* Emergency mode favours readability and low compositor cost. */
+html.raf-glass-minimal [data-raf-glass-surface='mobile-drawer'] {
+    background: rgba(12, 13, 16, 0.88) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 -0.75rem 2rem -1.5rem rgba(0, 0, 0, 0.62) !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    [data-raf-glass-surface='mobile-drawer'] {
+        background: rgba(12, 13, 16, 0.9) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+}
