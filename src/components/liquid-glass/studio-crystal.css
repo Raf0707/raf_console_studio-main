@@ -1,0 +1,274 @@
+/*
+ * STUDIO CRYSTAL SURFACES
+ *
+ * Scoped only to the Studio screens. The existing liquid hover, light sweep,
+ * edge flow and button animations remain untouched.
+ */
+
+/* --------------------------------------------------------------------------
+   PROJECTS-STYLE CHECKERBOARD BACKGROUND
+   -------------------------------------------------------------------------- */
+
+html.raf-glass-shader #raf-page-root:has(.raf-studio-liquid-card),
+html.raf-glass-shader #raf-page-root:has(.raf-studio-liquid-card) > main,
+html.raf-glass-fallback #raf-page-root:has(.raf-studio-liquid-card),
+html.raf-glass-fallback #raf-page-root:has(.raf-studio-liquid-card) > main {
+    background-color: transparent !important;
+}
+
+/* Remove the old dense Studio gradient without changing its DOM structure. */
+html.raf-glass-shader
+#raf-page-root:has(.raf-studio-liquid-card)
+main > div[class*='fixed'][class*='-z-20'],
+html.raf-glass-fallback
+#raf-page-root:has(.raf-studio-liquid-card)
+main > div[class*='fixed'][class*='-z-20'] {
+    opacity: 0 !important;
+    background: transparent !important;
+}
+
+/* Reuse the same cell size and line density as the Projects screen. */
+html.raf-glass-shader
+#raf-page-root:has(.raf-studio-liquid-card)
+main > div[class*='fixed'][class*='-z-10'],
+html.raf-glass-fallback
+#raf-page-root:has(.raf-studio-liquid-card)
+main > div[class*='fixed'][class*='-z-10'] {
+    opacity: 0.055 !important;
+
+    background-image:
+        linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0.12) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.12) 1px,
+            transparent 1px
+        ) !important;
+
+    background-size: 4.5rem 4.5rem !important;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent 92%
+        ) !important;
+
+    -webkit-mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent 92%
+        ) !important;
+}
+
+/* Soft monochrome illumination behind the grid, without a solid fill. */
+html.raf-glass-shader
+#raf-page-root:has(.raf-studio-liquid-card)::before,
+html.raf-glass-fallback
+#raf-page-root:has(.raf-studio-liquid-card)::before {
+    position: fixed;
+    z-index: 0;
+    inset: 0;
+
+    pointer-events: none;
+    content: '';
+
+    background:
+        radial-gradient(
+            40rem circle at 4% 14%,
+            rgba(255, 255, 255, 0.07),
+            transparent 70%
+        ),
+        radial-gradient(
+            44rem circle at 98% 45%,
+            rgba(255, 255, 255, 0.045),
+            transparent 72%
+        );
+}
+
+/* --------------------------------------------------------------------------
+   ALL STUDIO CARDS — TRANSPARENT GLASS
+   -------------------------------------------------------------------------- */
+
+html.raf-glass-shader
+#raf-page-root:has(.raf-studio-liquid-card)
+.raf-studio-liquid-card,
+html.raf-glass-fallback
+#raf-page-root:has(.raf-studio-liquid-card)
+.raf-studio-liquid-card {
+    background-color: rgba(255, 255, 255, 0.002) !important;
+
+    background-image:
+        radial-gradient(
+            ellipse at 16% -12%,
+            rgba(255, 255, 255, 0.045),
+            transparent 39%
+        ),
+        radial-gradient(
+            ellipse at 94% 112%,
+            rgba(255, 255, 255, 0.018),
+            transparent 48%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.009),
+            rgba(255, 255, 255, 0.001) 55%,
+            rgba(255, 255, 255, 0.004)
+        ) !important;
+
+    border-color: rgba(255, 255, 255, 0.14) !important;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+        inset 1rem 0 2rem -1.7rem rgba(255, 255, 255, 0.11),
+        inset -1rem 0 2rem -1.7rem rgba(255, 255, 255, 0.045),
+        0 1.4rem 3.8rem -2.6rem rgba(0, 0, 0, 0.5)
+        !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Hover remains transparent; existing liquid animations continue to run. */
+html.raf-glass-shader
+#raf-page-root:has(.raf-studio-liquid-card)
+.raf-studio-liquid-card:hover,
+html.raf-glass-fallback
+#raf-page-root:has(.raf-studio-liquid-card)
+.raf-studio-liquid-card:hover {
+    background-color: rgba(255, 255, 255, 0.004) !important;
+
+    background-image:
+        radial-gradient(
+            ellipse at 16% -12%,
+            rgba(255, 255, 255, 0.065),
+            transparent 40%
+        ),
+        radial-gradient(
+            ellipse at 94% 112%,
+            rgba(255, 255, 255, 0.026),
+            transparent 48%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.013),
+            rgba(255, 255, 255, 0.002) 55%,
+            rgba(255, 255, 255, 0.006)
+        ) !important;
+
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* The shader runtime may add this class after the first frame. Keep the same
+   transparent appearance before and after registration. */
+html.raf-glass-shader
+#raf-page-root:has(.raf-studio-liquid-card)
+.raf-studio-liquid-card.raf-shader-surface {
+    background-color: rgba(255, 255, 255, 0.002) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   NESTED CARD LAYERS
+   -------------------------------------------------------------------------- */
+
+/* Hero preview stage and form wrapper must not place an opaque rectangle
+   inside an otherwise transparent outer card. */
+html.raf-glass-shader
+#raf-page-root:has(.raf-studio-liquid-card)
+.raf-studio-liquid-card [class*='bg-gradient-to-br'],
+html.raf-glass-fallback
+#raf-page-root:has(.raf-studio-liquid-card)
+.raf-studio-liquid-card [class*='bg-gradient-to-br'],
+html.raf-glass-shader
+#raf-page-root:has(.raf-studio-liquid-card)
+.raf-studio-liquid-card [class*='bg-black/10'],
+html.raf-glass-fallback
+#raf-page-root:has(.raf-studio-liquid-card)
+.raf-studio-liquid-card [class*='bg-black/10'],
+html.raf-glass-shader
+#raf-page-root:has(.raf-studio-liquid-card)
+.raf-studio-liquid-card [class*='bg-black/12'],
+html.raf-glass-fallback
+#raf-page-root:has(.raf-studio-liquid-card)
+.raf-studio-liquid-card [class*='bg-black/12'],
+html.raf-glass-shader
+#raf-page-root:has(.raf-studio-liquid-card)
+.raf-studio-liquid-card [class*='bg-black/20'],
+html.raf-glass-fallback
+#raf-page-root:has(.raf-studio-liquid-card)
+.raf-studio-liquid-card [class*='bg-black/20'] {
+    background-color: rgba(255, 255, 255, 0.002) !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* The order form is itself a large card inside GlassSurface. */
+html.raf-glass-shader
+#raf-page-root:has(.raf-studio-liquid-card)
+form[class*='rounded'],
+html.raf-glass-fallback
+#raf-page-root:has(.raf-studio-liquid-card)
+form[class*='rounded'] {
+    background-color: rgba(255, 255, 255, 0.003) !important;
+    background-image: none !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        0 1.2rem 3rem -2.2rem rgba(0, 0, 0, 0.44)
+        !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Consent blocks remain readable but no longer look like opaque cards. */
+html.raf-glass-shader
+#raf-page-root:has(.raf-studio-liquid-card)
+form label[class*='rounded'],
+html.raf-glass-fallback
+#raf-page-root:has(.raf-studio-liquid-card)
+form label[class*='rounded'] {
+    background-color: rgba(255, 255, 255, 0.012) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* The Mobile / Websites selector is a glass control, not a dark slab. */
+html.raf-glass-shader
+#raf-page-root:has(.raf-studio-liquid-card)
+div[class*='max-w-xl'][class*='bg-black/25'],
+html.raf-glass-fallback
+#raf-page-root:has(.raf-studio-liquid-card)
+div[class*='max-w-xl'][class*='bg-black/25'] {
+    background-color: rgba(255, 255, 255, 0.004) !important;
+    background-image: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Fallback remains transparent and sharp; only WebGL supplies refraction. */
+html.raf-glass-fallback
+#raf-page-root:has(.raf-studio-liquid-card)
+.raf-studio-liquid-card {
+    background-color: rgba(8, 9, 12, 0.16) !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    #raf-page-root:has(.raf-studio-liquid-card)
+    .raf-studio-liquid-card,
+    #raf-page-root:has(.raf-studio-liquid-card)
+    form[class*='rounded'] {
+        background-color: rgba(14, 15, 18, 0.86) !important;
+    }
+}
