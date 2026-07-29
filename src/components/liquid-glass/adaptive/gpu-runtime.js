@@ -7,7 +7,8 @@ function createShader(gl, type, source) {
     gl.compileShader(shader);
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        const message = gl.getShaderInfoLog(shader) || 'Shader compilation failed';
+        const message = gl.getShaderInfoLog(shader)
+            || 'Shader compilation failed';
         gl.deleteShader(shader);
         throw new Error(message);
     }
@@ -27,7 +28,8 @@ function createProgram(gl) {
     gl.deleteShader(fragment);
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        const message = gl.getProgramInfoLog(program) || 'Shader linking failed';
+        const message = gl.getProgramInfoLog(program)
+            || 'Shader linking failed';
         gl.deleteProgram(program);
         throw new Error(message);
     }
@@ -35,7 +37,12 @@ function createProgram(gl) {
     return program;
 }
 
-export function createGpuRuntime(canvas, platform, onContextLost, onContextRestored) {
+export function createGpuRuntime(
+    canvas,
+    platform,
+    onContextLost,
+    onContextRestored,
+) {
     const gl = canvas.getContext('webgl2', {
         alpha: false,
         antialias: false,
@@ -52,7 +59,11 @@ export function createGpuRuntime(canvas, platform, onContextLost, onContextResto
     }
 
     canvas.addEventListener('webglcontextlost', onContextLost, false);
-    canvas.addEventListener('webglcontextrestored', onContextRestored, false);
+    canvas.addEventListener(
+        'webglcontextrestored',
+        onContextRestored,
+        false,
+    );
 
     const compileStart = performance.now();
     const program = createProgram(gl);
@@ -100,7 +111,7 @@ export function createGpuRuntime(canvas, platform, onContextLost, onContextResto
 
     const benchmarkMs = performance.now() - benchmarkStart
         + (performance.now() - compileStart) * 0.25;
-    const initial = selectInitialQuality(gl, gpu, platform, benchmarkMs);
+    const initial = selectInitialQuality(gpu, platform, benchmarkMs);
 
     return {
         gl,
@@ -111,8 +122,16 @@ export function createGpuRuntime(canvas, platform, onContextLost, onContextResto
         benchmarkMs,
         initial,
         destroy() {
-            canvas.removeEventListener('webglcontextlost', onContextLost, false);
-            canvas.removeEventListener('webglcontextrestored', onContextRestored, false);
+            canvas.removeEventListener(
+                'webglcontextlost',
+                onContextLost,
+                false,
+            );
+            canvas.removeEventListener(
+                'webglcontextrestored',
+                onContextRestored,
+                false,
+            );
             if (!gl.isContextLost()) {
                 gl.deleteBuffer(buffer);
                 gl.deleteProgram(program);
