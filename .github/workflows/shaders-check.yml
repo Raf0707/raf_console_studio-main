@@ -1,0 +1,35 @@
+name: Shader branch checks
+
+on:
+  push:
+    branches: ["shaders"]
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_TELEGRAM_BOT_TOKEN: ${{ secrets.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN }}
+      NEXT_PUBLIC_TELEGRAM_CHAT_ID: ${{ secrets.NEXT_PUBLIC_TELEGRAM_CHAT_ID }}
+      NEXT_PUBLIC_TELEGRAM_BOT_TOKEN_WEB: ${{ secrets.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN_WEB }}
+      NEXT_PUBLIC_TELEGRAM_CHAT_ID_WEB: ${{ secrets.NEXT_PUBLIC_TELEGRAM_CHAT_ID_WEB }}
+    steps:
+      - name: Checkout shaders branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static Next.js export
+        run: npm run build
