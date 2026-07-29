@@ -1,0 +1,69 @@
+/*
+ * PRIVACY POLICY HERO
+ *
+ * The large legal-document card keeps its original rounded composition.
+ * It is made transparent with CSS only and is deliberately excluded from
+ * the WebGL surface list, because a full-screen rectangular refraction layer
+ * creates visible straight edges inside this unusually large card.
+ */
+
+html.raf-glass-shader [class*='PrivacyPolicy_hero'] {
+    overflow: hidden !important;
+
+    border-radius:
+        clamp(1.8rem, 4vw, 3.4rem) !important;
+
+    clip-path:
+        inset(0 round clamp(1.8rem, 4vw, 3.4rem));
+
+    contain: paint;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.018) 0%,
+            rgba(255, 255, 255, 0.006) 44%,
+            rgba(255, 255, 255, 0.002) 100%
+        ) !important;
+
+    background-color:
+        rgba(255, 255, 255, 0.001) !important;
+
+    border-color:
+        rgba(255, 255, 255, 0.115) !important;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.025),
+        0 2rem 7rem rgba(0, 0, 0, 0.24) !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/*
+ * Safety override for a hot reload or an already mounted route. The runtime
+ * removes this class as well, but these declarations prevent the generic
+ * shader-surface fill from changing the original Privacy card design.
+ */
+html.raf-glass-shader
+[class*='PrivacyPolicy_hero'].raf-shader-surface {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.018) 0%,
+            rgba(255, 255, 255, 0.006) 44%,
+            rgba(255, 255, 255, 0.002) 100%
+        ) !important;
+
+    background-color:
+        rgba(255, 255, 255, 0.001) !important;
+
+    border-color:
+        rgba(255, 255, 255, 0.115) !important;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.025),
+        0 2rem 7rem rgba(0, 0, 0, 0.24) !important;
+}
