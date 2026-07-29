@@ -6,13 +6,14 @@ import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 import GlobalPointerEffects from '@/components/effects/GlobalPointerEffects';
 import InitialLoadGate from '@/components/loading/InitialLoadGate';
+import AdaptiveShaderRuntime from '@/components/liquid-glass/AdaptiveShaderRuntime';
 import LiquidGlassRuntime from '@/components/liquid-glass/LiquidGlassRuntime';
 import RouteResponsiveController from '@/components/responsive/RouteResponsiveController';
-
 
 import './globals.css';
 import './mobile-responsive.css';
 import '@/components/liquid-glass/liquid-glass.css';
+import '@/components/liquid-glass/adaptive-shaders.css';
 
 export const metadata = {
   title: 'Raf</>Console Studio',
@@ -113,7 +114,6 @@ export default function RootLayout({ children }) {
           <RouteResponsiveController />
           <InitialLoadGate />
 
-
           <div id="raf-liquid-root">
             <Header />
 
@@ -124,8 +124,8 @@ export default function RootLayout({ children }) {
             <Footer />
           </div>
 
-            <LiquidGlassRuntime />
-
+          <AdaptiveShaderRuntime />
+          <LiquidGlassRuntime />
 
           {/* Глобальные волны, плазма и остальные pointer-анимации сохранены. */}
           {/*<GlobalPointerEffects />*/}
