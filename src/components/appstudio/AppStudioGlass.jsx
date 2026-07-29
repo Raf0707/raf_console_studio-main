@@ -323,7 +323,7 @@ function Intro({ content, form }) {
             </GlassSurface>
 
             <GlassSurface className="p-3 sm:p-4">
-                <div className="rounded-[1.5rem] bg-black/10 p-1">
+                <div data-raf-shader-ignore="true">
                     {form}
                 </div>
             </GlassSurface>
@@ -635,7 +635,7 @@ export function AppStudioGlass({ content, forms, initialService = 'mobile' }) {
     };
 
     return (
-        <main className="relative isolate min-h-screen overflow-hidden bg-neutral-950 text-white">
+        <main className="raf-studio-page relative isolate min-h-screen overflow-hidden bg-transparent text-white">
 
             <style jsx global>{`
                 .raf-studio-liquid-card {
@@ -931,9 +931,6 @@ export function AppStudioGlass({ content, forms, initialService = 'mobile' }) {
                     }
                 }
             `}</style>
-            <div className="pointer-events-none fixed inset-0 -z-20 bg-[radial-gradient(circle_at_18%_12%,rgba(255,255,255,.08),transparent_26%),radial-gradient(circle_at_82%_30%,rgba(255,255,255,.05),transparent_24%),linear-gradient(to_bottom,#050505,#101010_45%,#050505)]" />
-            <div className="pointer-events-none fixed inset-0 -z-10 opacity-[0.16] [background-image:linear-gradient(rgba(255,255,255,.055)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.04)_1px,transparent_1px)] [background-size:72px_72px] [mask-image:linear-gradient(to_bottom,black,transparent_90%)]" />
-
             <div className="mx-auto w-full max-w-[96rem] space-y-28 px-4 pb-28 sm:px-6 lg:space-y-36 lg:px-8">
                 <Hero
                     content={activeContent.hero}

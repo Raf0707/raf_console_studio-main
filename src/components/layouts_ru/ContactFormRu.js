@@ -74,6 +74,11 @@ export default function ContactFormAppRu() {
 
     const handleSubmit = async (e) => {
         if (!personalDataConsent) {
+            toast({
+                title: "Согласие не получено",
+                description: "Пожалуйста, дайте согласие на обработку персональных данных",
+                variant: "destructive",
+            });
             return;
         }
 
@@ -124,8 +129,9 @@ export default function ContactFormAppRu() {
     return (
         <>
             <form
+                data-form-version="app-ru"
                 onSubmit={handleSubmit}
-                className="bg-white/70 dark:bg-white/5 rounded-2xl shadow-lg p-8 flex-1 space-y-4"
+                className="raf-studio-order-form flex-1 space-y-4 p-8"
             >
                 <div>
                     <label className="block text-sm font-medium mb-1">Ваше имя*</label>
@@ -164,8 +170,8 @@ export default function ContactFormAppRu() {
                             className="text-xs tabular-nums text-black/40 dark:text-white/40"
                             aria-live="polite"
                         >
-      {comment.length}/500
-    </span>
+                            {comment.length}/500
+                        </span>
                     </div>
 
                     <textarea
@@ -181,7 +187,7 @@ export default function ContactFormAppRu() {
                     />
                 </div>
 
-                <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-black/[0.08] bg-white/35 p-4 backdrop-blur-xl transition hover:bg-white/55 dark:border-white/[0.09] dark:bg-white/[0.035] dark:hover:bg-white/[0.06]">
+                <label className="raf-studio-consent-row flex cursor-pointer items-start gap-3 p-4">
                     <input
                         type="checkbox"
                         name="personalDataConsent"
@@ -191,10 +197,11 @@ export default function ContactFormAppRu() {
                         className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-black dark:accent-white"
                     />
 
-                    <span className="text-xs leading-5 text-black/55 dark:text-white/55">
-    Я даю согласие на обработку моих персональных данных исключительно
-    в целях рассмотрения заявки, обратной связи, подготовки предложения
-    и оказания запрошенных услуг в соответствии с{' '}
+                    <span className="min-w-0 flex-1 text-xs leading-5 text-black/55 dark:text-white/55">
+                        Я даю согласие на обработку моих персональных данных
+                        исключительно в целях рассмотрения заявки, обратной связи,
+                        подготовки предложения и оказания запрошенных услуг в
+                        соответствии с{' '}
                         <a
                             href="/privacy_policy_ru"
                             target="_blank"
@@ -202,10 +209,10 @@ export default function ContactFormAppRu() {
                             className="font-medium text-black underline decoration-black/25 underline-offset-2 transition hover:decoration-black dark:text-white dark:decoration-white/30 dark:hover:decoration-white"
                             onClick={(event) => event.stopPropagation()}
                         >
-      политикой обработки персональных данных
-    </a>
-    .
-  </span>
+                            политикой обработки персональных данных
+                        </a>
+                        .
+                    </span>
                 </label>
 
                 <Button type="submit" className="w-full" disabled={isLoading}>

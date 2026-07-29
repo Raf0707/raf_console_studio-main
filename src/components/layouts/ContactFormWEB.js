@@ -194,7 +194,7 @@ export default function ContactFormWEB() {
             <form
                 id="contact-form"
                 onSubmit={handleSubmit}
-                className="flex-1 space-y-4 rounded-2xl bg-white/70 p-8 shadow-lg dark:bg-white/5"
+                className="raf-studio-order-form flex-1 space-y-4 p-8"
             >
                 <div>
                     <label
@@ -305,7 +305,7 @@ export default function ContactFormWEB() {
                     )}
                 </div>
 
-                <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-black/[0.08] bg-white/35 p-4 backdrop-blur-xl transition hover:bg-white/55 dark:border-white/[0.09] dark:bg-white/[0.035] dark:hover:bg-white/[0.06]">
+                <label className="raf-studio-consent-row flex cursor-pointer items-start gap-3 p-4">
                     <input
                         type="checkbox"
                         name="personalDataConsent"
@@ -328,7 +328,7 @@ export default function ContactFormWEB() {
                             className="font-medium text-black underline decoration-black/25 underline-offset-2 transition hover:decoration-black dark:text-white dark:decoration-white/30 dark:hover:decoration-white"
                             onClick={(event) => event.stopPropagation()}
                         >
-                            Privacy Policy
+                            Personal Data Processing Policy
                         </a>
                         .
                     </span>

@@ -6,70 +6,55 @@
  */
 
 /* --------------------------------------------------------------------------
-   PROJECTS-STYLE CHECKERBOARD BACKGROUND
+   GLOBAL CHECKERBOARD BACKGROUND
    -------------------------------------------------------------------------- */
 
-html.raf-glass-shader #raf-page-root:has(.raf-studio-liquid-card),
-html.raf-glass-shader #raf-page-root:has(.raf-studio-liquid-card) > main,
-html.raf-glass-fallback #raf-page-root:has(.raf-studio-liquid-card),
-html.raf-glass-fallback #raf-page-root:has(.raf-studio-liquid-card) > main {
-    background-color: transparent !important;
-}
-
-/* Remove the old dense Studio gradient without changing its DOM structure. */
-html.raf-glass-shader
-#raf-page-root:has(.raf-studio-liquid-card)
-main > div[class*='fixed'][class*='-z-20'],
-html.raf-glass-fallback
-#raf-page-root:has(.raf-studio-liquid-card)
-main > div[class*='fixed'][class*='-z-20'] {
-    opacity: 0 !important;
+/*
+ * Studio does not draw its own background or its own grid.
+ * The shared site background remains visible underneath, exactly as it does
+ * on the Projects screen.
+ */
+html.raf-glass-shader #raf-page-root:has(.raf-studio-page),
+html.raf-glass-shader #raf-page-root:has(.raf-studio-page) > main,
+html.raf-glass-fallback #raf-page-root:has(.raf-studio-page),
+html.raf-glass-fallback #raf-page-root:has(.raf-studio-page) > main,
+html.raf-glass-shader .raf-studio-page,
+html.raf-glass-fallback .raf-studio-page {
     background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
 }
 
-/* Reuse the same cell size and line density as the Projects screen. */
+/*
+ * Defensive cleanup for old Studio-specific fixed background layers.
+ * These selectors are harmless when the JSX layers have already been removed.
+ */
 html.raf-glass-shader
-#raf-page-root:has(.raf-studio-liquid-card)
-main > div[class*='fixed'][class*='-z-10'],
+.raf-studio-page > div[class*='fixed'][class*='-z-20'],
+html.raf-glass-shader
+.raf-studio-page > div[class*='fixed'][class*='-z-10'],
 html.raf-glass-fallback
-#raf-page-root:has(.raf-studio-liquid-card)
-main > div[class*='fixed'][class*='-z-10'] {
-    opacity: 0.055 !important;
+.raf-studio-page > div[class*='fixed'][class*='-z-20'],
+html.raf-glass-fallback
+.raf-studio-page > div[class*='fixed'][class*='-z-10'] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
 
-    background-image:
-        linear-gradient(
-            to right,
-            rgba(255, 255, 255, 0.12) 1px,
-            transparent 1px
-        ),
-        linear-gradient(
-            to bottom,
-            rgba(255, 255, 255, 0.12) 1px,
-            transparent 1px
-        ) !important;
+    background: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
 
-    background-size: 4.5rem 4.5rem !important;
-
-    mask-image:
-        linear-gradient(
-            to bottom,
-            black,
-            transparent 92%
-        ) !important;
-
-    -webkit-mask-image:
-        linear-gradient(
-            to bottom,
-            black,
-            transparent 92%
-        ) !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
 }
 
-/* Soft monochrome illumination behind the grid, without a solid fill. */
-html.raf-glass-shader
-#raf-page-root:has(.raf-studio-liquid-card)::before,
-html.raf-glass-fallback
-#raf-page-root:has(.raf-studio-liquid-card)::before {
+/*
+ * Soft monochrome illumination only.
+ * No linear-gradient is used here, so this layer cannot create a grid.
+ */
+html.raf-glass-shader .raf-studio-page::before,
+html.raf-glass-fallback .raf-studio-page::before {
     position: fixed;
     z-index: 0;
     inset: 0;
@@ -78,16 +63,28 @@ html.raf-glass-fallback
     content: '';
 
     background:
-        radial-gradient(
-            40rem circle at 4% 14%,
-            rgba(255, 255, 255, 0.07),
-            transparent 70%
-        ),
-        radial-gradient(
-            44rem circle at 98% 45%,
-            rgba(255, 255, 255, 0.045),
-            transparent 72%
-        );
+            radial-gradient(
+                    40rem circle at 4% 14%,
+                    rgba(255, 255, 255, 0.07),
+                    transparent 70%
+            ),
+            radial-gradient(
+                    44rem circle at 98% 45%,
+                    rgba(255, 255, 255, 0.045),
+                    transparent 72%
+            );
+}
+
+/*
+ * Do not allow another Studio pseudo-element to add a second pattern.
+ */
+html.raf-glass-shader .raf-studio-page::after,
+html.raf-glass-fallback .raf-studio-page::after {
+    display: none !important;
+    content: none !important;
+
+    background: none !important;
+    background-image: none !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -100,76 +97,92 @@ html.raf-glass-shader
 html.raf-glass-fallback
 #raf-page-root:has(.raf-studio-liquid-card)
 .raf-studio-liquid-card {
-    background-color: rgba(255, 255, 255, 0.002) !important;
+    background-color:
+            rgba(255, 255, 255, 0.002) !important;
 
     background-image:
-        radial-gradient(
-            ellipse at 16% -12%,
-            rgba(255, 255, 255, 0.045),
-            transparent 39%
-        ),
-        radial-gradient(
-            ellipse at 94% 112%,
-            rgba(255, 255, 255, 0.018),
-            transparent 48%
-        ),
-        linear-gradient(
-            145deg,
-            rgba(255, 255, 255, 0.009),
-            rgba(255, 255, 255, 0.001) 55%,
-            rgba(255, 255, 255, 0.004)
-        ) !important;
+            radial-gradient(
+                    ellipse at 16% -12%,
+                    rgba(255, 255, 255, 0.045),
+                    transparent 39%
+            ),
+            radial-gradient(
+                    ellipse at 94% 112%,
+                    rgba(255, 255, 255, 0.018),
+                    transparent 48%
+            ),
+            linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.009),
+                    rgba(255, 255, 255, 0.001) 55%,
+                    rgba(255, 255, 255, 0.004)
+            ) !important;
 
-    border-color: rgba(255, 255, 255, 0.14) !important;
+    border-color:
+            rgba(255, 255, 255, 0.14) !important;
 
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.22),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.2),
-        inset 1rem 0 2rem -1.7rem rgba(255, 255, 255, 0.11),
-        inset -1rem 0 2rem -1.7rem rgba(255, 255, 255, 0.045),
-        0 1.4rem 3.8rem -2.6rem rgba(0, 0, 0, 0.5)
-        !important;
+            inset 0 1px 0
+            rgba(255, 255, 255, 0.22),
+            inset 0 -1px 0
+            rgba(0, 0, 0, 0.2),
+            inset 1rem 0 2rem -1.7rem
+            rgba(255, 255, 255, 0.11),
+            inset -1rem 0 2rem -1.7rem
+            rgba(255, 255, 255, 0.045),
+            0 1.4rem 3.8rem -2.6rem
+            rgba(0, 0, 0, 0.5)
+    !important;
 
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 }
 
-/* Hover remains transparent; existing liquid animations continue to run. */
+/*
+ * Hover remains transparent.
+ * Existing liquid animations continue to run.
+ */
 html.raf-glass-shader
 #raf-page-root:has(.raf-studio-liquid-card)
 .raf-studio-liquid-card:hover,
 html.raf-glass-fallback
 #raf-page-root:has(.raf-studio-liquid-card)
 .raf-studio-liquid-card:hover {
-    background-color: rgba(255, 255, 255, 0.004) !important;
+    background-color:
+            rgba(255, 255, 255, 0.004) !important;
 
     background-image:
-        radial-gradient(
-            ellipse at 16% -12%,
-            rgba(255, 255, 255, 0.065),
-            transparent 40%
-        ),
-        radial-gradient(
-            ellipse at 94% 112%,
-            rgba(255, 255, 255, 0.026),
-            transparent 48%
-        ),
-        linear-gradient(
-            145deg,
-            rgba(255, 255, 255, 0.013),
-            rgba(255, 255, 255, 0.002) 55%,
-            rgba(255, 255, 255, 0.006)
-        ) !important;
+            radial-gradient(
+                    ellipse at 16% -12%,
+                    rgba(255, 255, 255, 0.065),
+                    transparent 40%
+            ),
+            radial-gradient(
+                    ellipse at 94% 112%,
+                    rgba(255, 255, 255, 0.026),
+                    transparent 48%
+            ),
+            linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.013),
+                    rgba(255, 255, 255, 0.002) 55%,
+                    rgba(255, 255, 255, 0.006)
+            ) !important;
 
-    border-color: rgba(255, 255, 255, 0.2) !important;
+    border-color:
+            rgba(255, 255, 255, 0.2) !important;
 }
 
-/* The shader runtime may add this class after the first frame. Keep the same
-   transparent appearance before and after registration. */
+/*
+ * The shader runtime may add this class after the first frame.
+ * Keep the same transparent appearance before and after registration.
+ */
 html.raf-glass-shader
 #raf-page-root:has(.raf-studio-liquid-card)
 .raf-studio-liquid-card.raf-shader-surface {
-    background-color: rgba(255, 255, 255, 0.002) !important;
+    background-color:
+            rgba(255, 255, 255, 0.002) !important;
+
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 }
@@ -178,8 +191,10 @@ html.raf-glass-shader
    NESTED CARD LAYERS
    -------------------------------------------------------------------------- */
 
-/* Hero preview stage and form wrapper must not place an opaque rectangle
-   inside an otherwise transparent outer card. */
+/*
+ * Hero preview stage and form wrapper must not place an opaque rectangle
+ * inside an otherwise transparent outer card.
+ */
 html.raf-glass-shader
 #raf-page-root:has(.raf-studio-liquid-card)
 .raf-studio-liquid-card [class*='bg-gradient-to-br'],
@@ -204,64 +219,77 @@ html.raf-glass-shader
 html.raf-glass-fallback
 #raf-page-root:has(.raf-studio-liquid-card)
 .raf-studio-liquid-card [class*='bg-black/20'] {
-    background-color: rgba(255, 255, 255, 0.002) !important;
+    background-color:
+            rgba(255, 255, 255, 0.002) !important;
+
     background-image: none !important;
+
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 }
 
-/* The order form is itself a large card inside GlassSurface. */
+/*
+ * The order form is itself a large card inside GlassSurface.
+ */
 html.raf-glass-shader
 #raf-page-root:has(.raf-studio-liquid-card)
 form[class*='rounded'],
 html.raf-glass-fallback
 #raf-page-root:has(.raf-studio-liquid-card)
 form[class*='rounded'] {
-    background-color: rgba(255, 255, 255, 0.003) !important;
+    background-color:
+            rgba(255, 255, 255, 0.003) !important;
+
     background-image: none !important;
 
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border:
+            1px solid
+            rgba(255, 255, 255, 0.12) !important;
 
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.14),
-        0 1.2rem 3rem -2.2rem rgba(0, 0, 0, 0.44)
-        !important;
+            inset 0 1px 0
+            rgba(255, 255, 255, 0.14),
+            0 1.2rem 3rem -2.2rem
+            rgba(0, 0, 0, 0.44)
+    !important;
 
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 }
 
-/* Consent blocks remain readable but no longer look like opaque cards. */
-html.raf-glass-shader
-#raf-page-root:has(.raf-studio-liquid-card)
-form label[class*='rounded'],
-html.raf-glass-fallback
-#raf-page-root:has(.raf-studio-liquid-card)
-form label[class*='rounded'] {
-    background-color: rgba(255, 255, 255, 0.012) !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
 
-/* The Mobile / Websites selector is a glass control, not a dark slab. */
+/*
+ * The Mobile / Websites selector is a glass control,
+ * not a dark slab.
+ */
 html.raf-glass-shader
 #raf-page-root:has(.raf-studio-liquid-card)
 div[class*='max-w-xl'][class*='bg-black/25'],
 html.raf-glass-fallback
 #raf-page-root:has(.raf-studio-liquid-card)
 div[class*='max-w-xl'][class*='bg-black/25'] {
-    background-color: rgba(255, 255, 255, 0.004) !important;
+    background-color:
+            rgba(255, 255, 255, 0.004) !important;
+
     background-image: none !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+
+    border:
+            1px solid
+            rgba(255, 255, 255, 0.12) !important;
+
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 }
 
-/* Fallback remains transparent and sharp; only WebGL supplies refraction. */
+/*
+ * Fallback remains transparent and sharp.
+ * Only WebGL supplies refraction.
+ */
 html.raf-glass-fallback
 #raf-page-root:has(.raf-studio-liquid-card)
 .raf-studio-liquid-card {
-    background-color: rgba(8, 9, 12, 0.16) !important;
+    background-color:
+            rgba(8, 9, 12, 0.16) !important;
 }
 
 @media (prefers-reduced-transparency: reduce) {
@@ -269,6 +297,313 @@ html.raf-glass-fallback
     .raf-studio-liquid-card,
     #raf-page-root:has(.raf-studio-liquid-card)
     form[class*='rounded'] {
-        background-color: rgba(14, 15, 18, 0.86) !important;
+        background-color:
+                rgba(14, 15, 18, 0.86) !important;
     }
+}
+
+/* --------------------------------------------------------------------------
+   CONSENT ROW — NO INNER GLASS CAPSULE
+   -------------------------------------------------------------------------- */
+
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-consent-row,
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-consent-row {
+    position: relative;
+
+    border: 0 !important;
+    border-radius: 0 !important;
+    outline: 0 !important;
+
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+
+    box-shadow: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    filter: none !important;
+    clip-path: none !important;
+}
+
+/*
+ * Полностью убираем возможные овальные псевдослои,
+ * добавленные общими стеклянными стилями.
+ */
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-consent-row::before,
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-consent-row::after,
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-consent-row::before,
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-consent-row::after {
+    display: none !important;
+    content: none !important;
+
+    border: 0 !important;
+    border-radius: 0 !important;
+
+    background: none !important;
+    box-shadow: none !important;
+
+    opacity: 0 !important;
+    filter: none !important;
+}
+
+/*
+ * Ссылка и текст всегда остаются поверх внешней карточки,
+ * без отдельной стеклянной линзы.
+ */
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-consent-row > *,
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-consent-row > * {
+    position: relative;
+    z-index: 2;
+}
+
+
+/* --------------------------------------------------------------------------
+   STUDIO ORDER FORM — REMOVE ALL INNER CAPSULES
+   -------------------------------------------------------------------------- */
+
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-order-form,
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-order-form {
+    border: 0 !important;
+    border-radius: 0 !important;
+    outline: 0 !important;
+
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+
+    box-shadow: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    clip-path: none !important;
+    filter: none !important;
+}
+
+/*
+ * Строка согласия не является отдельной карточкой.
+ */
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-consent-row,
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-consent-row {
+    border: 0 !important;
+    border-radius: 0 !important;
+    outline: 0 !important;
+
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+
+    box-shadow: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    clip-path: none !important;
+    filter: none !important;
+}
+
+/*
+ * У формы и строки согласия не должно быть декоративных
+ * псевдоэлементов или стеклянных линз.
+ */
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-order-form::before,
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-order-form::after,
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-consent-row::before,
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-consent-row::after,
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-order-form::before,
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-order-form::after,
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-consent-row::before,
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-consent-row::after {
+    display: none !important;
+    content: none !important;
+
+    border: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+
+    opacity: 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   FIX: REMOVE OVAL FROM CONSENT ROW & CHECKBOX
+   -------------------------------------------------------------------------- */
+
+/*
+ * 1. Строка согласия – без фона, без скругления, без псевдоэлементов.
+ */
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-consent-row,
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-consent-row {
+    border-radius: 0 !important;
+    clip-path: none !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/*
+ * 2. Сам чекбокс – квадратный, без скругления.
+ *    Убираем любой овальный вид, который может давать appearance.
+ */
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-consent-row input[type="checkbox"],
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-consent-row input[type="checkbox"] {
+    appearance: checkbox !important;
+    -webkit-appearance: checkbox !important;
+    border-radius: 0 !important;
+    border: 1px solid rgba(255,255,255,0.3) !important; /* опционально, чтобы был виден */
+    width: 1rem !important;
+    height: 1rem !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/*
+ * 3. Удаляем любые псевдоэлементы, которые могли бы добавить овал.
+ */
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-consent-row::before,
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-consent-row::after,
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-consent-row::before,
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-consent-row::after {
+    display: none !important;
+    content: none !important;
+    border-radius: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+}
+
+html.raf-glass-shader
+#raf-page-root
+.raf-studio-order-form,
+html.raf-glass-fallback
+#raf-page-root
+.raf-studio-order-form {
+    border-radius: 0 !important;
+    clip-path: none !important;
+    background: transparent !important;
+}
+
+/* --------------------------------------------------------------------------
+   CONSENT TEXT — COMPLETELY FLAT
+   -------------------------------------------------------------------------- */
+
+.raf-studio-consent-row,
+.raf-studio-consent-text,
+.raf-studio-consent-row span,
+.raf-studio-consent-row label,
+.raf-studio-consent-row a {
+    border: 0 !important;
+    border-radius: 0 !important;
+    outline: 0 !important;
+
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+
+    box-shadow: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    filter: none !important;
+    clip-path: none !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+}
+
+.raf-studio-consent-row::before,
+.raf-studio-consent-row::after,
+.raf-studio-consent-text::before,
+.raf-studio-consent-text::after,
+.raf-studio-consent-row span::before,
+.raf-studio-consent-row span::after,
+.raf-studio-consent-row label::before,
+.raf-studio-consent-row label::after,
+.raf-studio-consent-row a::before,
+.raf-studio-consent-row a::after {
+    display: none !important;
+    content: none !important;
+
+    border: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+
+    opacity: 0 !important;
+}
+
+/*
+ * Шейдер не должен превращать строку согласия
+ * или её текст во вложенную стеклянную поверхность.
+ */
+.raf-studio-consent-row.raf-shader-surface,
+.raf-studio-consent-text.raf-shader-surface,
+.raf-studio-consent-row .raf-shader-surface {
+    border: 0 !important;
+    border-radius: 0 !important;
+
+    background: transparent !important;
+    background-image: none !important;
+
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }

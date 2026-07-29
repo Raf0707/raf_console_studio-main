@@ -127,7 +127,7 @@ export default function ContactFormWeb() {
         <>
             <form
                 onSubmit={handleSubmit}
-                className="bg-white/70 dark:bg-white/5 rounded-2xl shadow-lg p-8 flex-1 space-y-4"
+                className="raf-studio-order-form flex-1 space-y-4 p-8"
             ><div>
                     <label className="block text-sm font-medium mb-1">Your Name*</label>
                     <Input
@@ -182,7 +182,7 @@ export default function ContactFormWeb() {
                     />
                 </div>
 
-                <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-black/[0.08] bg-white/35 p-4 backdrop-blur-xl transition hover:bg-white/55 dark:border-white/[0.09] dark:bg-white/[0.035] dark:hover:bg-white/[0.06]">
+                <label className="raf-studio-consent-row flex cursor-pointer items-start gap-3 p-4">
                     <input
                         type="checkbox"
                         name="personalDataConsent"
