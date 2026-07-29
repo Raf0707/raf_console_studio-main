@@ -334,7 +334,7 @@ export default function ContactFormWEBRu() {
                         >
             политикой обработки персональных данных
         </a>
-        .
+
     </span>
                 </label>
 

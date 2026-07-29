@@ -211,7 +211,7 @@ export default function ContactFormAppRu() {
                         >
                             политикой обработки персональных данных
                         </a>
-                        .
+
                     </span>
                 </label>
 

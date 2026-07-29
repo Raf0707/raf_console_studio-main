@@ -205,7 +205,7 @@ export default function ContactFormWeb() {
                         >
       Personal Data Processing Policy
     </a>
-    .
+
   </span>
                 </label>
 

@@ -2,12 +2,16 @@ import { clamp } from './capabilities';
 
 /*
  * Любой элемент внутри такого контейнера полностью исключается
- * из WebGL-шейдера. Это нужно для форм, чекбоксов и обычного текста.
+ * из WebGL-шейдера.
  */
 const SURFACE_IGNORE_SELECTOR =
     '[data-raf-shader-ignore="true"]';
 
-const SURFACE_SELECTOR = [
+/*
+ * Эти элементы являются шейдерными поверхностями явно.
+ * Для них не требуется проверять CSS backdrop-filter.
+ */
+const EXPLICIT_SURFACE_SELECTOR = [
     '[data-raf-glass-surface="mobile-drawer"]',
     '[data-raf-glass-surface="mobile-navigation-item"]',
     '.raf-liquid-header-panel',
@@ -17,6 +21,13 @@ const SURFACE_SELECTOR = [
     '.raf-liquid-button',
     '.raf-liquid-card',
     '.project-card',
+].join(',');
+
+/*
+ * Полный список потенциальных поверхностей.
+ */
+const SURFACE_SELECTOR = [
+    EXPLICIT_SURFACE_SELECTOR,
     '[class*="glass"]',
     '[class*="Glass"]',
     '[class*="card"]',
@@ -30,6 +41,12 @@ function clearSurfaceState(element) {
 
     element.classList.remove('raf-shader-surface');
     element.removeAttribute('data-raf-large-glass');
+}
+
+function isIgnoredSurface(element) {
+    return Boolean(
+        element.closest(SURFACE_IGNORE_SELECTOR),
+    );
 }
 
 export function isActuallyVisible(element, rect) {
@@ -56,11 +73,13 @@ export function isActuallyVisible(element, rect) {
     }
 
     const style = window.getComputedStyle(element);
+    const opacity =
+        Number.parseFloat(style.opacity) || 0;
 
     return (
         style.display !== 'none' &&
         style.visibility !== 'hidden' &&
-        Number(style.opacity) > 0.02
+        opacity > 0.02
     );
 }
 
@@ -81,7 +100,11 @@ function surfaceKind(element) {
         return 0.98;
     }
 
-    if (element.matches('.raf-liquid-header-panel')) {
+    if (
+        element.matches(
+            '.raf-liquid-header-panel',
+        )
+    ) {
         return 0.96;
     }
 
@@ -91,13 +114,16 @@ function surfaceKind(element) {
 
     if (
         element.matches(
-            '.raf-liquid-segment, [data-liquid-segment="true"]',
+            '.raf-liquid-segment, ' +
+            '[data-liquid-segment="true"]',
         )
     ) {
         return 0.72;
     }
 
-    if (element.matches('.raf-liquid-button')) {
+    if (
+        element.matches('.raf-liquid-button')
+    ) {
         return 0.56;
     }
 
@@ -106,25 +132,29 @@ function surfaceKind(element) {
 
 export function collectSurfaces(maxSurfaces) {
     /*
-     * Vaul, Radix и другие компоненты через Portal
-     * могут находиться непосредственно внутри body.
+     * Некоторые компоненты создаются через Portal,
+     * поэтому поиск выполняется по всему document.
      */
     const root = document;
+
     const unique = new Set();
     const candidates = [];
+    const eligibleElements = new Set();
 
     /*
-     * Сохраняем список ранее зарегистрированных поверхностей.
-     * После нового сканирования с устаревших элементов будет
-     * удалён класс raf-shader-surface.
+     * Запоминаем элементы, зарегистрированные на прошлом проходе.
+     * Удаляем класс только у действительно устаревших элементов,
+     * а не у тех, которые просто не попали в maxSurfaces.
      */
     const previouslyRegistered = new Set(
-        root.querySelectorAll('.raf-shader-surface'),
+        root.querySelectorAll(
+            '.raf-shader-surface',
+        ),
     );
 
     /*
-     * Сначала очищаем все элементы, которые явно исключены
-     * из шейдера, включая всех их потомков.
+     * Немедленно очищаем всё, что явно исключено
+     * через data-raf-shader-ignore.
      */
     root
         .querySelectorAll(
@@ -133,7 +163,6 @@ export function collectSurfaces(maxSurfaces) {
         )
         .forEach((element) => {
             clearSurfaceState(element);
-            previouslyRegistered.delete(element);
         });
 
     root
@@ -149,56 +178,119 @@ export function collectSurfaces(maxSurfaces) {
             unique.add(element);
 
             /*
-             * Важное исправление:
-             * элементы формы и всё внутри неё не могут стать
-             * WebGL-поверхностью ни на ПК, ни на мобильных.
+             * Форма, чекбокс и текст согласия
+             * не регистрируются как WebGL-поверхности.
              */
-            if (
-                element.closest(SURFACE_IGNORE_SELECTOR)
-            ) {
+            if (isIgnoredSurface(element)) {
                 clearSurfaceState(element);
-                previouslyRegistered.delete(element);
                 return;
             }
+
+            const alreadyRegistered =
+                element.classList.contains(
+                    'raf-shader-surface',
+                );
 
             const rect =
                 element.getBoundingClientRect();
 
-            if (!isActuallyVisible(element, rect)) {
-                return;
-            }
-
             const style =
                 window.getComputedStyle(element);
 
-            const explicitSurface = element.matches(
-                '[data-raf-glass-surface="mobile-drawer"], ' +
-                '[data-raf-glass-surface="mobile-navigation-item"], ' +
-                '.raf-liquid-header-panel, ' +
-                '.raf-nav-drop, ' +
-                '.raf-liquid-segment, ' +
-                '[data-liquid-segment="true"], ' +
-                '.raf-liquid-button, ' +
-                '.raf-liquid-card, ' +
-                '.project-card',
-            );
+            const explicitSurface =
+                element.matches(
+                    EXPLICIT_SURFACE_SELECTOR,
+                );
 
             const backdrop =
                 style.backdropFilter ||
                 style.webkitBackdropFilter ||
                 'none';
 
+            const hasBackdrop =
+                Boolean(backdrop) &&
+                backdrop !== 'none';
+
             const radiusValue =
                 Number.parseFloat(
                     style.borderTopLeftRadius,
                 ) || 0;
 
+            /*
+             * Радиус является стабильным признаком карточки.
+             * Плоские текстовые элементы не должны становиться
+             * отдельными шейдерными поверхностями.
+             */
             if (
                 !explicitSurface &&
-                (
-                    backdrop === 'none' ||
-                    radiusValue < 12
-                )
+                radiusValue < 12
+            ) {
+                clearSurfaceState(element);
+                return;
+            }
+
+            /*
+             * ВАЖНО:
+             *
+             * После регистрации класс .raf-shader-surface
+             * устанавливает backdrop-filter: none.
+             *
+             * Поэтому уже зарегистрированный элемент нельзя
+             * исключать только потому, что его computed backdrop
+             * теперь равен none.
+             */
+            if (
+                !explicitSurface &&
+                !alreadyRegistered &&
+                !hasBackdrop
+            ) {
+                clearSurfaceState(element);
+                return;
+            }
+
+            eligibleElements.add(element);
+
+            /*
+             * Для приоритета используем layout-размеры.
+             * offsetWidth/offsetHeight не меняются во время
+             * hover-scale анимаций, поэтому порядок карточек
+             * не скачет на каждом кадре.
+             */
+            const layoutWidth =
+                element.offsetWidth || rect.width;
+
+            const layoutHeight =
+                element.offsetHeight || rect.height;
+
+            const area =
+                layoutWidth * layoutHeight;
+
+            const largeCard =
+                element.matches(
+                    '.project-card, .raf-liquid-card',
+                ) &&
+                area > 190000;
+
+            /*
+             * CSS-класс получают все подходящие элементы.
+             * maxSurfaces ограничивает только WebGL-отрисовку,
+             * но не должен включать и выключать стили карточек.
+             */
+            element.classList.add(
+                'raf-shader-surface',
+            );
+
+            element.toggleAttribute(
+                'data-raf-large-glass',
+                largeCard,
+            );
+
+            /*
+             * Невидимые элементы сохраняют стабильный CSS-класс,
+             * но в WebGL на текущем кадре не передаются.
+             */
+            if (
+                !isActuallyVisible(element, rect)
             ) {
                 return;
             }
@@ -209,13 +301,8 @@ export function collectSurfaces(maxSurfaces) {
                 96,
             );
 
-            const kind = surfaceKind(element);
-            const area = rect.width * rect.height;
-
-            const largeCard =
-                element.matches(
-                    '.project-card, .raf-liquid-card',
-                ) && area > 190000;
+            const kind =
+                surfaceKind(element);
 
             let priority = 100;
 
@@ -262,9 +349,30 @@ export function collectSurfaces(maxSurfaces) {
                 radius,
                 kind,
                 priority,
-                largeCard,
             });
         });
+
+    /*
+     * Очищаем только элементы, которые:
+     *
+     * 1. удалены из DOM;
+     * 2. больше не соответствуют списку поверхностей;
+     * 3. попали внутрь ignore-контейнера;
+     * 4. перестали быть подходящей поверхностью.
+     *
+     * Не очищаем элементы только из-за maxSurfaces.
+     */
+    previouslyRegistered.forEach(
+        (element) => {
+            if (
+                !element.isConnected ||
+                isIgnoredSurface(element) ||
+                !eligibleElements.has(element)
+            ) {
+                clearSurfaceState(element);
+            }
+        },
+    );
 
     candidates.sort(
         (first, second) =>
@@ -272,40 +380,14 @@ export function collectSurfaces(maxSurfaces) {
     );
 
     /*
-     * Класс шейдерной поверхности добавляется только
-     * элементам, которые реально попали в лимит рендера.
+     * Лимит применяется только к WebGL.
+     * CSS-состояние всех карточек остаётся стабильным.
      */
     const selectedCandidates =
-        candidates.slice(0, maxSurfaces);
-
-    const selectedElements = new Set(
-        selectedCandidates.map(
-            ({ element }) => element,
-        ),
-    );
-
-    /*
-     * Удаляем устаревшие классы с поверхностей, которые
-     * больше не зарегистрированы или вышли за лимит.
-     */
-    previouslyRegistered.forEach((element) => {
-        if (!selectedElements.has(element)) {
-            clearSurfaceState(element);
-        }
-    });
-
-    selectedCandidates.forEach(
-        ({ element, largeCard }) => {
-            element.classList.add(
-                'raf-shader-surface',
-            );
-
-            element.toggleAttribute(
-                'data-raf-large-glass',
-                largeCard,
-            );
-        },
-    );
+        candidates.slice(
+            0,
+            Math.max(0, maxSurfaces),
+        );
 
     return selectedCandidates.map(
         ({
