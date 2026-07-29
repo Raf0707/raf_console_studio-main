@@ -7,6 +7,7 @@ const SURFACE_SELECTOR = [
     '[class*="desktopNav"]',
     '[class*="contactCard"]',
     '[class*="developerCard"]',
+    '[class*="PrivacyPolicy_hero"]',
     '[class*="policySection"]',
     '[class*="introduction"]',
     '.raf-studio-liquid-card',
@@ -65,6 +66,7 @@ function surfaceKind(element) {
         element.matches(
             '[class*="contactCard"], '
             + '[class*="developerCard"], '
+            + '[class*="PrivacyPolicy_hero"], '
             + '[class*="policySection"], '
             + '[class*="introduction"], '
             + '.raf-studio-liquid-card',
@@ -147,6 +149,7 @@ export function collectSurfaces(maxSurfaces) {
             + '[class*="desktopNav"], '
             + '[class*="contactCard"], '
             + '[class*="developerCard"], '
+            + '[class*="PrivacyPolicy_hero"], '
             + '[class*="policySection"], '
             + '[class*="introduction"], '
             + '.raf-studio-liquid-card, '
@@ -205,6 +208,10 @@ export function collectSurfaces(maxSurfaces) {
 
         if (element.matches('[class*="desktopNav"]')) {
             priority += 2200;
+        }
+
+        if (element.matches('[class*="PrivacyPolicy_hero"]')) {
+            priority += 1900;
         }
 
         if (
