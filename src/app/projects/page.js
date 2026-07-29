@@ -338,7 +338,9 @@ function SegmentButton({ options, value, onChange, label }) {
             className={`project-segment ${options.length === 2 ? 'project-segment--split' : 'project-segment--scroll'}
                 grid min-w-0 gap-1 rounded-[1.35rem]
                 border border-white/[0.09]
-                bg-black/30 p-1.5 shadow-inner shadow-black/40
+                bg-white/[0.006] p-1.5
+                shadow-[inset_0_1px_0_rgba(255,255,255,0.045),inset_0_-1px_0_rgba(0,0,0,0.2)]
+                backdrop-blur-[8px]
             `}
             style={{
                 gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))`,
@@ -362,8 +364,8 @@ function SegmentButton({ options, value, onChange, label }) {
                             ${
                             active
                                 ? `
-                                        bg-white text-black
-                                        shadow-[0_0_2rem_rgba(255,255,255,0.18),inset_0_1px_0_rgba(255,255,255,0.95)]
+                                        bg-white/[0.022] text-white
+                                        shadow-[inset_0_1px_0_rgba(255,255,255,0.52),inset_0_-1px_0_rgba(0,0,0,0.28),0_0_2rem_rgba(255,255,255,0.06)]
                                     `
                                 : `
                                         text-white/55
@@ -1059,7 +1061,11 @@ export default function Page() {
                     className={`
                         projects-filters relative mx-auto mt-12 w-full max-w-5xl
                         overflow-hidden rounded-[2.25rem] p-3 sm:p-4
-                        ${glassPanel}
+                        border border-white/[0.12]
+                        bg-white/[0.008]
+                        shadow-[0_1.5rem_5rem_-2.5rem_rgba(255,255,255,0.08),0_2rem_6rem_-3rem_rgba(0,0,0,0.95)]
+                        backdrop-blur-[10px]
+                        backdrop-saturate-[108%]
                     `}
                 >
                     <span
