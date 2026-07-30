@@ -12,6 +12,7 @@ import FallbackSurfaceRuntime from '@/components/liquid-glass/FallbackSurfaceRun
 import LiquidGlassRuntime from '@/components/liquid-glass/LiquidGlassRuntime';
 import AgencyShaderRuntime from '@/components/liquid-glass/refraction/AgencyShaderRuntime';
 import NavbarDragRefractionRuntime from '@/components/liquid-glass/refraction/NavbarDragRefractionRuntime';
+import NavbarProgressiveTextRefractionRuntime from '@/components/liquid-glass/refraction/NavbarProgressiveTextRefractionRuntime';
 import RouteResponsiveController from '@/components/responsive/RouteResponsiveController';
 
 import './globals.css';
@@ -134,6 +135,7 @@ export default function RootLayout({ children }) {
               <LiquidGlassRuntime />
               <AgencyShaderRuntime />
               <NavbarDragRefractionRuntime />
+              <NavbarProgressiveTextRefractionRuntime />
             </Suspense>
 
             <div id="raf-page-root">
