@@ -1,0 +1,14 @@
+V3.8.1
+MVP Liquid Glass
+Готово
+ - Полностью сделан Liquid Glass NavBar
+ - Полностью готовы экраны в стиле Liquid Glass:
+    - Studio
+    - Projects
+    - Contacts
+    - Policy
+
+Доделать и доработать:
+ - Home
+ - убрать преломление из кнопки навигации в мобильной версии
+
