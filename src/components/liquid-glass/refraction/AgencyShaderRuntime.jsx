@@ -18,7 +18,7 @@ const NAVBAR_SELECTOR = '[data-raf-navbar-shell="true"]';
 const PILL_SELECTOR = '[data-raf-refraction-target="navbar-pill"]';
 const PAGE_SOURCE_SELECTOR = '#raf-page-root';
 const MAX_DPR = 1.75;
-const CLONE_REBUILD_DELAY = 96;
+const CLONE_REBUILD_DELAY = 220;
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const mix = (from, to, amount) => from + (to - from) * amount;
@@ -429,7 +429,7 @@ function createVerticalSceneLens(header, source) {
       }
 
       return record.type === 'attributes'
-        && ['class', 'style', 'src', 'hidden', 'open', 'aria-expanded'].includes(record.attributeName);
+        && ['class', 'src', 'hidden', 'open', 'aria-expanded'].includes(record.attributeName);
     });
 
     if (meaningful) {
@@ -442,7 +442,7 @@ function createVerticalSceneLens(header, source) {
     subtree: true,
     characterData: true,
     attributes: true,
-    attributeFilter: ['class', 'style', 'src', 'hidden', 'open', 'aria-expanded'],
+    attributeFilter: ['class', 'src', 'hidden', 'open', 'aria-expanded'],
   });
 
   resizeObserver = new ResizeObserver(() => {
