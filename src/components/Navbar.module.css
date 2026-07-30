@@ -598,12 +598,14 @@
             rgba(0, 0, 0, 0.7);
 
     backdrop-filter:
-        blur(3px)
-        saturate(118%);
+            blur(1px)
+            saturate(112%)
+            brightness(1.03);
 
     -webkit-backdrop-filter:
-        blur(3px)
-        saturate(118%);
+            blur(1px)
+            saturate(112%)
+            brightness(1.03);
 
     transform: none;
     transform-origin: 50% 50%;
@@ -2370,6 +2372,11 @@
 
     pointer-events: none;
     border-radius: inherit;
+
+}
+
+.mobileFabWarp {
+    display: none !important;
 }
 
 .mobileFabBase {

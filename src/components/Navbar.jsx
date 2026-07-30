@@ -388,52 +388,48 @@ export default function Navbar({
           shouldScaleBackground={false}
         >
           {mobileFabPortalReady && createPortal(
-            <DrawerTrigger
-              data-raf-mobile-navigation-fab="true"
-              data-raf-native-refraction="true"
-              data-raf-shader-ignore="true"
-              data-raf-refraction-pointer="true"
-              data-raf-viewport-width={mobileFabPosition.viewportWidth}
-              data-raf-viewport-height={mobileFabPosition.viewportHeight}
-              className={styles.mobileTrigger}
-              style={{
-                '--raf-mobile-fab-right': `${mobileFabPosition.right}px`,
-                '--raf-mobile-fab-bottom': `${mobileFabPosition.bottom}px`,
-              }}
-              aria-label={isRussian ? 'Открыть меню' : 'Open menu'}
-              aria-expanded={mobileOpen}
-            >
-              <span
-                aria-hidden="true"
-                className={styles.mobileFabBase}
-              />
-              <span
-                aria-hidden="true"
-                data-raf-refraction-target="mobile-fab"
-                className={styles.mobileFabWarp}
-              />
-              <span
-                aria-hidden="true"
-                className={styles.mobileFabTint}
-              />
-              <span
-                aria-hidden="true"
-                className={styles.mobileFabSheen}
-              />
-              <span
-                aria-hidden="true"
-                className={styles.mobileFabRim}
-              />
+              <DrawerTrigger
+                  data-raf-mobile-navigation-fab="true"
+                  data-raf-refraction-pointer="true"
+                  data-raf-viewport-width={mobileFabPosition.viewportWidth}
+                  data-raf-viewport-height={mobileFabPosition.viewportHeight}
+                  className={styles.mobileTrigger}
+                  style={{
+                    '--raf-mobile-fab-right': `${mobileFabPosition.right}px`,
+                    '--raf-mobile-fab-bottom': `${mobileFabPosition.bottom}px`,
+                  }}
+                  aria-label={isRussian ? 'Открыть меню' : 'Open menu'}
+                  aria-expanded={mobileOpen}
+              >
+    <span
+        aria-hidden="true"
+        className={styles.mobileFabBase}
+    />
 
-              <span className={styles.mobileFabIcon}>
-                <Menu aria-hidden="true" />
-              </span>
+                <span
+                    aria-hidden="true"
+                    className={styles.mobileFabTint}
+                />
 
-              <span className="sr-only">
-                {isRussian ? 'Открыть меню' : 'Open menu'}
-              </span>
-            </DrawerTrigger>,
-            document.body,
+                <span
+                    aria-hidden="true"
+                    className={styles.mobileFabSheen}
+                />
+
+                <span
+                    aria-hidden="true"
+                    className={styles.mobileFabRim}
+                />
+
+                <span className={styles.mobileFabIcon}>
+      <Menu aria-hidden="true" />
+    </span>
+
+                <span className="sr-only">
+      {isRussian ? 'Открыть меню' : 'Open menu'}
+    </span>
+              </DrawerTrigger>,
+              document.body,
           )}
 
           <DrawerContent
