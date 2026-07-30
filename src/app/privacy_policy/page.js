@@ -272,9 +272,12 @@ function PolicySection({
 
 export default function PrivacyPolicy() {
     return (
-        <main className={styles.page}>
+        <main
+            className={styles.page}
+            data-raf-refraction-source="true"
+        >
             <header className={styles.hero}>
-                <span className={styles.heroGlow} />
+
 
                 <div className={styles.heroTop}>
                     <div className={styles.heroIcon}>
@@ -320,11 +323,12 @@ export default function PrivacyPolicy() {
                         <strong>July 25, 2026</strong>
                     </div>
 
-                    <div className={styles.heroStatement}>
+                    <div
+                        className={styles.heroStatement}>
                         <span className={styles.statementDot} />
 
-                        We do not sell personal information
-                        to third parties
+                        We do not sell or transfer personal
+                        information to third parties
                     </div>
                 </div>
             </header>
@@ -522,14 +526,13 @@ export default function PrivacyPolicy() {
 
                             <div>
                                 <strong>
-                                    Personal data is not
-                                    sold
+                                    Personal data is not sold
+                                    or transferred
                                 </strong>
 
                                 <p>
-                                    We do not sell your
-                                    personal information to
-                                    third parties.
+                                    We do not sell or transfer your
+                                    personal information to third parties.
                                 </p>
                             </div>
                         </div>

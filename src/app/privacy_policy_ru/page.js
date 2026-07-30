@@ -1,5 +1,5 @@
 'use client';
-;
+
 
 import styles from './PrivacyPolicy.module.css';
 
@@ -274,9 +274,12 @@ function PolicySection({
 
 export default function PrivacyPolicy() {
     return (
-        <main className={styles.page}>
+        <main
+            className={styles.page}
+            data-raf-refraction-source="true"
+        >
             <header className={styles.hero}>
-                <span className={styles.heroGlow} />
+
 
                 <div className={styles.heroTop}>
                     <div className={styles.heroIcon}>
@@ -324,11 +327,12 @@ export default function PrivacyPolicy() {
                         <strong>25 июля 2026 года</strong>
                     </div>
 
-                    <div className={styles.heroStatement}>
+                    <div
+                        className={styles.heroStatement}>
                         <span className={styles.statementDot} />
 
-                        Мы не продаём персональные данные
-                        третьим лицам
+                        Мы не продаём и не передаём
+                        персональные данные третьим лицам
                     </div>
                 </div>
             </header>
@@ -533,14 +537,13 @@ export default function PrivacyPolicy() {
 
                             <div>
                                 <strong>
-                                    Персональные данные не
-                                    продаются
+                                    Персональные данные не продаются
+                                    и не передаются
                                 </strong>
 
                                 <p>
-                                    Мы не продаём вашу
-                                    личную информацию
-                                    третьим лицам.
+                                    Мы не продаём и не передаём вашу
+                                    личную информацию третьим лицам.
                                 </p>
                             </div>
                         </div>

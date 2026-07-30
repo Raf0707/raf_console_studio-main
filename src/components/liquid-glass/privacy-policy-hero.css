@@ -11,31 +11,31 @@ html.raf-glass-shader [class*='PrivacyPolicy_hero'] {
     overflow: hidden !important;
 
     border-radius:
-        clamp(1.8rem, 4vw, 3.4rem) !important;
+            clamp(1.8rem, 4vw, 3.4rem) !important;
 
     clip-path:
-        inset(0 round clamp(1.8rem, 4vw, 3.4rem));
+            inset(0 round clamp(1.8rem, 4vw, 3.4rem));
 
     contain: paint;
 
     background:
-        linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 0.018) 0%,
-            rgba(255, 255, 255, 0.006) 44%,
-            rgba(255, 255, 255, 0.002) 100%
-        ) !important;
+            linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.018) 0%,
+                    rgba(255, 255, 255, 0.006) 44%,
+                    rgba(255, 255, 255, 0.002) 100%
+            ) !important;
 
     background-color:
-        rgba(255, 255, 255, 0.001) !important;
+            rgba(255, 255, 255, 0.001) !important;
 
     border-color:
-        rgba(255, 255, 255, 0.115) !important;
+            rgba(255, 255, 255, 0.115) !important;
 
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.14),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.025),
-        0 2rem 7rem rgba(0, 0, 0, 0.24) !important;
+            inset 0 1px 0 rgba(255, 255, 255, 0.14),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.025),
+            0 2rem 7rem rgba(0, 0, 0, 0.24) !important;
 
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
@@ -49,21 +49,70 @@ html.raf-glass-shader [class*='PrivacyPolicy_hero'] {
 html.raf-glass-shader
 [class*='PrivacyPolicy_hero'].raf-shader-surface {
     background:
-        linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 0.018) 0%,
-            rgba(255, 255, 255, 0.006) 44%,
-            rgba(255, 255, 255, 0.002) 100%
-        ) !important;
+            linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.018) 0%,
+                    rgba(255, 255, 255, 0.006) 44%,
+                    rgba(255, 255, 255, 0.002) 100%
+            ) !important;
 
     background-color:
-        rgba(255, 255, 255, 0.001) !important;
+            rgba(255, 255, 255, 0.001) !important;
 
     border-color:
-        rgba(255, 255, 255, 0.115) !important;
+            rgba(255, 255, 255, 0.115) !important;
 
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.14),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.025),
-        0 2rem 7rem rgba(0, 0, 0, 0.24) !important;
+            inset 0 1px 0 rgba(255, 255, 255, 0.14),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.025),
+            0 2rem 7rem rgba(0, 0, 0, 0.24) !important;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/*                  LOCAL POLICY GEOMETRY / REFRACTION SAFETY                  */
+/* -------------------------------------------------------------------------- */
+
+/* Never promote the plain footer statement to a glass/shader surface. */
+html.raf-glass-shader
+[class*='PrivacyPolicy_heroStatement'] {
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/*
+ * A cloned policy page must retain the same width and centering as the source.
+ * This prevents route-specific liquid-surface transforms from shifting lower
+ * document cards into the navbar sampling area.
+ */
+.raf-agency-live-scene-clone
+[class*='PrivacyPolicy_page'] {
+    width: min(100%, 92rem) !important;
+    max-width: 92rem !important;
+    margin-inline: auto !important;
+
+    transform: none !important;
+    translate: none !important;
+    scale: 1 1 !important;
+
+    animation: none !important;
+    transition: none !important;
+}
+
+.raf-agency-live-scene-clone
+[class*='PrivacyPolicy_hero'],
+.raf-agency-live-scene-clone
+[class*='PrivacyPolicy_documentLayout'],
+.raf-agency-live-scene-clone
+[class*='PrivacyPolicy_document'] {
+    transform: none !important;
+    translate: none !important;
+    scale: 1 1 !important;
+    animation: none !important;
+    transition: none !important;
 }

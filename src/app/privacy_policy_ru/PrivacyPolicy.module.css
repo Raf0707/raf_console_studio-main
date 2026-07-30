@@ -307,10 +307,22 @@
 
 .heroFooter {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
 
-    gap: 1.5rem;
+    padding-inline: clamp(
+            2rem,
+            5vw,
+            5rem
+    );
+
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .heroFooter {
+        padding-inline: 1.25rem;
+    }
 }
 
 .updateCard {
@@ -2953,4 +2965,130 @@
     .heroContent {
         padding-block: clamp(2.5rem, 10vw, 4rem) !important;
     }
+}
+
+/* ========================================================================== */
+/*                    PRIVACY HERO — FINAL LOCAL CORRECTIONS                   */
+/* ========================================================================== */
+
+/*
+ * The generic liquid-glass enhancement reused .hero::before as a moving
+ * vertical shine. On this unusually large card it looked like a tall column
+ * above the card. Restore the original full-card lighting instead.
+ */
+.hero::before {
+    inset: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+
+    width: auto !important;
+    height: auto !important;
+
+    border-radius: inherit !important;
+    clip-path: none !important;
+    -webkit-clip-path: none !important;
+
+    opacity: 1 !important;
+
+    background:
+        radial-gradient(
+            circle at 10% 5%,
+            rgba(255, 255, 255, 0.13),
+            transparent 32%
+        ),
+        linear-gradient(
+            115deg,
+            rgba(255, 255, 255, 0.065),
+            transparent 32%,
+            transparent 72%,
+            rgba(255, 255, 255, 0.025)
+        ) !important;
+
+    filter: none !important;
+    transform: none !important;
+    animation: none !important;
+    will-change: auto !important;
+}
+
+/* Both footer elements share one vertical center line. */
+.heroFooter {
+    align-items: center !important;
+    min-height: clamp(4.8rem, 7vw, 6rem);
+}
+
+/*
+ * This is informational text, not a control. Remove every glass capsule layer
+ * that may be added by generic surface runtimes.
+ */
+.heroStatement,
+.heroStatement.raf-shader-surface,
+[data-raf-shader-ignore='true'].heroStatement {
+    align-self: center;
+    justify-content: flex-end;
+
+    width: min(100%, 34rem);
+    max-width: 34rem;
+
+    margin: 0 0 0 auto;
+    padding: 0 !important;
+
+    overflow: visible !important;
+
+    border: 0 !important;
+    border-radius: 0 !important;
+
+    background: transparent !important;
+    background-color: transparent !important;
+
+    box-shadow: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    clip-path: none !important;
+    -webkit-clip-path: none !important;
+
+    transform: none !important;
+    scale: 1 1 !important;
+
+    text-align: right;
+}
+
+.heroStatement::before,
+.heroStatement::after {
+    display: none !important;
+    content: none !important;
+}
+
+/*
+ * Keep the policy page as a stable geometric source for the navbar clone.
+ * Generic liquid-card hover scaling must never affect the source coordinates.
+ */
+
+
+@media (max-width: 48rem) {
+    .heroFooter {
+        align-items: stretch !important;
+        min-height: 0;
+    }
+
+    .heroStatement {
+        justify-content: flex-start;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        text-align: left;
+    }
+}
+
+/* Disable global liquid glass vertical light beam on privacy hero */
+.page[data-raf-refraction-source="true"] .heroGlow,
+.page[data-raf-refraction-source="true"] .hero::before,
+.page[data-raf-refraction-source="true"] .hero::after {
+    display: none !important;
+    opacity: 0 !important;
+    animation: none !important;
+    transform: none !important;
 }

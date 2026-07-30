@@ -129,14 +129,7 @@
     --raf-glass-pointer-y: 0px !important;
 }
 
-[data-raf-native-refraction='true'] [class*='sheen'],
-[data-raf-navbar-shell='true'] [class*='dropSheen'],
-[data-raf-navbar-shell='true'] [class*='dropHighlight'],
-[data-raf-navbar-shell='true'] [class*='dropCaustic'] {
-    animation: none !important;
-    transition: none !important;
-    will-change: auto !important;
-}
+
 
 html.raf-glass-minimal .raf-agency-live-lens {
     display: none !important;
