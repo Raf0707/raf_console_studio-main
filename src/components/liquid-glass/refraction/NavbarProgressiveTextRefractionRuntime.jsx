@@ -14,8 +14,17 @@ const RUNTIME_STYLES = `
 [data-raf-navbar-text-refraction] {
   transform: none !important;
   filter: none !important;
-  text-shadow: none !important;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.42),
+    0 0 0.55rem rgba(0, 0, 0, 0.28) !important;
   letter-spacing: inherit !important;
+}
+
+[data-raf-navbar-shell="true"][data-raf-progressive-text-runtime="ready"]
+a[aria-current="page"][data-raf-navbar-text-refraction] {
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.55),
+    0 0 0.8rem rgba(255, 255, 255, 0.2) !important;
 }
 
 [data-raf-navbar-progressive-text-link="true"] {
