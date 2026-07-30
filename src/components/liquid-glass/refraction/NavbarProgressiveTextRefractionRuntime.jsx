@@ -6,6 +6,8 @@ import { createRefractionMap } from './refraction-map';
 
 const FILTER_MARGIN = 32;
 const MAX_MAP_SIZE = 2048;
+const MOTION_VELOCITY_EPSILON = 0.006;
+const MOTION_SETTLE_GRACE = 64;
 const TRANSPARENT_PIXEL =
   'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 
@@ -434,6 +436,7 @@ function attach(shell) {
   let frame = 0;
   let previousCenter = null;
   let previousTime = performance.now();
+  let lastMotionTime = Number.NEGATIVE_INFINITY;
   let direction = 1;
   let sceneSignature = '';
   let mapKey = '';
@@ -525,6 +528,20 @@ function attach(shell) {
       direction = -1;
     }
 
+    const dragLifecycleActive = shell.hasAttribute(
+      'data-raf-navbar-dragging',
+    );
+    const physicallyMoving = Math.abs(velocity)
+      > MOTION_VELOCITY_EPSILON;
+
+    if (dragLifecycleActive || physicallyMoving) {
+      lastMotionTime = time;
+    }
+
+    const motionActive = dragLifecycleActive
+      || physicallyMoving
+      || time - lastMotionTime <= MOTION_SETTLE_GRACE;
+
     previousCenter = center;
     previousTime = time;
 
@@ -564,16 +581,18 @@ function attach(shell) {
       clone.style.height = `${rect.height}px`;
     });
 
-    if (mapsReady) {
+    if (mapsReady && motionActive) {
       const lensRect = {
         left: surfaceRect.left,
         right: surfaceRect.right,
       };
       parts.links.forEach((link) => maskLink(link, lensRect));
       scene.style.opacity = '1';
+      scene.dataset.rafNavbarMovingLensActive = 'true';
     } else {
       parts.links.forEach(clearMask);
       scene.style.opacity = '0';
+      delete scene.dataset.rafNavbarMovingLensActive;
     }
 
     frame = window.requestAnimationFrame(render);
