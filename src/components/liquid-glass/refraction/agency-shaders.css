@@ -1,8 +1,9 @@
 /*
  * Raf</>Console Studio — stable single-sample refraction.
  *
- * Only one live page clone is rendered inside the header lens. Navigation
- * labels are never copied or displaced, and no time-driven GPU layer is used.
+ * Exactly one aligned page clone is bent inside an opaque optical viewport.
+ * Navigation labels remain untouched, while all perpetual light animations
+ * inside the navbar are disabled.
  */
 
 .raf-agency-live-lens,
@@ -23,20 +24,28 @@
 .raf-agency-live-lens--vertical {
     z-index: 1;
     inset: 0;
-    opacity: 1;
+    opacity: 0;
     background: var(--raf-agency-scene-background, rgb(10 10 12));
-    filter:
-        url(#raf-header-warp)
-        contrast(1.045)
-        brightness(1.012);
+    transition: none !important;
+}
+
+.raf-agency-live-lens--vertical[data-raf-agency-ready='true'] {
+    opacity: 1;
 }
 
 .raf-agency-live-scene-host {
     position: absolute;
     inset: 0;
     display: block;
-    overflow: visible;
+    overflow: hidden;
     background: var(--raf-agency-scene-background, rgb(10 10 12));
+    filter:
+        url(#raf-header-warp)
+        contrast(1.035)
+        brightness(1.008);
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
 }
 
 .raf-agency-live-scene-clone {
@@ -58,6 +67,7 @@
             var(--raf-agency-scene-y)
         ) !important;
     transform-origin: 0 0 !important;
+    backface-visibility: visible !important;
 }
 
 .raf-agency-live-scene-clone,
@@ -81,9 +91,8 @@
 }
 
 /*
- * The original native backdrop layers would sample the same page a second
- * time. Keep their measurable boxes for SVG map generation, but make their
- * visual output inert so the live clone is the only refracted image.
+ * Native backdrop layers would sample the page for a second time. Their boxes
+ * remain measurable for the SVG map runtime, but their visual output is inert.
  */
 [data-raf-refraction-target='header-shell'],
 [data-raf-refraction-target='navbar-shell'],
@@ -102,7 +111,7 @@
     display: none !important;
 }
 
-/* Navigation text always remains the original DOM layer. */
+/* Navigation text always remains the original React DOM layer. */
 .raf-agency-live-lens--horizontal,
 .raf-agency-navigation-strip,
 .raf-agency-navigation-label,
@@ -110,11 +119,22 @@
     display: none !important;
 }
 
-/* Static liquid lighting: no perpetual shimmer that can look like flicker. */
+/*
+ * Pointer-driven sheen and endless caustic movement are deliberately frozen.
+ * A refracted image changes only when the real page scrolls or its layout moves.
+ */
+[data-raf-native-refraction='true'],
+[data-raf-navbar-shell='true'] {
+    --raf-glass-pointer-x: 50% !important;
+    --raf-glass-pointer-y: 0px !important;
+}
+
+[data-raf-native-refraction='true'] [class*='sheen'],
 [data-raf-navbar-shell='true'] [class*='dropSheen'],
 [data-raf-navbar-shell='true'] [class*='dropHighlight'],
 [data-raf-navbar-shell='true'] [class*='dropCaustic'] {
     animation: none !important;
+    transition: none !important;
     will-change: auto !important;
 }
 
