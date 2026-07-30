@@ -2,13 +2,14 @@ import { Inter } from 'next/font/google';
 
 import { OfflineManager } from '@/components/pwa';
 import { ThemeProvider } from '@/components/theme-provider';
-import Header from '@/components/layouts/Header';
+import Header from '@/components/Header';
 import Footer from '@/components/layouts/Footer';
 import GlobalPointerEffects from '@/components/effects/GlobalPointerEffects';
 import InitialLoadGate from '@/components/loading/InitialLoadGate';
 import AdaptiveShaderRuntime from '@/components/liquid-glass/AdaptiveShaderRuntime';
 import FallbackSurfaceRuntime from '@/components/liquid-glass/FallbackSurfaceRuntime';
 import LiquidGlassRuntime from '@/components/liquid-glass/LiquidGlassRuntime';
+import AgencyShaderRuntime from '@/components/liquid-glass/refraction/AgencyShaderRuntime';
 import RouteResponsiveController from '@/components/responsive/RouteResponsiveController';
 
 import './globals.css';
@@ -18,6 +19,7 @@ import '@/components/liquid-glass/adaptive-shaders.css';
 import '@/components/liquid-glass/privacy-policy-hero.css';
 import '@/components/liquid-glass/studio-crystal.css';
 import '@/components/liquid-glass/mobile-crystal-drawer.css';
+import '@/components/liquid-glass/refraction/agency-shaders.css';
 
 export const metadata = {
   title: 'Raf</>Console Studio',
@@ -131,6 +133,7 @@ export default function RootLayout({ children }) {
           <AdaptiveShaderRuntime />
           <FallbackSurfaceRuntime />
           <LiquidGlassRuntime />
+          <AgencyShaderRuntime />
 
           {/* Глобальные волны, плазма и остальные pointer-анимации сохранены. */}
           {/*<GlobalPointerEffects />*/}
