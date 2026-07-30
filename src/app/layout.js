@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { Inter } from 'next/font/google';
 
 import { OfflineManager } from '@/components/pwa';
@@ -121,7 +122,9 @@ export default function RootLayout({ children }) {
           <InitialLoadGate />
 
           <div id="raf-liquid-root">
-            <Header />
+            <Suspense fallback={null}>
+              <Header />
+            </Suspense>
 
             <div id="raf-page-root">
               {children}
