@@ -4,10 +4,10 @@ import { useEffect } from 'react';
 
 import { createRefractionMap } from './refraction-map';
 
-const SVG_NS = 'http://www.w3.org/2000/svg';
-const XLINK_NS = 'http://www.w3.org/1999/xlink';
-const FILTER_MARGIN = 28;
+const FILTER_MARGIN = 32;
 const MAX_MAP_SIZE = 2048;
+const TRANSPARENT_PIXEL =
+  'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 
 const RUNTIME_STYLES = `
 [data-raf-navbar-shell="true"][data-raf-moving-lens-runtime="ready"]
@@ -16,8 +16,8 @@ const RUNTIME_STYLES = `
   filter: none !important;
   letter-spacing: inherit !important;
   text-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.42),
-    0 0 0.55rem rgba(0, 0, 0, 0.28) !important;
+    0 1px 0 rgba(0,0,0,.42),
+    0 0 .55rem rgba(0,0,0,.28) !important;
 }
 
 [data-raf-navbar-shell="true"][data-raf-moving-lens-runtime="ready"]
@@ -25,33 +25,38 @@ a[aria-current="page"][data-raf-navbar-text-refraction],
 [data-raf-navbar-shell="true"][data-raf-moving-lens-runtime="ready"]
 a[data-raf-navbar-drop-owner="true"][data-raf-navbar-text-refraction] {
   text-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.55),
-    0 0 0.8rem rgba(255, 255, 255, 0.2) !important;
+    0 1px 0 rgba(0,0,0,.55),
+    0 0 .8rem rgba(255,255,255,.2) !important;
 }
 
-[data-raf-navbar-shell="true"][data-raf-moving-lens-runtime="ready"]
 [data-raf-navbar-progressive-text-mask="true"] {
   display: none !important;
 }
 
-[data-raf-navbar-moving-lens="true"],
-[data-raf-navbar-moving-lens="true"] * {
+[data-raf-navbar-moving-lens-scene="true"],
+[data-raf-navbar-moving-lens-scene="true"] * {
   pointer-events: none !important;
   user-select: none !important;
 }
 
-[data-raf-navbar-moving-lens="true"] {
+[data-raf-navbar-moving-lens-scene="true"] {
   position: absolute;
-  z-index: 12;
-  top: 0;
-  left: 0;
+  z-index: 1;
+  inset: 0;
   display: block;
-  overflow: hidden;
-  border-radius: 999px;
-  contain: paint;
-  isolation: isolate;
+  overflow: visible;
+  border: 0 !important;
+  border-radius: inherit;
   opacity: 0;
-  will-change: transform, width, height, opacity;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  mix-blend-mode: normal;
+  isolation: isolate;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
 }
 
 [data-raf-navbar-moving-lens-sample="true"] {
@@ -59,6 +64,12 @@ a[data-raf-navbar-drop-owner="true"][data-raf-navbar-text-refraction] {
   inset: 0;
   display: block;
   overflow: visible;
+  border: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
   transform: translateZ(0);
   transform-origin: 50% 50%;
   will-change: filter;
@@ -70,17 +81,22 @@ a[data-raf-navbar-drop-owner="true"][data-raf-navbar-text-refraction] {
   align-items: center;
   justify-content: center;
   overflow: visible;
+  border: 0 !important;
   white-space: nowrap;
   text-align: center;
   text-decoration: none;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
   transform: none !important;
   transition: none !important;
   animation: none !important;
-  will-change: left, top, width, height;
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  [data-raf-navbar-moving-lens="true"] {
+  [data-raf-navbar-moving-lens-scene="true"] {
     display: none !important;
   }
 }
@@ -90,283 +106,125 @@ const clamp = (value, min, max) => (
   Math.min(max, Math.max(min, value))
 );
 
-function createSvgElement(name, attributes = {}) {
-  const element = document.createElementNS(SVG_NS, name);
-
-  Object.entries(attributes).forEach(([key, value]) => {
-    element.setAttribute(key, String(value));
-  });
-
-  return element;
-}
-
-function setHref(element, value) {
-  element.setAttribute('href', value);
-  element.setAttributeNS(XLINK_NS, 'xlink:href', value);
-}
-
-function createFilterDefinition(id, suffix) {
-  const filter = createSvgElement('filter', {
-    id,
-    filterUnits: 'userSpaceOnUse',
-    primitiveUnits: 'userSpaceOnUse',
-    x: 0,
-    y: 0,
-    width: 10,
-    height: 10,
-    colorInterpolationFilters: 'sRGB',
-  });
-
-  const image = createSvgElement('feImage', {
-    id: `raf-navbar-moving-lens-map-${suffix}`,
-    x: 0,
-    y: 0,
-    width: 10,
-    height: 10,
-    preserveAspectRatio: 'none',
-    result: 'map',
-  });
-  setHref(
-    image,
-    'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',
-  );
-
-  const displacement = createSvgElement('feDisplacementMap', {
-    id: `raf-navbar-moving-lens-displacement-${suffix}`,
-    in: 'SourceGraphic',
-    in2: 'map',
-    scale: 68,
-    xChannelSelector: 'R',
-    yChannelSelector: 'G',
-    result: 'bent',
-  });
-
-  const blur = createSvgElement('feGaussianBlur', {
-    in: 'bent',
-    stdDeviation: 0.14,
-    result: 'softened',
-  });
-
-  const monochrome = createSvgElement('feColorMatrix', {
-    in: 'softened',
-    type: 'saturate',
-    values: 0,
-    result: 'mono',
-  });
-
-  const transfer = createSvgElement('feComponentTransfer', {
-    in: 'mono',
-  });
-
-  ['R', 'G', 'B'].forEach((channel) => {
-    transfer.appendChild(createSvgElement(`feFunc${channel}`, {
-      type: 'gamma',
-      amplitude: 1.26,
-      exponent: 0.82,
-      offset: -0.024,
-    }));
-  });
-
-  filter.append(
-    image,
-    displacement,
-    blur,
-    monochrome,
-    transfer,
-  );
-
-  return {
-    filter,
-    image,
-    displacement,
-  };
-}
-
-function createFilterHost() {
-  const svg = createSvgElement('svg', {
-    'aria-hidden': 'true',
-    focusable: 'false',
-    width: 0,
-    height: 0,
-  });
-
-  Object.assign(svg.style, {
-    position: 'absolute',
-    width: '0px',
-    height: '0px',
-    overflow: 'hidden',
-    pointerEvents: 'none',
-  });
-
-  const defs = createSvgElement('defs');
-  const right = createFilterDefinition(
-    'raf-navbar-moving-lens-right',
-    'right',
-  );
-  const left = createFilterDefinition(
-    'raf-navbar-moving-lens-left',
-    'left',
-  );
-
-  defs.append(right.filter, left.filter);
-  svg.appendChild(defs);
-  document.body.appendChild(svg);
-
-  return {
-    svg,
-    right,
-    left,
-  };
-}
-
-function getDirectDesktopLinks(shell) {
+function getLinks(shell) {
   return Array.from(shell.querySelectorAll('a[href]')).filter(
     (link) => link.parentElement === shell,
   );
 }
 
-function getDesktopParts(shell) {
+function getParts(shell) {
   const warp = shell.querySelector(
     '[data-raf-refraction-target="navbar-pill"]',
   );
   const surface = warp?.parentElement;
   const drop = surface?.parentElement;
-  const links = getDirectDesktopLinks(shell);
+  const links = getLinks(shell);
 
   if (
-    !(drop instanceof HTMLElement)
+    !(surface instanceof HTMLElement)
+    || !(drop instanceof HTMLElement)
     || links.length === 0
   ) {
     return null;
   }
 
-  return {
-    drop,
-    links,
-  };
+  return { surface, drop, links };
 }
 
-function clearLegacyProgressiveEffect(shell) {
+function clearLegacy(shell) {
   shell.querySelectorAll(
     '[data-raf-navbar-progressive-text-mask="true"]',
   ).forEach((node) => node.remove());
 
-  getDirectDesktopLinks(shell).forEach((link) => {
+  getLinks(shell).forEach((link) => {
     delete link.dataset.rafNavbarProgressiveTextLink;
     delete link.dataset.rafProgressiveTextLabel;
     delete link.dataset.rafProgressiveTextState;
 
-    [
-      '--raf-progressive-text-opacity',
-      '--raf-progressive-text-clip',
-      '--raf-progressive-text-origin',
-      '--raf-progressive-text-shift',
-      '--raf-progressive-text-skew',
-      '--raf-progressive-text-scale-x',
-      '--raf-progressive-text-blur',
-      '--raf-progressive-text-saturation',
-      '--raf-progressive-text-shadow-forward',
-      '--raf-progressive-text-shadow-back',
-      '--raf-progressive-text-glow',
-      '--raf-progressive-text-filter',
-    ].forEach((property) => {
-      link.style.removeProperty(property);
+    Array.from(link.style).forEach((property) => {
+      if (property.startsWith('--raf-progressive-text-')) {
+        link.style.removeProperty(property);
+      }
     });
   });
 }
 
-function loadImage(source) {
+function loadImage(src) {
   return new Promise((resolve, reject) => {
     const image = new Image();
     image.onload = () => resolve(image);
     image.onerror = reject;
-    image.src = source;
+    image.src = src;
   });
 }
 
-function decodeChannel(value) {
+function decode(value) {
   return clamp((value - 128) / 127, -1, 1);
 }
 
-function encodeChannel(value) {
+function encode(value) {
   return Math.round(clamp(128 + value * 127, 0, 255));
 }
 
-function rotateMapPixels(sourcePixels, sourceWidth, sourceHeight, direction) {
-  const destinationWidth = sourceHeight;
-  const destinationHeight = sourceWidth;
-  const destination = new Uint8ClampedArray(
-    destinationWidth * destinationHeight * 4,
+function rotatePixels(data, width, height, direction) {
+  const outputWidth = height;
+  const outputHeight = width;
+  const output = new Uint8ClampedArray(
+    outputWidth * outputHeight * 4,
   );
 
-  for (let sourceY = 0; sourceY < sourceHeight; sourceY += 1) {
-    for (let sourceX = 0; sourceX < sourceWidth; sourceX += 1) {
-      const sourceOffset = (
-        sourceY * sourceWidth + sourceX
-      ) * 4;
-
-      const sourceVectorX = decodeChannel(
-        sourcePixels[sourceOffset],
-      );
-      const sourceVectorY = decodeChannel(
-        sourcePixels[sourceOffset + 1],
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const sourceOffset = (y * width + x) * 4;
+      const vectorX = decode(data[sourceOffset]);
+      const vectorY = decode(data[sourceOffset + 1]);
+      const curvature = clamp(
+        Math.hypot(vectorX, vectorY) * 1.35,
+        0,
+        1,
       );
 
-      let destinationX;
-      let destinationY;
-      let destinationVectorX;
-      let destinationVectorY;
-
-      if (direction > 0) {
-        destinationX = sourceHeight - 1 - sourceY;
-        destinationY = sourceX;
-        destinationVectorX = -sourceVectorY;
-        destinationVectorY = sourceVectorX;
-      } else {
-        destinationX = sourceY;
-        destinationY = sourceWidth - 1 - sourceX;
-        destinationVectorX = sourceVectorY;
-        destinationVectorY = -sourceVectorX;
-      }
-
+      const destinationX = direction > 0
+        ? height - 1 - y
+        : y;
+      const destinationY = direction > 0
+        ? x
+        : width - 1 - x;
+      const rotatedX = direction > 0
+        ? -vectorY
+        : vectorY;
+      const rotatedY = direction > 0
+        ? vectorX
+        : -vectorX;
       const destinationOffset = (
-        destinationY * destinationWidth + destinationX
+        destinationY * outputWidth + destinationX
       ) * 4;
 
-      destination[destinationOffset] = encodeChannel(
-        destinationVectorX,
+      output[destinationOffset] = encode(
+        rotatedX + direction * curvature * 0.055,
       );
-      destination[destinationOffset + 1] = encodeChannel(
-        destinationVectorY,
-      );
-      destination[destinationOffset + 2] = 128;
-      destination[destinationOffset + 3] = sourcePixels[
-        sourceOffset + 3
-      ];
+      output[destinationOffset + 1] = encode(rotatedY);
+      output[destinationOffset + 2] = 128;
+      output[destinationOffset + 3] = data[sourceOffset + 3];
     }
   }
 
   return {
-    pixels: destination,
-    width: destinationWidth,
-    height: destinationHeight,
+    data: output,
+    width: outputWidth,
+    height: outputHeight,
   };
 }
 
-async function createDirectionalMaps({
-  width,
-  height,
-  radius,
-}) {
+async function createMaps(width, height, radius) {
   const safeWidth = clamp(Math.round(width), 8, MAX_MAP_SIZE);
   const safeHeight = clamp(Math.round(height), 8, MAX_MAP_SIZE);
-
-  const sourceMap = createRefractionMap({
+  const source = createRefractionMap({
     width: safeHeight,
     height: safeWidth,
     radius,
     margin: FILTER_MARGIN,
-    band: Math.max(8, safeWidth * 0.5),
+    band: Math.max(8, safeHeight * 0.5),
     profileShape: 3.45,
     edgePower: 1.22,
     bodyStrength: 0.2,
@@ -380,97 +238,97 @@ async function createDirectionalMaps({
     verticalLensScale: 1.18,
   });
 
-  if (!sourceMap) {
-    return null;
-  }
+  if (!source) return null;
 
-  const sourceImage = await loadImage(sourceMap.dataUrl);
-  const sourceCanvas = document.createElement('canvas');
-  sourceCanvas.width = sourceMap.width;
-  sourceCanvas.height = sourceMap.height;
+  const image = await loadImage(source.dataUrl);
+  const canvas = document.createElement('canvas');
+  canvas.width = source.width;
+  canvas.height = source.height;
 
-  const sourceContext = sourceCanvas.getContext('2d', {
+  const context = canvas.getContext('2d', {
     alpha: false,
     willReadFrequently: true,
   });
+  if (!context) return null;
 
-  if (!sourceContext) {
-    return null;
-  }
-
-  sourceContext.drawImage(sourceImage, 0, 0);
-  const sourceImageData = sourceContext.getImageData(
+  context.drawImage(image, 0, 0);
+  const pixels = context.getImageData(
     0,
     0,
-    sourceCanvas.width,
-    sourceCanvas.height,
-  );
+    canvas.width,
+    canvas.height,
+  ).data;
 
-  const makeMap = (direction) => {
-    const rotated = rotateMapPixels(
-      sourceImageData.data,
-      sourceCanvas.width,
-      sourceCanvas.height,
+  const make = (direction) => {
+    const rotated = rotatePixels(
+      pixels,
+      canvas.width,
+      canvas.height,
       direction,
     );
+    const target = document.createElement('canvas');
+    target.width = rotated.width;
+    target.height = rotated.height;
 
-    const canvas = document.createElement('canvas');
-    canvas.width = rotated.width;
-    canvas.height = rotated.height;
+    const targetContext = target.getContext('2d', { alpha: false });
+    if (!targetContext) return null;
 
-    const context = canvas.getContext('2d', {
-      alpha: false,
-    });
-
-    if (!context) {
-      return null;
-    }
-
-    const imageData = context.createImageData(
+    const imageData = targetContext.createImageData(
       rotated.width,
       rotated.height,
     );
-    imageData.data.set(rotated.pixels);
-    context.putImageData(imageData, 0, 0);
+    imageData.data.set(rotated.data);
+    targetContext.putImageData(imageData, 0, 0);
 
     return {
-      dataUrl: canvas.toDataURL('image/png'),
+      dataUrl: target.toDataURL('image/png'),
       width: rotated.width,
       height: rotated.height,
-      margin: sourceMap.margin,
+      margin: source.margin,
     };
   };
 
-  const right = makeMap(1);
-  const left = makeMap(-1);
-
-  if (!right || !left) {
-    return null;
-  }
-
-  return {
-    right,
-    left,
-  };
+  const right = make(1);
+  const left = make(-1);
+  return right && left ? { right, left } : null;
 }
 
-function applyMap(filterDefinition, map) {
+function setHref(element, value) {
+  element.setAttribute('href', value);
+  element.setAttributeNS(
+    'http://www.w3.org/1999/xlink',
+    'xlink:href',
+    value,
+  );
+}
+
+function applyMap(suffix, map) {
+  const filter = document.getElementById(
+    `raf-navbar-moving-lens-${suffix}`,
+  );
+  const image = document.getElementById(
+    `raf-navbar-moving-lens-map-${suffix}`,
+  );
+
+  if (!(filter instanceof SVGElement) || !(image instanceof SVGElement)) {
+    return;
+  }
+
   const x = -map.margin;
   const y = -map.margin;
 
-  filterDefinition.filter.setAttribute('x', String(x));
-  filterDefinition.filter.setAttribute('y', String(y));
-  filterDefinition.filter.setAttribute('width', String(map.width));
-  filterDefinition.filter.setAttribute('height', String(map.height));
-
-  filterDefinition.image.setAttribute('x', String(x));
-  filterDefinition.image.setAttribute('y', String(y));
-  filterDefinition.image.setAttribute('width', String(map.width));
-  filterDefinition.image.setAttribute('height', String(map.height));
-  setHref(filterDefinition.image, map.dataUrl);
+  filter.setAttribute('x', String(x));
+  filter.setAttribute('y', String(y));
+  filter.setAttribute('width', String(map.width));
+  filter.setAttribute('height', String(map.height));
+  image.setAttribute('x', String(x));
+  image.setAttribute('y', String(y));
+  image.setAttribute('width', String(map.width));
+  image.setAttribute('height', String(map.height));
+  setHref(image, map.dataUrl);
 }
 
-function createLabelClone(link) {
+function createLabel(link) {
   const clone = document.createElement('span');
   const style = window.getComputedStyle(link);
 
@@ -493,66 +351,85 @@ function createLabelClone(link) {
   return clone;
 }
 
-function getSceneSignature(links) {
+function signature(links) {
   return links.map((link) => [
     link.textContent,
     link.className,
     link.getAttribute('aria-current'),
+    link.dataset.rafNavbarDropOwner,
   ].join('::')).join('||');
 }
 
-function setOriginalLinkMask(link, lensRect) {
-  const linkRect = link.getBoundingClientRect();
-  const overlapLeft = Math.max(linkRect.left, lensRect.left);
-  const overlapRight = Math.min(linkRect.right, lensRect.right);
+function clearMask(link) {
+  [
+    'mask-image',
+    '-webkit-mask-image',
+    'mask-repeat',
+    '-webkit-mask-repeat',
+    'mask-size',
+    '-webkit-mask-size',
+  ].forEach((property) => link.style.removeProperty(property));
+}
 
-  if (
-    overlapRight <= overlapLeft
-    || linkRect.width <= 0.01
-  ) {
-    link.style.removeProperty('mask-image');
-    link.style.removeProperty('-webkit-mask-image');
+function maskLink(link, lensRect) {
+  const rect = link.getBoundingClientRect();
+  const left = Math.max(rect.left, lensRect.left);
+  const right = Math.min(rect.right, lensRect.right);
+
+  if (right <= left || rect.width <= 0.01) {
+    clearMask(link);
     return;
   }
 
-  const start = clamp(
-    ((overlapLeft - linkRect.left) / linkRect.width) * 100,
-    0,
-    100,
-  );
-  const end = clamp(
-    ((overlapRight - linkRect.left) / linkRect.width) * 100,
-    0,
-    100,
-  );
-  const feather = clamp(
-    (0.85 / linkRect.width) * 100,
-    0.08,
-    1.2,
-  );
-  const before = Math.max(0, start - feather);
-  const after = Math.min(100, end + feather);
-
+  const start = clamp(((left - rect.left) / rect.width) * 100, 0, 100);
+  const end = clamp(((right - rect.left) / rect.width) * 100, 0, 100);
+  const feather = clamp((0.7 / rect.width) * 100, 0.06, 0.9);
   const mask = [
     'linear-gradient(90deg,',
     '#000 0%,',
-    `#000 ${before.toFixed(3)}%,`,
+    `#000 ${Math.max(0, start - feather).toFixed(3)}%,`,
     `transparent ${start.toFixed(3)}%,`,
     `transparent ${end.toFixed(3)}%,`,
-    `#000 ${after.toFixed(3)}%,`,
+    `#000 ${Math.min(100, end + feather).toFixed(3)}%,`,
     '#000 100%)',
   ].join(' ');
 
   link.style.setProperty('mask-image', mask);
   link.style.setProperty('-webkit-mask-image', mask);
+  link.style.setProperty('mask-repeat', 'no-repeat');
+  link.style.setProperty('-webkit-mask-repeat', 'no-repeat');
+  link.style.setProperty('mask-size', '100% 100%');
+  link.style.setProperty('-webkit-mask-size', '100% 100%');
 }
 
-function clearOriginalLinkMask(link) {
-  link.style.removeProperty('mask-image');
-  link.style.removeProperty('-webkit-mask-image');
+function inverseTransform(surface) {
+  const style = window.getComputedStyle(surface);
+  const value = style.transform;
+
+  if (!value || value === 'none') {
+    return {
+      value: 'none',
+      origin: style.transformOrigin || '50% 50%',
+    };
+  }
+
+  try {
+    const Matrix = window.DOMMatrixReadOnly || window.DOMMatrix;
+    return {
+      value: Matrix
+        ? new Matrix(value).inverse().toString()
+        : 'none',
+      origin: style.transformOrigin || '50% 50%',
+    };
+  } catch {
+    return {
+      value: 'none',
+      origin: style.transformOrigin || '50% 50%',
+    };
+  }
 }
 
-function attachMovingLens(shell, filterHost) {
+function attach(shell) {
   let disposed = false;
   let frame = 0;
   let previousCenter = null;
@@ -562,112 +439,79 @@ function attachMovingLens(shell, filterHost) {
   let mapKey = '';
   let mapGeneration = 0;
   let mapsReady = false;
-  let labelClones = [];
+  let clones = [];
 
-  clearLegacyProgressiveEffect(shell);
+  clearLegacy(shell);
 
-  const lens = document.createElement('span');
+  const scene = document.createElement('span');
   const sample = document.createElement('span');
-
-  lens.dataset.rafNavbarMovingLens = 'true';
-  lens.setAttribute('aria-hidden', 'true');
+  scene.dataset.rafNavbarMovingLensScene = 'true';
+  scene.setAttribute('aria-hidden', 'true');
   sample.dataset.rafNavbarMovingLensSample = 'true';
-
-  lens.appendChild(sample);
-  shell.appendChild(lens);
+  scene.appendChild(sample);
   shell.dataset.rafMovingLensRuntime = 'ready';
 
-  const rebuildScene = (links) => {
+  const rebuild = (links) => {
     sample.replaceChildren();
-    labelClones = links.map((link) => {
-      const clone = createLabelClone(link);
+    clones = links.map((link) => {
+      const clone = createLabel(link);
       sample.appendChild(clone);
-      return {
-        link,
-        clone,
-      };
+      return { link, clone };
     });
   };
 
-  const requestMaps = ({ width, height, radius }) => {
-    const nextKey = [
-      Math.round(width),
-      Math.round(height),
-      radius.toFixed(2),
-    ].join('x');
+  const requestMaps = (width, height, radius) => {
+    const key = `${Math.round(width)}x${Math.round(height)}x${radius.toFixed(2)}`;
+    if (key === mapKey) return;
 
-    if (nextKey === mapKey) {
-      return;
-    }
-
-    mapKey = nextKey;
+    mapKey = key;
     mapsReady = false;
     const generation = ++mapGeneration;
 
-    createDirectionalMaps({
-      width,
-      height,
-      radius,
-    }).then((maps) => {
-      if (
-        disposed
-        || generation !== mapGeneration
-        || !maps
-      ) {
-        return;
-      }
-
-      applyMap(filterHost.right, maps.right);
-      applyMap(filterHost.left, maps.left);
+    createMaps(width, height, radius).then((maps) => {
+      if (disposed || generation !== mapGeneration || !maps) return;
+      applyMap('right', maps.right);
+      applyMap('left', maps.left);
       mapsReady = true;
     }).catch(() => {
-      if (generation === mapGeneration) {
-        mapsReady = false;
-      }
+      if (generation === mapGeneration) mapsReady = false;
     });
   };
 
   const render = (time) => {
     frame = 0;
+    if (disposed || !shell.isConnected) return;
 
-    if (disposed || !shell.isConnected) {
-      return;
-    }
-
-    const parts = getDesktopParts(shell);
-
+    const parts = getParts(shell);
     if (!parts) {
-      lens.style.opacity = '0';
+      scene.style.opacity = '0';
       frame = window.requestAnimationFrame(render);
       return;
     }
 
-    const nextSignature = getSceneSignature(parts.links);
+    if (scene.parentElement !== parts.surface) {
+      parts.surface.appendChild(scene);
+    }
 
+    const nextSignature = signature(parts.links);
     if (nextSignature !== sceneSignature) {
       sceneSignature = nextSignature;
-      rebuildScene(parts.links);
+      rebuild(parts.links);
     }
 
-    const shellRect = shell.getBoundingClientRect();
     const dropRect = parts.drop.getBoundingClientRect();
-    const localLeft = dropRect.left - shellRect.left;
-    const localTop = dropRect.top - shellRect.top;
-    const width = dropRect.width;
-    const height = dropRect.height;
+    const surfaceRect = parts.surface.getBoundingClientRect();
+    const width = parts.drop.offsetWidth;
+    const height = parts.drop.offsetHeight;
 
     if (width < 8 || height < 8) {
-      parts.links.forEach(clearOriginalLinkMask);
-      lens.style.opacity = '0';
+      parts.links.forEach(clearMask);
+      scene.style.opacity = '0';
       frame = window.requestAnimationFrame(render);
       return;
     }
 
-    lens.style.width = `${width}px`;
-    lens.style.height = `${height}px`;
-    lens.style.transform = `translate3d(${localLeft}px, ${localTop}px, 0)`;
-
-    const center = dropRect.left + width * 0.5;
+    const center = dropRect.left + dropRect.width * 0.5;
     const elapsed = Math.max(1, time - previousTime);
     const velocity = previousCenter === null
       ? 0
@@ -688,59 +532,48 @@ function attachMovingLens(shell, filterHost) {
       window.getComputedStyle(parts.drop).borderTopLeftRadius,
     ) || height * 0.5;
 
-    requestMaps({
-      width,
-      height,
-      radius,
-    });
+    requestMaps(width, height, radius);
 
     const scale = Math.round(clamp(
-      height * 1.65 + Math.abs(velocity) * 18,
+      height * 1.45 + Math.abs(velocity) * 10,
       58,
-      92,
+      82,
     ));
-
-    filterHost.right.displacement.setAttribute(
-      'scale',
-      String(scale),
-    );
-    filterHost.left.displacement.setAttribute(
-      'scale',
-      String(scale),
-    );
+    document.getElementById(
+      'raf-navbar-moving-lens-displacement-right',
+    )?.setAttribute('scale', String(scale));
+    document.getElementById(
+      'raf-navbar-moving-lens-displacement-left',
+    )?.setAttribute('scale', String(scale));
 
     sample.style.filter = [
       `url(#raf-navbar-moving-lens-${direction > 0 ? 'right' : 'left'})`,
-      'contrast(1.035)',
-      'brightness(1.008)',
+      'contrast(1.025)',
+      'brightness(1.004)',
     ].join(' ');
 
-    const lensRect = {
-      left: dropRect.left,
-      right: dropRect.right,
-      top: dropRect.top,
-      bottom: dropRect.bottom,
-      width,
-      height,
-    };
+    const inverse = inverseTransform(parts.surface);
+    scene.style.transformOrigin = inverse.origin;
+    scene.style.transform = inverse.value;
 
-    labelClones.forEach(({ link, clone }) => {
-      const linkRect = link.getBoundingClientRect();
-
-      clone.style.left = `${linkRect.left - lensRect.left}px`;
-      clone.style.top = `${linkRect.top - lensRect.top}px`;
-      clone.style.width = `${linkRect.width}px`;
-      clone.style.height = `${linkRect.height}px`;
+    clones.forEach(({ link, clone }) => {
+      const rect = link.getBoundingClientRect();
+      clone.style.left = `${rect.left - dropRect.left}px`;
+      clone.style.top = `${rect.top - dropRect.top}px`;
+      clone.style.width = `${rect.width}px`;
+      clone.style.height = `${rect.height}px`;
     });
 
     if (mapsReady) {
-      parts.links.forEach((link) => {
-        setOriginalLinkMask(link, lensRect);
-      });
-      lens.style.opacity = '1';
+      const lensRect = {
+        left: surfaceRect.left,
+        right: surfaceRect.right,
+      };
+      parts.links.forEach((link) => maskLink(link, lensRect));
+      scene.style.opacity = '1';
     } else {
-      parts.links.forEach(clearOriginalLinkMask);
-      lens.style.opacity = '0';
+      parts.links.forEach(clearMask);
+      scene.style.opacity = '0';
     }
 
     frame = window.requestAnimationFrame(render);
@@ -751,13 +584,9 @@ function attachMovingLens(shell, filterHost) {
   return () => {
     disposed = true;
     mapGeneration += 1;
-
-    if (frame !== 0) {
-      window.cancelAnimationFrame(frame);
-    }
-
-    getDirectDesktopLinks(shell).forEach(clearOriginalLinkMask);
-    lens.remove();
+    if (frame) window.cancelAnimationFrame(frame);
+    getLinks(shell).forEach(clearMask);
+    scene.remove();
     delete shell.dataset.rafMovingLensRuntime;
   };
 }
@@ -766,27 +595,15 @@ export default function NavbarProgressiveTextRefractionRuntime() {
   useEffect(() => {
     let disposed = false;
     let bindFrame = 0;
-
-    const style = document.createElement('style');
-    style.dataset.rafNavbarMovingLensStyles = 'true';
-    style.textContent = RUNTIME_STYLES;
-    document.head.appendChild(style);
-
-    const filterHost = createFilterHost();
     const bindings = new Map();
 
-    const bindAll = () => {
+    const bind = () => {
       bindFrame = 0;
+      if (disposed) return;
 
-      if (disposed) {
-        return;
-      }
-
-      const shells = new Set(
-        document.querySelectorAll(
-          '[data-raf-navbar-shell="true"]',
-        ),
-      );
+      const shells = new Set(document.querySelectorAll(
+        '[data-raf-navbar-shell="true"]',
+      ));
 
       bindings.forEach((dispose, shell) => {
         if (!shells.has(shell) || !shell.isConnected) {
@@ -799,51 +616,105 @@ export default function NavbarProgressiveTextRefractionRuntime() {
         if (
           shell instanceof HTMLElement
           && !bindings.has(shell)
-          && getDesktopParts(shell)
+          && getParts(shell)
         ) {
-          bindings.set(
-            shell,
-            attachMovingLens(shell, filterHost),
-          );
+          bindings.set(shell, attach(shell));
         }
       });
     };
 
-    const scheduleBind = () => {
-      if (bindFrame !== 0 || disposed) {
-        return;
+    const schedule = () => {
+      if (!bindFrame && !disposed) {
+        bindFrame = window.requestAnimationFrame(bind);
       }
-
-      bindFrame = window.requestAnimationFrame(bindAll);
     };
 
-    const observer = new MutationObserver(scheduleBind);
+    const observer = new MutationObserver(schedule);
     observer.observe(document.body, {
       childList: true,
       subtree: true,
     });
-
-    window.addEventListener('resize', scheduleBind, {
-      passive: true,
-    });
-
-    scheduleBind();
+    window.addEventListener('resize', schedule, { passive: true });
+    schedule();
 
     return () => {
       disposed = true;
       observer.disconnect();
-      window.removeEventListener('resize', scheduleBind);
-
-      if (bindFrame !== 0) {
-        window.cancelAnimationFrame(bindFrame);
-      }
-
+      window.removeEventListener('resize', schedule);
+      if (bindFrame) window.cancelAnimationFrame(bindFrame);
       bindings.forEach((dispose) => dispose());
       bindings.clear();
-      filterHost.svg.remove();
-      style.remove();
     };
   }, []);
 
-  return null;
+  return (
+    <>
+      <style>{RUNTIME_STYLES}</style>
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        width="0"
+        height="0"
+        style={{
+          position: 'absolute',
+          width: 0,
+          height: 0,
+          overflow: 'hidden',
+          pointerEvents: 'none',
+        }}
+      >
+        <defs>
+          {['right', 'left'].map((direction) => (
+            <filter
+              key={direction}
+              id={`raf-navbar-moving-lens-${direction}`}
+              filterUnits="userSpaceOnUse"
+              primitiveUnits="userSpaceOnUse"
+              x="0"
+              y="0"
+              width="10"
+              height="10"
+              colorInterpolationFilters="sRGB"
+            >
+              <feImage
+                id={`raf-navbar-moving-lens-map-${direction}`}
+                href={TRANSPARENT_PIXEL}
+                x="0"
+                y="0"
+                width="10"
+                height="10"
+                preserveAspectRatio="none"
+                result="map"
+              />
+              <feDisplacementMap
+                id={`raf-navbar-moving-lens-displacement-${direction}`}
+                in="SourceGraphic"
+                in2="map"
+                scale="64"
+                xChannelSelector="R"
+                yChannelSelector="G"
+                result="bent"
+              />
+              <feGaussianBlur
+                in="bent"
+                stdDeviation="0.14"
+                result="softened"
+              />
+              <feColorMatrix
+                in="softened"
+                type="saturate"
+                values="0"
+                result="mono"
+              />
+              <feComponentTransfer in="mono">
+                <feFuncR type="gamma" amplitude="1.18" exponent="0.88" offset="-0.018" />
+                <feFuncG type="gamma" amplitude="1.18" exponent="0.88" offset="-0.018" />
+                <feFuncB type="gamma" amplitude="1.18" exponent="0.88" offset="-0.018" />
+              </feComponentTransfer>
+            </filter>
+          ))}
+        </defs>
+      </svg>
+    </>
+  );
 }
