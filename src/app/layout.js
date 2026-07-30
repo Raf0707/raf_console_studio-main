@@ -124,6 +124,14 @@ export default function RootLayout({ children }) {
           <div id="raf-liquid-root">
             <Suspense fallback={null}>
               <Header />
+
+              {/*
+                Both runtimes mutate DOM below the hydrated Header. Keeping them
+                inside the same Suspense boundary guarantees that their effects
+                cannot prepend optical spans into dehydrated server markup.
+              */}
+              <LiquidGlassRuntime />
+              <AgencyShaderRuntime />
             </Suspense>
 
             <div id="raf-page-root">
@@ -135,8 +143,6 @@ export default function RootLayout({ children }) {
 
           <AdaptiveShaderRuntime />
           <FallbackSurfaceRuntime />
-          <LiquidGlassRuntime />
-          <AgencyShaderRuntime />
 
           {/* Глобальные волны, плазма и остальные pointer-анимации сохранены. */}
           {/*<GlobalPointerEffects />*/}
