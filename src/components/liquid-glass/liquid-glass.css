@@ -16,374 +16,69 @@
 
 
 /* =========================================================
-   HEADER / NAVBAR
+   HEADER / NAVBAR — NATIVE SDF + SVG REFRACTION
    ========================================================= */
 
+/*
+ * The Header and desktop Navbar now own a dedicated optical stack:
+ * fallback backdrop, SDF displacement, tint, sheen and rim.
+ * Global liquid-glass styles must not place a second blur above it.
+ */
 body header {
     background: transparent !important;
     border: 0 !important;
     box-shadow: none !important;
-}
-
-/*
- * Применяется сразу при SSR-первом кадре,
- * ещё до того как runtime добавит класс.
- */
-/* =========================================================
-   HEADER — CLEAR LIQUID GLASS
-   ========================================================= */
-
-body header > div:has(nav),
-.raf-liquid-header-panel {
-    position: relative !important;
-
-    isolation: isolate;
-
-    overflow: hidden !important;
-
-    border:
-            1px solid
-            rgba(255, 255, 255, 0.12) !important;
-
-    /*
-     * Почти полностью прозрачное стекло.
-     * Только очень слабые отражения по краям.
-     */
-    background:
-            radial-gradient(
-                    ellipse at 14% -18%,
-                    rgba(255, 255, 255, 0.075),
-                    transparent 42%
-            ),
-
-            radial-gradient(
-                    ellipse at 86% 118%,
-                    rgba(255, 255, 255, 0.045),
-                    transparent 46%
-            ),
-
-            linear-gradient(
-                    138deg,
-                    rgba(255, 255, 255, 0.026),
-                    rgba(255, 255, 255, 0.006) 48%,
-                    rgba(255, 255, 255, 0.018)
-            ) !important;
-
-    box-shadow:
-            inset 0 1px 0
-            rgba(255, 255, 255, 0.24),
-
-            inset 0 -1px 0
-            rgba(0, 0, 0, 0.12),
-
-            inset 0.8rem 0 1.8rem -1.55rem
-            rgba(255, 255, 255, 0.09),
-
-            inset -0.8rem 0 1.8rem -1.55rem
-            rgba(255, 255, 255, 0.055),
-
-            0 1rem 2.8rem -1.7rem
-            rgba(0, 0, 0, 0.42) !important;
-
-    /*
-     * Почти без матового размытия.
-     */
-    backdrop-filter:
-            blur(5px)
-            saturate(112%)
-            contrast(102%) !important;
-
-    -webkit-backdrop-filter:
-            blur(5px)
-            saturate(112%)
-            contrast(102%) !important;
-}
-/*
- * Только тонкий верхний свет.
- * Серой обводки по всему периметру нет.
- */
-body header > div:has(nav)::before,
-.raf-liquid-header-panel::before {
-    position: absolute;
-
-    z-index: -1;
-
-    top: 0;
-    right: 5%;
-    left: 5%;
-
-    height: 38%;
-
-    pointer-events: none;
-
-    content: '';
-
-    border-radius: inherit;
-
-    opacity: 0.42;
-
-    background:
-            radial-gradient(
-                    ellipse at 24% 0%,
-                    rgba(255, 255, 255, 0.13),
-                    rgba(255, 255, 255, 0.025) 28%,
-                    transparent 58%
-            ),
-
-            linear-gradient(
-                    180deg,
-                    rgba(255, 255, 255, 0.055),
-                    transparent 72%
-            );
-
-    filter: none;
-}
-
-body header > div:has(nav)::after,
-.raf-liquid-header-panel::after {
-    position: absolute;
-
-    z-index: -1;
-
-    right: 10%;
-    bottom: -48%;
-    left: 36%;
-
-    height: 66%;
-
-    display: block !important;
-
-    pointer-events: none;
-
-    content: '';
-
-    border-radius: 50%;
-
-    opacity: 0.18;
-
-    background:
-            radial-gradient(
-                    ellipse,
-                    rgba(255, 255, 255, 0.075),
-                    transparent 68%
-            );
-
-    filter: blur(0.45rem);
-}
-
-body header,
-body header > div,
-body header > div:has(nav),
-.raf-liquid-header-panel,
-body header nav,
-.raf-liquid-nav-items {
-    background-color: transparent !important;
-}
-
-
-/* Убираем внутреннюю серую капсулу навигации. */
-
-body header nav,
-.raf-liquid-nav-items {
-    position: relative !important;
-
-    z-index: 2;
-
-    overflow: visible !important;
-
-    border: 0 !important;
-
-    background: transparent !important;
-
-    background-color: transparent !important;
-    background-image: none !important;
-
-    box-shadow: none !important;
-
     backdrop-filter: none !important;
-
     -webkit-backdrop-filter: none !important;
 }
 
-body header,
-body header > div,
-body header > div:has(nav) {
+body header
+[data-raf-native-refraction='true'] {
     background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
-body header > div:not(:has(nav)) {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+body header
+nav[data-raf-navbar-shell='true'] {
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
-body header nav::before,
-.raf-liquid-nav-items::before {
-    display: none !important;
-}
-
-
-/* Текст навигации */
-
-.raf-liquid-nav-items a {
-    color:
-            rgba(255, 255, 255, 0.58) !important;
-
-    text-shadow:
-            0 1px 0
-            rgba(0, 0, 0, 0.24) !important;
-}
-
-.raf-liquid-nav-items a:hover,
-.raf-liquid-nav-items a[aria-current='page'],
-.raf-liquid-nav-items
-a[class*='desktopLinkActive'] {
-    color:
-            rgba(255, 255, 255, 0.98) !important;
-
-    text-shadow:
-            0 0 1rem
-            rgba(255, 255, 255, 0.18) !important;
-}
-
-
-/* Водяная капля активного пункта навигации */
-
-.raf-nav-drop-slot {
-    overflow: visible !important;
-}
-
+/*
+ * Old runtime classes can remain for one hydration frame after HMR.
+ * Keep them optically neutral until LiquidGlassRuntime removes them.
+ */
+body header
+[data-raf-native-refraction='true'].raf-liquid-header-panel,
+body header
+[data-raf-native-refraction='true']
+.raf-liquid-nav-items,
+body header
+[data-raf-native-refraction='true']
 .raf-nav-drop {
-    overflow: hidden !important;
-
-    border:
-            1px solid
-            rgba(255, 255, 255, 0.38) !important;
-
-    background:
-            radial-gradient(
-                    ellipse at 27% 9%,
-                    rgba(255, 255, 255, 0.5),
-                    rgba(255, 255, 255, 0.1) 24%,
-                    transparent 43%
-            ),
-            radial-gradient(
-                    ellipse at 78% 84%,
-                    rgba(255, 255, 255, 0.14),
-                    transparent 46%
-            ),
-            linear-gradient(
-                    132deg,
-                    rgba(255, 255, 255, 0.105),
-                    rgba(255, 255, 255, 0.018) 48%,
-                    rgba(255, 255, 255, 0.075)
-            ) !important;
-
-    box-shadow:
-            inset 0 1px 0
-            rgba(255, 255, 255, 0.68),
-            inset 0 -1px 0
-            rgba(255, 255, 255, 0.07),
-            inset 0 0 0.9rem
-            rgba(255, 255, 255, 0.055),
-            0 0.65rem 1.5rem
-            rgba(0, 0, 0, 0.18) !important;
-
-    backdrop-filter:
-            blur(8px)
-            saturate(128%)
-            contrast(106%) !important;
-
-    -webkit-backdrop-filter:
-            blur(8px)
-            saturate(128%)
-            contrast(106%) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
-.raf-nav-drop-highlight {
-    opacity: 0.58 !important;
-
-    background:
-            linear-gradient(
-                    180deg,
-                    rgba(255, 255, 255, 0.68),
-                    transparent
-            ) !important;
+body header
+[data-raf-native-refraction='true']::before,
+body header
+[data-raf-native-refraction='true']::after,
+body header
+nav[data-raf-navbar-shell='true']::before,
+body header
+nav[data-raf-navbar-shell='true']::after {
+    display: none !important;
+    content: none !important;
 }
 
-.raf-nav-drop-caustic {
-    opacity: 0.34 !important;
-
-    background:
-            radial-gradient(
-                    ellipse,
-                    rgba(255, 255, 255, 0.56),
-                    transparent 70%
-            ) !important;
-}
-
-.raf-nav-drop-ripple {
-    border-color:
-            rgba(255, 255, 255, 0.48) !important;
-
-    box-shadow:
-            0 0 1rem
-            rgba(255, 255, 255, 0.1) !important;
-}
-
-
-/* Кнопки навбара */
-
-.raf-liquid-header-button {
-    border-color:
-            rgba(255, 255, 255, 0.13) !important;
-
-    background:
-            radial-gradient(
-                    circle at 28% 6%,
-                    rgba(255, 255, 255, 0.07),
-                    transparent 46%
-            ),
-            rgba(255, 255, 255, 0.012) !important;
-
-    box-shadow:
-            inset 0 1px 0
-            rgba(255, 255, 255, 0.18),
-
-            inset 0 -1px 0
-            rgba(0, 0, 0, 0.1),
-
-            0 0.45rem 1.2rem -0.8rem
-            rgba(0, 0, 0, 0.42) !important;
-
-    backdrop-filter:
-            blur(4px)
-            saturate(110%) !important;
-
-    -webkit-backdrop-filter:
-            blur(4px)
-            saturate(110%) !important;
-}
-
-.raf-liquid-header-button:hover {
-    border-color:
-            rgba(255, 255, 255, 0.24) !important;
-
-    background:
-            radial-gradient(
-                    circle at 30% 5%,
-                    rgba(255, 255, 255, 0.11),
-                    transparent 48%
-            ),
-            rgba(255, 255, 255, 0.026) !important;
-}
-
-.raf-liquid-header-button svg,
-.raf-liquid-globe-button svg,
+/* Header controls keep their own component styles. */
 body header button svg {
     color: #fff !important;
     stroke: #fff !important;
 }
-
 
 /* =========================================================
    SEGMENT BUTTON
@@ -2622,3 +2317,218 @@ prefers-reduced-motion: reduce
     }
 }
 
+/* ========================================================================== 
+   CONTENT GLASS CARDS — RESTORED AFTER NAVBAR OPTICAL PIPELINE
+   ========================================================================== */
+
+/*
+ * Новый SDF/SVG Navbar полностью изолирован от карточек контента.
+ * Эти правила возвращают исходную прозрачную WebGL-поверхность проектам
+ * и карточкам контактов, не затрагивая их hover-анимации и layout.
+ */
+html.raf-glass-shader .raf-content-glass-card,
+html.raf-glass-shader .project-card,
+html.raf-glass-shader .raf-liquid-card,
+html.raf-glass-shader [class*='contactCard'],
+html.raf-glass-shader [class*='developerCard'],
+html.raf-glass-shader .raf-content-glass-card.raf-shader-surface,
+html.raf-glass-shader .project-card.raf-shader-surface,
+html.raf-glass-shader .raf-liquid-card.raf-shader-surface,
+html.raf-glass-shader [class*='contactCard'].raf-shader-surface,
+html.raf-glass-shader [class*='developerCard'].raf-shader-surface {
+    background-color: rgba(255, 255, 255, 0.003) !important;
+
+    background-image:
+        radial-gradient(
+            ellipse at 12% -8%,
+            rgba(255, 255, 255, 0.075),
+            transparent 39%
+        ),
+        radial-gradient(
+            ellipse at 96% 112%,
+            rgba(255, 255, 255, 0.028),
+            transparent 48%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.014),
+            rgba(255, 255, 255, 0.001) 54%,
+            rgba(255, 255, 255, 0.006)
+        ) !important;
+
+    border-color: rgba(255, 255, 255, 0.18) !important;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+        inset 1rem 0 2rem -1.7rem rgba(255, 255, 255, 0.13),
+        inset -1rem 0 2rem -1.7rem rgba(255, 255, 255, 0.055),
+        0 1.2rem 3.2rem -2.1rem rgba(0, 0, 0, 0.5) !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/*
+ * CSS fallback остаётся прозрачным стеклом, а не плотной серой карточкой.
+ * Blur используется только когда процедурный WebGL недоступен.
+ */
+html.raf-glass-fallback .raf-content-glass-card,
+html.raf-glass-fallback .project-card,
+html.raf-glass-fallback .raf-liquid-card,
+html.raf-glass-fallback [class*='contactCard'],
+html.raf-glass-fallback [class*='developerCard'] {
+    background-color: rgba(10, 11, 15, 0.16) !important;
+
+    background-image:
+        radial-gradient(
+            ellipse at 12% -8%,
+            rgba(255, 255, 255, 0.09),
+            transparent 42%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.035),
+            rgba(255, 255, 255, 0.008) 58%,
+            rgba(0, 0, 0, 0.025)
+        ) !important;
+
+    backdrop-filter:
+        blur(9px)
+        saturate(112%)
+        contrast(104%) !important;
+
+    -webkit-backdrop-filter:
+        blur(9px)
+        saturate(112%)
+        contrast(104%) !important;
+}
+
+
+
+/* ========================================================================== 
+   PRIVACY POLICY GLASS — TRANSPARENCY RESTORED
+   ========================================================================== */
+
+/*
+ * The optical Navbar pipeline must not turn Policy cards into opaque panels.
+ * These selectors cover the RU and EN CSS Module class names in production.
+ */
+html.raf-glass-shader [class*='PrivacyPolicy_hero'],
+html.raf-glass-shader [class*='PrivacyPolicy_navigationCard'],
+html.raf-glass-shader [class*='PrivacyPolicy_introduction'],
+html.raf-glass-shader [class*='PrivacyPolicy_policySection'],
+html.raf-glass-shader [class*='PrivacyPolicy_documentFooter'],
+html.raf-glass-shader [class*='PrivacyPolicy_purposeCard'],
+html.raf-glass-shader [class*='PrivacyPolicy_consentCard'],
+html.raf-glass-shader [class*='PrivacyPolicy_serviceItem'],
+html.raf-glass-shader [class*='PrivacyPolicy_worldCard'],
+html.raf-glass-shader [class*='PrivacyPolicy_licenseCard'],
+html.raf-glass-shader [class*='PrivacyPolicy_contactCard'],
+html.raf-glass-shader [class*='PrivacyPolicy_notice'],
+html.raf-glass-shader [class*='PrivacyPolicy_warningNotice'],
+html.raf-glass-shader [class*='PrivacyPolicy_primaryNotice'],
+html.raf-glass-shader [class*='PrivacyPolicy_updateCard'],
+html.raf-glass-shader [class*='PrivacyPolicy_securityGrid'] > div,
+html.raf-glass-shader [class*='PrivacyPolicy_checkList'] > li,
+html.raf-glass-shader [class*='PrivacyPolicy_hero'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_navigationCard'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_introduction'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_policySection'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_documentFooter'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_purposeCard'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_consentCard'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_serviceItem'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_worldCard'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_licenseCard'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_contactCard'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_notice'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_warningNotice'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_primaryNotice'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_updateCard'].raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_securityGrid'] > div.raf-shader-surface,
+html.raf-glass-shader [class*='PrivacyPolicy_checkList'] > li.raf-shader-surface {
+    background-color: rgba(255, 255, 255, 0.0025) !important;
+    background-image:
+        radial-gradient(
+            ellipse at 12% -8%,
+            rgba(255, 255, 255, 0.065),
+            transparent 39%
+        ),
+        radial-gradient(
+            ellipse at 96% 112%,
+            rgba(255, 255, 255, 0.024),
+            transparent 48%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.011),
+            rgba(255, 255, 255, 0.001) 54%,
+            rgba(255, 255, 255, 0.005)
+        ) !important;
+
+    border-color: rgba(255, 255, 255, 0.15) !important;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+        inset 1rem 0 2rem -1.7rem rgba(255, 255, 255, 0.11),
+        inset -1rem 0 2rem -1.7rem rgba(255, 255, 255, 0.045),
+        0 1.25rem 3.4rem -2.25rem rgba(0, 0, 0, 0.5) !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* The large hero keeps a slightly stronger edge while remaining transparent. */
+html.raf-glass-shader [class*='PrivacyPolicy_hero'],
+html.raf-glass-shader [class*='PrivacyPolicy_hero'].raf-shader-surface {
+    background-color: rgba(255, 255, 255, 0.0015) !important;
+    border-color: rgba(255, 255, 255, 0.17) !important;
+}
+
+/*
+ * CSS fallback: keep the page readable without restoring the old dense
+ * 1.4rem frosted film from the Policy CSS Module.
+ */
+html.raf-glass-fallback [class*='PrivacyPolicy_hero'],
+html.raf-glass-fallback [class*='PrivacyPolicy_navigationCard'],
+html.raf-glass-fallback [class*='PrivacyPolicy_introduction'],
+html.raf-glass-fallback [class*='PrivacyPolicy_policySection'],
+html.raf-glass-fallback [class*='PrivacyPolicy_documentFooter'],
+html.raf-glass-fallback [class*='PrivacyPolicy_purposeCard'],
+html.raf-glass-fallback [class*='PrivacyPolicy_consentCard'],
+html.raf-glass-fallback [class*='PrivacyPolicy_serviceItem'],
+html.raf-glass-fallback [class*='PrivacyPolicy_worldCard'],
+html.raf-glass-fallback [class*='PrivacyPolicy_licenseCard'],
+html.raf-glass-fallback [class*='PrivacyPolicy_contactCard'],
+html.raf-glass-fallback [class*='PrivacyPolicy_notice'],
+html.raf-glass-fallback [class*='PrivacyPolicy_warningNotice'],
+html.raf-glass-fallback [class*='PrivacyPolicy_primaryNotice'],
+html.raf-glass-fallback [class*='PrivacyPolicy_updateCard'],
+html.raf-glass-fallback [class*='PrivacyPolicy_securityGrid'] > div,
+html.raf-glass-fallback [class*='PrivacyPolicy_checkList'] > li {
+    background-color: rgba(8, 9, 12, 0.14) !important;
+    background-image:
+        radial-gradient(
+            ellipse at 12% -8%,
+            rgba(255, 255, 255, 0.075),
+            transparent 42%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.026),
+            rgba(255, 255, 255, 0.006) 58%,
+            rgba(0, 0, 0, 0.02)
+        ) !important;
+
+    backdrop-filter:
+        blur(6px)
+        saturate(108%)
+        contrast(103%) !important;
+
+    -webkit-backdrop-filter:
+        blur(6px)
+        saturate(108%)
+        contrast(103%) !important;
+}

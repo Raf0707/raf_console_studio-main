@@ -119,9 +119,50 @@ function enhanceHeader() {
         return;
     }
 
-    panel.classList.add('raf-liquid-header-panel');
-
     const nav = panel.querySelector('nav');
+
+    /*
+     * Header with the native SDF/SVG refraction pipeline owns its own
+     * layers. Old liquid-glass classes must be removed so global CSS
+     * cannot add a second blur or overwrite the optical rim.
+     */
+    if (
+        panel.matches(
+            '[data-raf-native-refraction="true"]',
+        )
+    ) {
+        panel.classList.remove(
+            'raf-liquid-header-panel',
+        );
+
+        if (nav instanceof HTMLElement) {
+            nav.classList.remove(
+                'raf-liquid-nav-items',
+            );
+
+            nav
+                .querySelectorAll(
+                    '.raf-nav-drop-slot, ' +
+                    '.raf-nav-drop, ' +
+                    '.raf-nav-drop-highlight, ' +
+                    '.raf-nav-drop-caustic, ' +
+                    '.raf-nav-drop-ripple',
+                )
+                .forEach((element) => {
+                    element.classList.remove(
+                        'raf-nav-drop-slot',
+                        'raf-nav-drop',
+                        'raf-nav-drop-highlight',
+                        'raf-nav-drop-caustic',
+                        'raf-nav-drop-ripple',
+                    );
+                });
+        }
+
+        return;
+    }
+
+    panel.classList.add('raf-liquid-header-panel');
 
     if (nav instanceof HTMLElement) {
         nav.classList.add('raf-liquid-nav-items');
@@ -820,20 +861,61 @@ export default function LiquidGlassRuntime() {
         const enhanceProjectCards = (root = document) => {
             const searchRoot = root instanceof Element ? root : document;
 
-            searchRoot.querySelectorAll('.project-card').forEach((card) => {
-                if (!(card instanceof HTMLElement)) {
-                    return;
-                }
+            /*
+             * Прозрачные карточки контента должны сохранять собственный
+             * WebGL/CSS glass pipeline независимо от нового Navbar.
+             *
+             * CSS Modules добавляют хэш к именам классов, но сохраняют
+             * исходную часть contactCard/developerCard, поэтому селекторы
+             * ниже одинаково работают в RU/EN и после production build.
+             */
+            searchRoot
+                .querySelectorAll(
+                    [
+                        '.project-card',
+                        '[class*="contactCard"]',
+                        '[class*="developerCard"]',
 
-                /*
-                 * Важно: внутрь React-карточки больше ничего не вставляется.
-                 * Только классы и CSS-переменные — React безопасно удаляет и
-                 * заменяет карточки при переключении SegmentButton.
-                 */
-                card.classList.add('raf-liquid-card');
-                card.style.setProperty('--raf-water-x', '16%');
-                card.style.setProperty('--raf-water-y', '24%');
-            });
+                        /* Privacy Policy — RU/EN CSS Modules. */
+                        '[class*="PrivacyPolicy_hero"]',
+                        '[class*="PrivacyPolicy_navigationCard"]',
+                        '[class*="PrivacyPolicy_introduction"]',
+                        '[class*="PrivacyPolicy_policySection"]',
+                        '[class*="PrivacyPolicy_documentFooter"]',
+                        '[class*="PrivacyPolicy_purposeCard"]',
+                        '[class*="PrivacyPolicy_consentCard"]',
+                        '[class*="PrivacyPolicy_serviceItem"]',
+                        '[class*="PrivacyPolicy_worldCard"]',
+                        '[class*="PrivacyPolicy_licenseCard"]',
+                        '[class*="PrivacyPolicy_contactCard"]',
+                        '[class*="PrivacyPolicy_notice"]',
+                        '[class*="PrivacyPolicy_warningNotice"]',
+                        '[class*="PrivacyPolicy_primaryNotice"]',
+                        '[class*="PrivacyPolicy_updateCard"]',
+                        '[class*="PrivacyPolicy_securityGrid"] > div',
+                        '[class*="PrivacyPolicy_checkList"] > li',
+                    ].join(','),
+                )
+                .forEach((card) => {
+                    if (!(card instanceof HTMLElement)) {
+                        return;
+                    }
+
+                    card.classList.add(
+                        'raf-content-glass-card',
+                    );
+
+                    if (card.matches('.project-card')) {
+                        /*
+                         * Важно: внутрь React-карточки ничего не вставляется.
+                         * Только классы и CSS-переменные — React безопасно
+                         * удаляет и заменяет карточки при SegmentButton.
+                         */
+                        card.classList.add('raf-liquid-card');
+                        card.style.setProperty('--raf-water-x', '16%');
+                        card.style.setProperty('--raf-water-y', '24%');
+                    }
+                });
         };
 
         const scanInterface = (root = document) => {

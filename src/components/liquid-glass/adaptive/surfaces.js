@@ -7,6 +7,38 @@ import { clamp } from './capabilities';
 const SURFACE_IGNORE_SELECTOR =
     '[data-raf-shader-ignore="true"]';
 
+const NATIVE_REFRACTION_SELECTOR =
+    '[data-raf-native-refraction="true"]';
+
+const POLICY_GLASS_CARD_SELECTOR = [
+    '[class*="PrivacyPolicy_hero"]',
+    '[class*="PrivacyPolicy_navigationCard"]',
+    '[class*="PrivacyPolicy_introduction"]',
+    '[class*="PrivacyPolicy_policySection"]',
+    '[class*="PrivacyPolicy_documentFooter"]',
+    '[class*="PrivacyPolicy_purposeCard"]',
+    '[class*="PrivacyPolicy_consentCard"]',
+    '[class*="PrivacyPolicy_serviceItem"]',
+    '[class*="PrivacyPolicy_worldCard"]',
+    '[class*="PrivacyPolicy_licenseCard"]',
+    '[class*="PrivacyPolicy_contactCard"]',
+    '[class*="PrivacyPolicy_notice"]',
+    '[class*="PrivacyPolicy_warningNotice"]',
+    '[class*="PrivacyPolicy_primaryNotice"]',
+    '[class*="PrivacyPolicy_updateCard"]',
+    '[class*="PrivacyPolicy_securityGrid"] > div',
+    '[class*="PrivacyPolicy_checkList"] > li',
+].join(',');
+
+const CONTENT_GLASS_CARD_SELECTOR = [
+    '.raf-content-glass-card',
+    '.project-card',
+    '.raf-liquid-card',
+    '[class*="contactCard"]',
+    '[class*="developerCard"]',
+    POLICY_GLASS_CARD_SELECTOR,
+].join(',');
+
 /*
  * Эти элементы являются шейдерными поверхностями явно.
  * Для них не требуется проверять CSS backdrop-filter.
@@ -19,8 +51,7 @@ const EXPLICIT_SURFACE_SELECTOR = [
     '.raf-liquid-segment',
     '[data-liquid-segment="true"]',
     '.raf-liquid-button',
-    '.raf-liquid-card',
-    '.project-card',
+    CONTENT_GLASS_CARD_SELECTOR,
 ].join(',');
 
 /*
@@ -45,7 +76,10 @@ function clearSurfaceState(element) {
 
 function isIgnoredSurface(element) {
     return Boolean(
-        element.closest(SURFACE_IGNORE_SELECTOR),
+        element.closest(
+            `${SURFACE_IGNORE_SELECTOR}, ` +
+            NATIVE_REFRACTION_SELECTOR,
+        ),
     );
 }
 
@@ -127,6 +161,14 @@ function surfaceKind(element) {
         return 0.56;
     }
 
+    if (
+        element.matches(
+            CONTENT_GLASS_CARD_SELECTOR,
+        )
+    ) {
+        return 1.08;
+    }
+
     return 1;
 }
 
@@ -158,8 +200,12 @@ export function collectSurfaces(maxSurfaces) {
      */
     root
         .querySelectorAll(
-            `${SURFACE_IGNORE_SELECTOR}, ` +
-            `${SURFACE_IGNORE_SELECTOR} *`,
+            [
+                SURFACE_IGNORE_SELECTOR,
+                `${SURFACE_IGNORE_SELECTOR} *`,
+                NATIVE_REFRACTION_SELECTOR,
+                `${NATIVE_REFRACTION_SELECTOR} *`,
+            ].join(', '),
         )
         .forEach((element) => {
             clearSurfaceState(element);
@@ -320,6 +366,19 @@ export function collectSurfaces(maxSurfaces) {
                 )
             ) {
                 priority += 1100;
+            }
+
+            /*
+             * Проекты и контакты получают высокий, но стабильный приоритет.
+             * Новый Header/Navbar не участвует в этом WebGL-списке, поэтому
+             * карточки не теряют преломление и прозрачность после навигации.
+             */
+            if (
+                element.matches(
+                    CONTENT_GLASS_CARD_SELECTOR,
+                )
+            ) {
+                priority += 1450;
             }
 
             if (kind < 0.6) {

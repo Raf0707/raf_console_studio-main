@@ -18,10 +18,12 @@ import {
 } from 'react';
 
 import Navbar from '@/components/Navbar';
+import NavbarRefractionRuntime from '@/components/liquid-glass/refraction/NavbarRefractionRuntime';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 import styles from './Header.module.css';
+import refractionStyles from './HeaderRefraction.module.css';
 
 const LANGUAGE_ANIMATION_DURATION = 360;
 
@@ -445,133 +447,60 @@ export default function Header() {
                 scrolled && 'pt-2'
             )}
         >
-            <svg
-                className="
-          pointer-events-none
-          absolute
-          h-0
-          w-0
-          overflow-hidden
-        "
-                width="0"
-                height="0"
-                aria-hidden="true"
-                focusable="false"
-            >
-                <defs>
-                    <filter
-                        id="raf-navbar-liquid"
-                        x="-30%"
-                        y="-90%"
-                        width="160%"
-                        height="280%"
-                    >
-                        <feTurbulence
-                            type="fractalNoise"
-                            baseFrequency="0.015 0.06"
-                            numOctaves="2"
-                            seed="17"
-                            result="noise"
-                        />
-
-                        <feGaussianBlur
-                            in="noise"
-                            stdDeviation="1.1"
-                            result="softNoise"
-                        />
-
-                        <feDisplacementMap
-                            in="SourceGraphic"
-                            in2="softNoise"
-                            scale="12"
-                            xChannelSelector="R"
-                            yChannelSelector="G"
-                            result="displaced"
-                        />
-
-                        <feSpecularLighting
-                            in="softNoise"
-                            surfaceScale="3"
-                            specularConstant="0.55"
-                            specularExponent="20"
-                            lightingColor="#ffffff"
-                            result="specular"
-                        >
-                            <feDistantLight
-                                azimuth="225"
-                                elevation="48"
-                            />
-                        </feSpecularLighting>
-
-                        <feComposite
-                            in="specular"
-                            in2="SourceAlpha"
-                            operator="in"
-                            result="specularCut"
-                        />
-
-                        <feBlend
-                            in="displaced"
-                            in2="specularCut"
-                            mode="screen"
-                        />
-                    </filter>
-                </defs>
-            </svg>
+            <NavbarRefractionRuntime />
 
             <div
+                data-raf-native-refraction="true"
+                data-raf-shader-ignore="true"
+                data-raf-refraction-pointer="true"
+                data-raf-scrolled={scrolled ? 'true' : 'false'}
                 className={cn(
+                    refractionStyles.shell,
                     [
                         'relative mx-auto',
-                        'isolate overflow-hidden',
-                        'flex min-h-16 w-full',
+                        'flex min-h-[4.5rem] w-full',
                         'max-w-[96rem]',
                         'items-center justify-between',
                         'gap-2',
-                        'rounded-[1.75rem]',
-                        'border border-white/18',
-                        'bg-white/[0.055]',
                         'px-3',
                         'text-white',
-
-                        'shadow-[0_1rem_3.5rem_rgba(0,0,0,.24),inset_0_1px_0_rgba(255,255,255,.28),inset_0_-1px_0_rgba(255,255,255,.06)]',
-
-                        'backdrop-blur-[30px]',
-                        'backdrop-saturate-[185%]',
-                        'backdrop-contrast-[108%]',
-
-                        'transition-[background-color,border-color,box-shadow,backdrop-filter]',
-                        'duration-500',
-
-                        'before:pointer-events-none',
-                        'before:absolute',
-                        'before:inset-0',
-                        'before:-z-10',
-                        'before:rounded-[inherit]',
-                        'before:bg-[linear-gradient(135deg,rgba(255,255,255,.13),rgba(255,255,255,.035)_38%,rgba(255,255,255,.015)_62%,rgba(255,255,255,.09))]',
-
-                        'after:pointer-events-none',
-                        'after:absolute',
-                        'after:inset-x-[10%]',
-                        'after:top-0',
-                        'after:-z-10',
-                        'after:h-px',
-                        'after:bg-gradient-to-r',
-                        'after:from-transparent',
-                        'after:via-white/65',
-                        'after:to-transparent',
-
                         'sm:px-4',
                         'lg:gap-3',
                         'xl:px-5',
-                    ],
-                    scrolled && [
-                        'border-white/22',
-                        'bg-white/[0.075]',
-                        'shadow-[0_1.4rem_4.5rem_rgba(0,0,0,.34),inset_0_1px_0_rgba(255,255,255,.3),inset_0_-1px_0_rgba(255,255,255,.07)]',
                     ]
                 )}
             >
+                <span
+                    aria-hidden="true"
+                    className={refractionStyles.base}
+                />
+                <span
+                    aria-hidden="true"
+                    data-raf-refraction-target="header-shell"
+                    className={refractionStyles.warp}
+                />
+                <span
+                    aria-hidden="true"
+                    data-raf-refraction-target="header-entry"
+                    className={refractionStyles.warpEntry}
+                />
+                <span
+                    aria-hidden="true"
+                    data-raf-refraction-target="header-lip"
+                    className={refractionStyles.warpLip}
+                />
+                <span
+                    aria-hidden="true"
+                    className={refractionStyles.tint}
+                />
+                <span
+                    aria-hidden="true"
+                    className={refractionStyles.sheen}
+                />
+                <span
+                    aria-hidden="true"
+                    className={refractionStyles.rim}
+                />
                 <Link
                     href={
                         isRussian
@@ -579,48 +508,38 @@ export default function Header() {
                             : '/main'
                     }
                     scroll={false}
-                    className="
-            relative
-            z-20
-            shrink-0
-            whitespace-nowrap
-            text-xs
-            font-semibold
-            tracking-[-0.04em]
-            text-white
-            sm:text-sm
-            xl:text-base
-          "
+                    className={cn(
+                        refractionStyles.content,
+                        'relative z-20 shrink-0 whitespace-nowrap text-xs font-semibold tracking-[-0.04em] text-white sm:text-sm xl:text-base'
+                    )}
                 >
                     Raf&lt;/&gt;Console{' '}
 
-                    <span
-                        className="
-              hidden
-              font-normal
-              text-white/45
-              2xl:inline
-            "
-                    >
-            Studio
-          </span>
+                    <span className="hidden font-normal text-white/45 2xl:inline">
+                        Studio
+                    </span>
                 </Link>
 
                 <Navbar
                     navLinks={navLinks}
                     isRussian={isRussian}
                     pathname={normalizedPathname}
+                    variant="desktop"
                 />
 
                 <div
-                    className="
-            relative
-            z-20
-            flex
-            shrink-0
-            items-center
-          "
+                    className={cn(
+                        refractionStyles.content,
+                        'relative z-20 flex shrink-0 items-center gap-1.5'
+                    )}
                 >
+                    <Navbar
+                        navLinks={navLinks}
+                        isRussian={isRussian}
+                        pathname={normalizedPathname}
+                        variant="mobile"
+                    />
+
                     <Button
                         type="button"
                         variant="ghost"

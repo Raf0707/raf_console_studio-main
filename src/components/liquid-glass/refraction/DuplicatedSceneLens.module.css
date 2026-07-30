@@ -1,0 +1,114 @@
+.lensViewport {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+
+    display: block;
+    overflow: hidden;
+
+    border-radius: inherit;
+    pointer-events: none;
+    contain: strict;
+    transform: translateZ(0);
+}
+
+.band {
+    --raf-band-overlap: 2px;
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(
+        (100% * var(--raf-band-index) / var(--raf-band-count))
+        - var(--raf-band-overlap)
+    );
+
+    height: calc(
+        (100% / var(--raf-band-count))
+        + (var(--raf-band-overlap) * 2)
+    );
+
+    display: block;
+    overflow: hidden;
+    pointer-events: none;
+    transform: translateZ(0);
+
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0,
+        #000 var(--raf-band-overlap),
+        #000 calc(100% - var(--raf-band-overlap)),
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0,
+        #000 var(--raf-band-overlap),
+        #000 calc(100% - var(--raf-band-overlap)),
+        transparent 100%
+    );
+}
+
+.sceneHost {
+    position: absolute;
+    inset: 0;
+    display: block;
+    pointer-events: none;
+    overflow: visible;
+}
+
+.sceneClone {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+
+    width: var(--raf-scene-width) !important;
+    min-width: var(--raf-scene-width) !important;
+    max-width: none !important;
+    height: var(--raf-scene-height) !important;
+    min-height: var(--raf-scene-height) !important;
+    max-height: none !important;
+
+    margin: 0 !important;
+    pointer-events: none !important;
+    user-select: none !important;
+
+    transform-origin:
+        var(--raf-lens-origin-x)
+        var(--raf-lens-origin-y) !important;
+
+    transform:
+        translate3d(var(--raf-scene-x), var(--raf-scene-y), 0)
+        translateY(var(--raf-band-shift))
+        scaleX(var(--raf-band-scale-x))
+        scaleY(var(--raf-band-scale-y)) !important;
+
+    filter:
+        blur(var(--raf-band-blur))
+        contrast(1.02)
+        saturate(1.025) !important;
+
+    opacity: 0.985;
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+.sceneClone,
+.sceneClone * {
+    caret-color: transparent !important;
+    pointer-events: none !important;
+}
+
+.sceneClone [data-raf-navbar-shell],
+.sceneClone [data-raf-mobile-navigation-fab],
+.sceneClone [data-raf-lens-overlay],
+.sceneClone [data-raf-lens-clone] {
+    display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sceneClone,
+    .sceneClone * {
+        transition-duration: 0.001ms !important;
+    }
+}

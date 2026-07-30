@@ -401,7 +401,35 @@ export default function AdaptiveShaderRuntime() {
         });
         reducedMotion.addEventListener?.('change', handleReducedMotion);
 
-        mutationObserver = new MutationObserver(() => {
+        mutationObserver = new MutationObserver((mutations) => {
+            const hasRelevantMutation = mutations.some((mutation) => {
+                const target = mutation.target;
+
+                if (!(target instanceof Element)) {
+                    return true;
+                }
+
+                /*
+                 * The Header/Navbar optical pipeline updates pointer sheen,
+                 * SDF maps and pill DOM independently. None of those changes
+                 * affect the procedural WebGL surface list, so rescanning on
+                 * every pointer frame would waste work and cause flicker.
+                 */
+                if (
+                    target.closest(
+                        '[data-raf-native-refraction="true"]',
+                    )
+                ) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            if (!hasRelevantMutation) {
+                return;
+            }
+
             needsSurfaceScan = true;
             needsRectRefresh = true;
         });

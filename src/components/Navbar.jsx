@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { createPortal } from 'react-dom';
 import {
   ArrowDown,
   ArrowUp,
@@ -79,6 +80,13 @@ export default function Navbar({
   const [visualIndex, setVisualIndex] = useState(routeIndex);
   const [impactId, setImpactId] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileFabPortalReady, setMobileFabPortalReady] = useState(false);
+  const [mobileFabPosition, setMobileFabPosition] = useState({
+    right: 16,
+    bottom: 16,
+    viewportWidth: 0,
+    viewportHeight: 0,
+  });
 
   const [mobileSelectedIndex, setMobileSelectedIndex] = useState(routeIndex);
   const [mobileTransitionIndex, setMobileTransitionIndex] = useState(null);
@@ -103,6 +111,109 @@ export default function Navbar({
     };
   }, []);
 
+  useEffect(() => {
+    setMobileFabPortalReady(true);
+
+    const updateMobileFabPosition = () => {
+      const viewport = window.visualViewport;
+
+      const viewportWidth = Math.max(
+        1,
+        Math.round(viewport?.width ?? window.innerWidth),
+      );
+      const viewportHeight = Math.max(
+        1,
+        Math.round(viewport?.height ?? window.innerHeight),
+      );
+
+      const viewportOffsetLeft = Math.round(
+        viewport?.offsetLeft ?? 0,
+      );
+      const viewportOffsetTop = Math.round(
+        viewport?.offsetTop ?? 0,
+      );
+
+      const right = Math.max(
+        16,
+        Math.round(
+          window.innerWidth
+          - (viewportOffsetLeft + viewportWidth)
+          + 16,
+        ),
+      );
+
+      const bottom = Math.max(
+        16,
+        Math.round(
+          window.innerHeight
+          - (viewportOffsetTop + viewportHeight)
+          + 16,
+        ),
+      );
+
+      setMobileFabPosition((current) => {
+        if (
+          current.right === right
+          && current.bottom === bottom
+          && current.viewportWidth === viewportWidth
+          && current.viewportHeight === viewportHeight
+        ) {
+          return current;
+        }
+
+        return {
+          right,
+          bottom,
+          viewportWidth,
+          viewportHeight,
+        };
+      });
+    };
+
+    updateMobileFabPosition();
+
+    window.addEventListener(
+      'resize',
+      updateMobileFabPosition,
+      { passive: true },
+    );
+    window.addEventListener(
+      'orientationchange',
+      updateMobileFabPosition,
+      { passive: true },
+    );
+
+    window.visualViewport?.addEventListener(
+      'resize',
+      updateMobileFabPosition,
+      { passive: true },
+    );
+    window.visualViewport?.addEventListener(
+      'scroll',
+      updateMobileFabPosition,
+      { passive: true },
+    );
+
+    return () => {
+      window.removeEventListener(
+        'resize',
+        updateMobileFabPosition,
+      );
+      window.removeEventListener(
+        'orientationchange',
+        updateMobileFabPosition,
+      );
+      window.visualViewport?.removeEventListener(
+        'resize',
+        updateMobileFabPosition,
+      );
+      window.visualViewport?.removeEventListener(
+        'scroll',
+        updateMobileFabPosition,
+      );
+    };
+  }, []);
+
   const activateDrop = (index) => {
     setVisualIndex(index);
     setImpactId((currentImpactId) => currentImpactId + 1);
@@ -123,9 +234,11 @@ export default function Navbar({
     ) % navLinks.length;
 
     /*
-     * Сначала новый пункт растекается как жидкая капля.
-     * Только после сборки он становится выбранным.
+     * Новый пункт становится активным сразу. Поэтому линза, блики и
+     * каустика начинают движение одновременно с деформацией карточки,
+     * без позднего «перезапуска» освещения после таймера.
      */
+    setMobileSelectedIndex(nextIndex);
     setMobileTransitionIndex(nextIndex);
     setMobileImpactId((current) => current + 1);
 
@@ -134,7 +247,6 @@ export default function Navbar({
     }
 
     mobileTransitionTimerRef.current = window.setTimeout(() => {
-      setMobileSelectedIndex(nextIndex);
       setMobileTransitionIndex(null);
     }, 760);
   };
@@ -166,19 +278,78 @@ export default function Navbar({
     <>
       {showDesktop && (
         <nav
+          data-raf-navbar-shell="true"
+          data-raf-native-refraction="true"
+          data-raf-shader-ignore="true"
+          data-raf-refraction-pointer="true"
           className={styles.desktopNav}
-          aria-label={isRussian ? 'Основная навигация' : 'Primary navigation'}
-          style={{ '--items-count': navLinks.length }}
+          aria-label={
+            isRussian
+              ? 'Основная навигация'
+              : 'Primary navigation'
+          }
+          style={{
+            '--items-count': navLinks.length,
+          }}
         >
           <span
             aria-hidden="true"
+            className={styles.navBase}
+          />
+          <span
+            aria-hidden="true"
+            data-raf-refraction-target="navbar-shell"
+            className={styles.navWarp}
+          />
+          <span
+            aria-hidden="true"
+            data-raf-refraction-target="navbar-entry"
+            className={styles.navWarpEntry}
+          />
+          <span
+            aria-hidden="true"
+            data-raf-refraction-target="navbar-lip"
+            className={styles.navWarpLip}
+          />
+          <span
+            aria-hidden="true"
+            className={styles.navTint}
+          />
+          <span
+            aria-hidden="true"
+            className={styles.navSheen}
+          />
+          <span
+            aria-hidden="true"
+            className={styles.navRim}
+          />
+
+          <span
+            aria-hidden="true"
             className={styles.activeDrop}
-            style={{ '--active-index': visualIndex, pointerEvents: 'none' }}
+            style={{
+              '--active-index': visualIndex,
+              pointerEvents: 'none',
+            }}
           >
             <span
               key={`${visualIndex}-${impactId}`}
-              className={`${styles.dropSurface} ${impactId > 0 ? styles.dropSurfaceImpact : ''}`}
+              className={[
+                styles.dropSurface,
+                impactId > 0
+                  ? styles.dropSurfaceImpact
+                  : '',
+              ].filter(Boolean).join(' ')}
             >
+              <span className={styles.dropBase} />
+              <span
+                data-raf-refraction-target="navbar-pill"
+                className={styles.dropWarp}
+              />
+              <span className={styles.dropTint} />
+              <span className={styles.dropSheen} />
+              <span className={styles.dropRim} />
+
               <span className={styles.dropHighlight} />
               <span className={styles.dropCaustic} />
               <span className={styles.dropRipple} />
@@ -186,7 +357,10 @@ export default function Navbar({
           </span>
 
           {navLinks.map((link, index) => {
-            const active = isActivePath(normalizedPathname, link.href);
+            const active = isActivePath(
+              normalizedPathname,
+              link.href,
+            );
 
             return (
               <Link
@@ -194,34 +368,73 @@ export default function Navbar({
                 href={ensureTrailingSlash(link.href)}
                 prefetch
                 aria-current={active ? 'page' : undefined}
-                onPointerDown={() => activateDrop(index)}
                 onClick={() => activateDrop(index)}
-                className={`${styles.desktopLink} ${
-                  visualIndex === index ? styles.desktopLinkActive : ''
-                }`}
+                className={[
+                  styles.desktopLink,
+                  visualIndex === index
+                    ? styles.desktopLinkActive
+                    : '',
+                ].filter(Boolean).join(' ')}
               >
                 {link.label}
               </Link>
             );
           })}
         </nav>
-      )}
+      )}      {showMobile && (
+        <Drawer
+          open={mobileOpen}
+          onOpenChange={handleMobileOpenChange}
+          shouldScaleBackground={false}
+        >
+          {mobileFabPortalReady && createPortal(
+            <DrawerTrigger
+              data-raf-mobile-navigation-fab="true"
+              data-raf-native-refraction="true"
+              data-raf-shader-ignore="true"
+              data-raf-refraction-pointer="true"
+              data-raf-viewport-width={mobileFabPosition.viewportWidth}
+              data-raf-viewport-height={mobileFabPosition.viewportHeight}
+              className={styles.mobileTrigger}
+              style={{
+                '--raf-mobile-fab-right': `${mobileFabPosition.right}px`,
+                '--raf-mobile-fab-bottom': `${mobileFabPosition.bottom}px`,
+              }}
+              aria-label={isRussian ? 'Открыть меню' : 'Open menu'}
+              aria-expanded={mobileOpen}
+            >
+              <span
+                aria-hidden="true"
+                className={styles.mobileFabBase}
+              />
+              <span
+                aria-hidden="true"
+                data-raf-refraction-target="mobile-fab"
+                className={styles.mobileFabWarp}
+              />
+              <span
+                aria-hidden="true"
+                className={styles.mobileFabTint}
+              />
+              <span
+                aria-hidden="true"
+                className={styles.mobileFabSheen}
+              />
+              <span
+                aria-hidden="true"
+                className={styles.mobileFabRim}
+              />
 
-      {showMobile && (
-          <Drawer
-              open={mobileOpen}
-              onOpenChange={handleMobileOpenChange}
-              shouldScaleBackground={false}
-          >
-          <DrawerTrigger
-            className={styles.mobileTrigger}
-            aria-label={isRussian ? 'Открыть меню' : 'Open menu'}
-          >
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">
-              {isRussian ? 'Открыть меню' : 'Open menu'}
-            </span>
-          </DrawerTrigger>
+              <span className={styles.mobileFabIcon}>
+                <Menu aria-hidden="true" />
+              </span>
+
+              <span className="sr-only">
+                {isRussian ? 'Открыть меню' : 'Open menu'}
+              </span>
+            </DrawerTrigger>,
+            document.body,
+          )}
 
           <DrawerContent
               className={styles.drawerContent}
