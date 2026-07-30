@@ -2,7 +2,7 @@ name: Shader branch checks
 
 on:
   push:
-    branches: ["shaders"]
+    branches: ["shaders", "raf-agency-shaders"]
   pull_request:
     branches: ["master"]
   workflow_dispatch:
@@ -19,7 +19,7 @@ jobs:
       NEXT_PUBLIC_TELEGRAM_BOT_TOKEN_WEB: ${{ secrets.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN_WEB }}
       NEXT_PUBLIC_TELEGRAM_CHAT_ID_WEB: ${{ secrets.NEXT_PUBLIC_TELEGRAM_CHAT_ID_WEB }}
     steps:
-      - name: Checkout shaders branch
+      - name: Checkout shader branch
         uses: actions/checkout@v4
 
       - name: Setup Node
