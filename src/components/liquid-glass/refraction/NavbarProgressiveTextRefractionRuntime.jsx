@@ -2,129 +2,86 @@
 
 import { useEffect } from 'react';
 
-const SETTLE_DURATION = 430;
+import { createRefractionMap } from './refraction-map';
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const XLINK_NS = 'http://www.w3.org/1999/xlink';
+const FILTER_MARGIN = 28;
+const MAX_MAP_SIZE = 2048;
 
 const RUNTIME_STYLES = `
-/*
- * The drag runtime still owns the drop movement, snapping and navigation.
- * These rules only neutralize its former whole-word deformation. The new
- * masked overlay below then refracts exactly the text area touched by glass.
- */
-[data-raf-navbar-shell="true"][data-raf-progressive-text-runtime="ready"]
+[data-raf-navbar-shell="true"][data-raf-moving-lens-runtime="ready"]
 [data-raf-navbar-text-refraction] {
   transform: none !important;
   filter: none !important;
+  letter-spacing: inherit !important;
   text-shadow:
     0 1px 0 rgba(0, 0, 0, 0.42),
     0 0 0.55rem rgba(0, 0, 0, 0.28) !important;
-  letter-spacing: inherit !important;
 }
 
-[data-raf-navbar-shell="true"][data-raf-progressive-text-runtime="ready"]
-a[aria-current="page"][data-raf-navbar-text-refraction] {
+[data-raf-navbar-shell="true"][data-raf-moving-lens-runtime="ready"]
+a[aria-current="page"][data-raf-navbar-text-refraction],
+[data-raf-navbar-shell="true"][data-raf-moving-lens-runtime="ready"]
+a[data-raf-navbar-drop-owner="true"][data-raf-navbar-text-refraction] {
   text-shadow:
     0 1px 0 rgba(0, 0, 0, 0.55),
     0 0 0.8rem rgba(255, 255, 255, 0.2) !important;
 }
 
-[data-raf-navbar-progressive-text-link="true"] {
-  position: relative;
-  isolation: isolate;
+[data-raf-navbar-shell="true"][data-raf-moving-lens-runtime="ready"]
+[data-raf-navbar-progressive-text-mask="true"] {
+  display: none !important;
 }
 
-[data-raf-navbar-progressive-text-mask="true"] {
+[data-raf-navbar-moving-lens="true"],
+[data-raf-navbar-moving-lens="true"] * {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+[data-raf-navbar-moving-lens="true"] {
   position: absolute;
-  z-index: 2;
+  z-index: 12;
+  top: 0;
+  left: 0;
+  display: block;
+  overflow: hidden;
+  border-radius: 999px;
+  contain: paint;
+  isolation: isolate;
+  opacity: 0;
+  will-change: transform, width, height, opacity;
+}
+
+[data-raf-navbar-moving-lens-sample="true"] {
+  position: absolute;
   inset: 0;
   display: block;
   overflow: visible;
-  pointer-events: none;
-  opacity: var(--raf-progressive-text-opacity, 0);
-  clip-path: var(
-    --raf-progressive-text-clip,
-    polygon(0% -120%, 0% -120%, 0% 220%, 0% 220%)
-  );
-  will-change: opacity, clip-path;
+  transform: translateZ(0);
+  transform-origin: 50% 50%;
+  will-change: filter;
 }
 
-[data-raf-navbar-progressive-text-fx="true"] {
+[data-raf-navbar-moving-lens-label="true"] {
   position: absolute;
-  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none;
+  overflow: visible;
   white-space: nowrap;
-  color: inherit;
-  font: inherit;
-  line-height: inherit;
-  letter-spacing: inherit;
   text-align: center;
-  transform-origin: var(--raf-progressive-text-origin, 50% 50%);
-  transform:
-    translate3d(var(--raf-progressive-text-shift, 0px), 0, 0)
-    skewX(var(--raf-progressive-text-skew, 0deg))
-    scaleX(var(--raf-progressive-text-scale-x, 1));
-  filter:
-    var(--raf-progressive-text-filter, blur(0px))
-    blur(var(--raf-progressive-text-blur, 0px))
-    saturate(var(--raf-progressive-text-saturation, 1));
-  text-shadow:
-    var(--raf-progressive-text-shadow-forward, 0px) 0 0 rgba(255, 255, 255, 0.5),
-    var(--raf-progressive-text-shadow-back, 0px) 0 0 rgba(122, 184, 255, 0.22),
-    0 0 var(--raf-progressive-text-glow, 0px) rgba(255, 255, 255, 0.3);
-  will-change: transform, filter, text-shadow;
+  text-decoration: none;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  will-change: left, top, width, height;
 }
 
-[data-raf-progressive-text-state="active"]
-[data-raf-navbar-progressive-text-mask="true"] {
-  transition:
-    opacity 42ms linear,
-    clip-path 38ms linear;
-}
-
-[data-raf-progressive-text-state="active"]
-[data-raf-navbar-progressive-text-fx="true"] {
-  transition:
-    transform 46ms linear,
-    filter 46ms linear,
-    text-shadow 46ms linear;
-}
-
-[data-raf-progressive-text-state="idle"]
-[data-raf-navbar-progressive-text-mask="true"] {
-  transition: opacity 110ms ease-out;
-}
-
-[data-raf-progressive-text-state="idle"]
-[data-raf-navbar-progressive-text-fx="true"] {
-  transition:
-    transform 145ms ease-out,
-    filter 145ms ease-out,
-    text-shadow 145ms ease-out;
-}
-
-[data-raf-progressive-text-state="settling"]
-[data-raf-navbar-progressive-text-mask="true"] {
-  transition: opacity ${SETTLE_DURATION}ms ease;
-}
-
-[data-raf-progressive-text-state="settling"]
-[data-raf-navbar-progressive-text-fx="true"] {
-  transition:
-    transform ${SETTLE_DURATION}ms cubic-bezier(0.2, 0.9, 0.18, 1),
-    filter ${SETTLE_DURATION}ms ease,
-    text-shadow ${SETTLE_DURATION}ms ease;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  [data-raf-navbar-progressive-text-mask="true"],
-  [data-raf-navbar-progressive-text-fx="true"] {
-    transition-duration: 90ms !important;
-  }
-
-  [data-raf-navbar-progressive-text-fx="true"] {
-    filter: none !important;
+@media (prefers-reduced-transparency: reduce) {
+  [data-raf-navbar-moving-lens="true"] {
+    display: none !important;
   }
 }
 `;
@@ -133,423 +90,695 @@ const clamp = (value, min, max) => (
   Math.min(max, Math.max(min, value))
 );
 
-function getDirectLinks(shell) {
+function createSvgElement(name, attributes = {}) {
+  const element = document.createElementNS(SVG_NS, name);
+
+  Object.entries(attributes).forEach(([key, value]) => {
+    element.setAttribute(key, String(value));
+  });
+
+  return element;
+}
+
+function setHref(element, value) {
+  element.setAttribute('href', value);
+  element.setAttributeNS(XLINK_NS, 'xlink:href', value);
+}
+
+function createFilterDefinition(id, suffix) {
+  const filter = createSvgElement('filter', {
+    id,
+    filterUnits: 'userSpaceOnUse',
+    primitiveUnits: 'userSpaceOnUse',
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+    colorInterpolationFilters: 'sRGB',
+  });
+
+  const image = createSvgElement('feImage', {
+    id: `raf-navbar-moving-lens-map-${suffix}`,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+    preserveAspectRatio: 'none',
+    result: 'map',
+  });
+  setHref(
+    image,
+    'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',
+  );
+
+  const displacement = createSvgElement('feDisplacementMap', {
+    id: `raf-navbar-moving-lens-displacement-${suffix}`,
+    in: 'SourceGraphic',
+    in2: 'map',
+    scale: 68,
+    xChannelSelector: 'R',
+    yChannelSelector: 'G',
+    result: 'bent',
+  });
+
+  const blur = createSvgElement('feGaussianBlur', {
+    in: 'bent',
+    stdDeviation: 0.14,
+    result: 'softened',
+  });
+
+  const monochrome = createSvgElement('feColorMatrix', {
+    in: 'softened',
+    type: 'saturate',
+    values: 0,
+    result: 'mono',
+  });
+
+  const transfer = createSvgElement('feComponentTransfer', {
+    in: 'mono',
+  });
+
+  ['R', 'G', 'B'].forEach((channel) => {
+    transfer.appendChild(createSvgElement(`feFunc${channel}`, {
+      type: 'gamma',
+      amplitude: 1.26,
+      exponent: 0.82,
+      offset: -0.024,
+    }));
+  });
+
+  filter.append(
+    image,
+    displacement,
+    blur,
+    monochrome,
+    transfer,
+  );
+
+  return {
+    filter,
+    image,
+    displacement,
+  };
+}
+
+function createFilterHost() {
+  const svg = createSvgElement('svg', {
+    'aria-hidden': 'true',
+    focusable: 'false',
+    width: 0,
+    height: 0,
+  });
+
+  Object.assign(svg.style, {
+    position: 'absolute',
+    width: '0px',
+    height: '0px',
+    overflow: 'hidden',
+    pointerEvents: 'none',
+  });
+
+  const defs = createSvgElement('defs');
+  const right = createFilterDefinition(
+    'raf-navbar-moving-lens-right',
+    'right',
+  );
+  const left = createFilterDefinition(
+    'raf-navbar-moving-lens-left',
+    'left',
+  );
+
+  defs.append(right.filter, left.filter);
+  svg.appendChild(defs);
+  document.body.appendChild(svg);
+
+  return {
+    svg,
+    right,
+    left,
+  };
+}
+
+function getDirectDesktopLinks(shell) {
   return Array.from(shell.querySelectorAll('a[href]')).filter(
     (link) => link.parentElement === shell,
   );
 }
 
-function getDropSurface(shell) {
+function getDesktopParts(shell) {
   const warp = shell.querySelector(
     '[data-raf-refraction-target="navbar-pill"]',
   );
   const surface = warp?.parentElement;
-
-  return surface instanceof HTMLElement ? surface : null;
-}
-
-function getDirectTextNodes(link) {
-  return Array.from(link.childNodes).filter(
-    (node) => node.nodeType === Node.TEXT_NODE
-      && node.nodeValue?.trim(),
-  );
-}
-
-function getTextLabel(link) {
-  return getDirectTextNodes(link)
-    .map((node) => node.nodeValue || '')
-    .join('')
-    .trim();
-}
-
-function getTextRect(link) {
-  const textNodes = getDirectTextNodes(link);
-
-  if (textNodes.length === 0) {
-    return null;
-  }
-
-  const range = document.createRange();
-  range.setStart(textNodes[0], 0);
-
-  const lastNode = textNodes[textNodes.length - 1];
-  range.setEnd(lastNode, lastNode.nodeValue?.length || 0);
-
-  const rect = range.getBoundingClientRect();
-  range.detach?.();
-
-  return rect.width > 0.01 ? rect : null;
-}
-
-function getOverlay(link) {
-  const mask = link.querySelector(
-    ':scope > [data-raf-navbar-progressive-text-mask="true"]',
-  );
-  const fx = mask?.querySelector(
-    ':scope > [data-raf-navbar-progressive-text-fx="true"]',
-  );
+  const drop = surface?.parentElement;
+  const links = getDirectDesktopLinks(shell);
 
   if (
-    !(mask instanceof HTMLElement)
-    || !(fx instanceof HTMLElement)
+    !(drop instanceof HTMLElement)
+    || links.length === 0
   ) {
     return null;
   }
 
   return {
-    mask,
-    fx,
+    drop,
+    links,
   };
 }
 
-function prepareLink(link) {
-  const label = getTextLabel(link)
-    || link.dataset.rafProgressiveTextLabel
-    || '';
+function clearLegacyProgressiveEffect(shell) {
+  shell.querySelectorAll(
+    '[data-raf-navbar-progressive-text-mask="true"]',
+  ).forEach((node) => node.remove());
 
-  if (!label) {
-    return false;
-  }
+  getDirectDesktopLinks(shell).forEach((link) => {
+    delete link.dataset.rafNavbarProgressiveTextLink;
+    delete link.dataset.rafProgressiveTextLabel;
+    delete link.dataset.rafProgressiveTextState;
 
-  link.dataset.rafNavbarProgressiveTextLink = 'true';
-  link.dataset.rafProgressiveTextLabel = label;
-
-  const existing = getOverlay(link);
-
-  if (existing) {
-    if (existing.fx.textContent !== label) {
-      existing.fx.textContent = label;
-    }
-
-    return true;
-  }
-
-  const mask = document.createElement('span');
-  const fx = document.createElement('span');
-
-  mask.dataset.rafNavbarProgressiveTextMask = 'true';
-  mask.setAttribute('aria-hidden', 'true');
-
-  fx.dataset.rafNavbarProgressiveTextFx = 'true';
-  fx.setAttribute('aria-hidden', 'true');
-  fx.textContent = label;
-
-  mask.appendChild(fx);
-  link.appendChild(mask);
-
-  return true;
-}
-
-function resetEffectVariables(link) {
-  link.style.setProperty('--raf-progressive-text-shift', '0px');
-  link.style.setProperty('--raf-progressive-text-skew', '0deg');
-  link.style.setProperty('--raf-progressive-text-scale-x', '1');
-  link.style.setProperty('--raf-progressive-text-blur', '0px');
-  link.style.setProperty('--raf-progressive-text-saturation', '1');
-  link.style.setProperty('--raf-progressive-text-shadow-forward', '0px');
-  link.style.setProperty('--raf-progressive-text-shadow-back', '0px');
-  link.style.setProperty('--raf-progressive-text-glow', '0px');
-  link.style.setProperty('--raf-progressive-text-filter', 'blur(0px)');
-}
-
-function setIdle(link) {
-  link.dataset.rafProgressiveTextState = 'idle';
-  link.style.setProperty('--raf-progressive-text-opacity', '0');
-  resetEffectVariables(link);
-}
-
-function clearLink(link) {
-  getOverlay(link)?.mask.remove();
-
-  delete link.dataset.rafNavbarProgressiveTextLink;
-  delete link.dataset.rafProgressiveTextLabel;
-  delete link.dataset.rafProgressiveTextState;
-
-  [
-    '--raf-progressive-text-opacity',
-    '--raf-progressive-text-clip',
-    '--raf-progressive-text-origin',
-    '--raf-progressive-text-shift',
-    '--raf-progressive-text-skew',
-    '--raf-progressive-text-scale-x',
-    '--raf-progressive-text-blur',
-    '--raf-progressive-text-saturation',
-    '--raf-progressive-text-shadow-forward',
-    '--raf-progressive-text-shadow-back',
-    '--raf-progressive-text-glow',
-    '--raf-progressive-text-filter',
-  ].forEach((property) => {
-    link.style.removeProperty(property);
+    [
+      '--raf-progressive-text-opacity',
+      '--raf-progressive-text-clip',
+      '--raf-progressive-text-origin',
+      '--raf-progressive-text-shift',
+      '--raf-progressive-text-skew',
+      '--raf-progressive-text-scale-x',
+      '--raf-progressive-text-blur',
+      '--raf-progressive-text-saturation',
+      '--raf-progressive-text-shadow-forward',
+      '--raf-progressive-text-shadow-back',
+      '--raf-progressive-text-glow',
+      '--raf-progressive-text-filter',
+    ].forEach((property) => {
+      link.style.removeProperty(property);
+    });
   });
 }
 
-function applyProgressiveRefraction({
-  links,
-  pillRect,
-  direction,
-  velocity,
-}) {
-  const motionStrength = clamp(
-    0.58 + Math.abs(velocity) / 0.92,
-    0.58,
-    1,
+function loadImage(source) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = reject;
+    image.src = source;
+  });
+}
+
+function decodeChannel(value) {
+  return clamp((value - 128) / 127, -1, 1);
+}
+
+function encodeChannel(value) {
+  return Math.round(clamp(128 + value * 127, 0, 255));
+}
+
+function rotateMapPixels(sourcePixels, sourceWidth, sourceHeight, direction) {
+  const destinationWidth = sourceHeight;
+  const destinationHeight = sourceWidth;
+  const destination = new Uint8ClampedArray(
+    destinationWidth * destinationHeight * 4,
   );
 
-  links.forEach((link) => {
-    if (!prepareLink(link)) {
-      return;
+  for (let sourceY = 0; sourceY < sourceHeight; sourceY += 1) {
+    for (let sourceX = 0; sourceX < sourceWidth; sourceX += 1) {
+      const sourceOffset = (
+        sourceY * sourceWidth + sourceX
+      ) * 4;
+
+      const sourceVectorX = decodeChannel(
+        sourcePixels[sourceOffset],
+      );
+      const sourceVectorY = decodeChannel(
+        sourcePixels[sourceOffset + 1],
+      );
+
+      let destinationX;
+      let destinationY;
+      let destinationVectorX;
+      let destinationVectorY;
+
+      if (direction > 0) {
+        destinationX = sourceHeight - 1 - sourceY;
+        destinationY = sourceX;
+        destinationVectorX = -sourceVectorY;
+        destinationVectorY = sourceVectorX;
+      } else {
+        destinationX = sourceY;
+        destinationY = sourceWidth - 1 - sourceX;
+        destinationVectorX = sourceVectorY;
+        destinationVectorY = -sourceVectorX;
+      }
+
+      const destinationOffset = (
+        destinationY * destinationWidth + destinationX
+      ) * 4;
+
+      destination[destinationOffset] = encodeChannel(
+        destinationVectorX,
+      );
+      destination[destinationOffset + 1] = encodeChannel(
+        destinationVectorY,
+      );
+      destination[destinationOffset + 2] = 128;
+      destination[destinationOffset + 3] = sourcePixels[
+        sourceOffset + 3
+      ];
     }
+  }
 
-    const linkRect = link.getBoundingClientRect();
-    const textRect = getTextRect(link);
-
-    if (!textRect || linkRect.width <= 0.01) {
-      setIdle(link);
-      return;
-    }
-
-    /*
-     * Refraction begins only when the visible glass surface reaches the first
-     * glyph. Padding and the rest of the navigation item do not participate.
-     */
-    const overlapLeft = Math.max(textRect.left, pillRect.left);
-    const overlapRight = Math.min(textRect.right, pillRect.right);
-    const overlapWidth = Math.max(0, overlapRight - overlapLeft);
-
-    if (overlapWidth <= 0.01) {
-      setIdle(link);
-      return;
-    }
-
-    /*
-     * The mask is expressed in link coordinates because its overlay fills the
-     * link. Its visible slice is exactly the part of the word under the drop:
-     * one touched letter means one letter-sized slice, then two, and so on.
-     */
-    const startPercent = clamp(
-      ((overlapLeft - linkRect.left) / linkRect.width) * 100,
-      0,
-      100,
-    );
-    const endPercent = clamp(
-      ((overlapRight - linkRect.left) / linkRect.width) * 100,
-      0,
-      100,
-    );
-
-    const labelLength = Math.max(
-      1,
-      Array.from(link.dataset.rafProgressiveTextLabel || '').length,
-    );
-    const averageGlyphWidth = Math.max(
-      4,
-      textRect.width / labelLength,
-    );
-    const contactStrength = clamp(
-      overlapWidth / (averageGlyphWidth * 0.9),
-      0,
-      1,
-    );
-    const pressure = clamp(
-      motionStrength * (0.24 + contactStrength * 0.76),
-      0,
-      1,
-    );
-
-    link.dataset.rafProgressiveTextState = 'active';
-    link.style.setProperty(
-      '--raf-progressive-text-clip',
-      `polygon(${startPercent.toFixed(3)}% -120%, ${endPercent.toFixed(3)}% -120%, ${endPercent.toFixed(3)}% 220%, ${startPercent.toFixed(3)}% 220%)`,
-    );
-    link.style.setProperty(
-      '--raf-progressive-text-opacity',
-      `${(0.52 + pressure * 0.48).toFixed(3)}`,
-    );
-    link.style.setProperty(
-      '--raf-progressive-text-origin',
-      direction > 0 ? '0% 50%' : '100% 50%',
-    );
-    link.style.setProperty(
-      '--raf-progressive-text-shift',
-      `${(direction * pressure * 4.8).toFixed(3)}px`,
-    );
-    link.style.setProperty(
-      '--raf-progressive-text-skew',
-      `${(-direction * pressure * 8.2).toFixed(3)}deg`,
-    );
-    link.style.setProperty(
-      '--raf-progressive-text-scale-x',
-      `${(1 + pressure * 0.078).toFixed(4)}`,
-    );
-    link.style.setProperty(
-      '--raf-progressive-text-blur',
-      `${(pressure * 0.16).toFixed(3)}px`,
-    );
-    link.style.setProperty(
-      '--raf-progressive-text-saturation',
-      `${(1 + pressure * 0.2).toFixed(3)}`,
-    );
-    link.style.setProperty(
-      '--raf-progressive-text-shadow-forward',
-      `${(direction * pressure * 2.5).toFixed(3)}px`,
-    );
-    link.style.setProperty(
-      '--raf-progressive-text-shadow-back',
-      `${(-direction * pressure * 1.6).toFixed(3)}px`,
-    );
-    link.style.setProperty(
-      '--raf-progressive-text-glow',
-      `${(pressure * 7).toFixed(3)}px`,
-    );
-    link.style.setProperty(
-      '--raf-progressive-text-filter',
-      direction > 0
-        ? 'url(#raf-navbar-horizontal-text-refraction-right)'
-        : 'url(#raf-navbar-horizontal-text-refraction-left)',
-    );
-  });
-}
-
-function settleLinks(links, timers) {
-  links.forEach((link) => {
-    if (!prepareLink(link)) {
-      return;
-    }
-
-    link.dataset.rafProgressiveTextState = 'settling';
-    link.style.setProperty('--raf-progressive-text-opacity', '0');
-    resetEffectVariables(link);
-  });
-
-  const timer = window.setTimeout(() => {
-    links.forEach((link) => {
-      link.dataset.rafProgressiveTextState = 'idle';
-      link.style.removeProperty('--raf-progressive-text-clip');
-    });
-    timers.delete(timer);
-  }, SETTLE_DURATION + 40);
-
-  timers.add(timer);
-}
-
-function attachShell(shell) {
-  let animationFrame = 0;
-  let lastClientX = null;
-  let lastTimestamp = 0;
-  let velocity = 0;
-
-  const timers = new Set();
-
-  shell.dataset.rafProgressiveTextRuntime = 'ready';
-
-  const prepareLinks = () => {
-    const links = getDirectLinks(shell);
-    links.forEach(prepareLink);
-    return links;
+  return {
+    pixels: destination,
+    width: destinationWidth,
+    height: destinationHeight,
   };
+}
 
-  const update = () => {
-    animationFrame = 0;
+async function createDirectionalMaps({
+  width,
+  height,
+  radius,
+}) {
+  const safeWidth = clamp(Math.round(width), 8, MAX_MAP_SIZE);
+  const safeHeight = clamp(Math.round(height), 8, MAX_MAP_SIZE);
 
-    if (
-      !shell.isConnected
-      || shell.dataset.rafNavbarDragging !== 'true'
-    ) {
-      return;
-    }
+  const sourceMap = createRefractionMap({
+    width: safeHeight,
+    height: safeWidth,
+    radius,
+    margin: FILTER_MARGIN,
+    band: Math.max(8, safeWidth * 0.5),
+    profileShape: 3.45,
+    edgePower: 1.22,
+    bodyStrength: 0.2,
+    normalStrength: 1.28,
+    shoulderStrength: 0.34,
+    shoulderPosition: 0.57,
+    shoulderWidth: 0.18,
+    bodyLensStrength: 0.24,
+    bodyLensPower: 0.9,
+    horizontalLensScale: 0.72,
+    verticalLensScale: 1.18,
+  });
 
-    const surface = getDropSurface(shell);
+  if (!sourceMap) {
+    return null;
+  }
 
-    if (!surface) {
-      return;
-    }
+  const sourceImage = await loadImage(sourceMap.dataUrl);
+  const sourceCanvas = document.createElement('canvas');
+  sourceCanvas.width = sourceMap.width;
+  sourceCanvas.height = sourceMap.height;
 
-    const direction = shell.dataset.rafNavbarDragDirection === 'left'
-      ? -1
-      : 1;
+  const sourceContext = sourceCanvas.getContext('2d', {
+    alpha: false,
+    willReadFrequently: true,
+  });
 
-    applyProgressiveRefraction({
-      links: prepareLinks(),
-      pillRect: surface.getBoundingClientRect(),
+  if (!sourceContext) {
+    return null;
+  }
+
+  sourceContext.drawImage(sourceImage, 0, 0);
+  const sourceImageData = sourceContext.getImageData(
+    0,
+    0,
+    sourceCanvas.width,
+    sourceCanvas.height,
+  );
+
+  const makeMap = (direction) => {
+    const rotated = rotateMapPixels(
+      sourceImageData.data,
+      sourceCanvas.width,
+      sourceCanvas.height,
       direction,
-      velocity,
+    );
+
+    const canvas = document.createElement('canvas');
+    canvas.width = rotated.width;
+    canvas.height = rotated.height;
+
+    const context = canvas.getContext('2d', {
+      alpha: false,
+    });
+
+    if (!context) {
+      return null;
+    }
+
+    const imageData = context.createImageData(
+      rotated.width,
+      rotated.height,
+    );
+    imageData.data.set(rotated.pixels);
+    context.putImageData(imageData, 0, 0);
+
+    return {
+      dataUrl: canvas.toDataURL('image/png'),
+      width: rotated.width,
+      height: rotated.height,
+      margin: sourceMap.margin,
+    };
+  };
+
+  const right = makeMap(1);
+  const left = makeMap(-1);
+
+  if (!right || !left) {
+    return null;
+  }
+
+  return {
+    right,
+    left,
+  };
+}
+
+function applyMap(filterDefinition, map) {
+  const x = -map.margin;
+  const y = -map.margin;
+
+  filterDefinition.filter.setAttribute('x', String(x));
+  filterDefinition.filter.setAttribute('y', String(y));
+  filterDefinition.filter.setAttribute('width', String(map.width));
+  filterDefinition.filter.setAttribute('height', String(map.height));
+
+  filterDefinition.image.setAttribute('x', String(x));
+  filterDefinition.image.setAttribute('y', String(y));
+  filterDefinition.image.setAttribute('width', String(map.width));
+  filterDefinition.image.setAttribute('height', String(map.height));
+  setHref(filterDefinition.image, map.dataUrl);
+}
+
+function createLabelClone(link) {
+  const clone = document.createElement('span');
+  const style = window.getComputedStyle(link);
+
+  clone.dataset.rafNavbarMovingLensLabel = 'true';
+  clone.setAttribute('aria-hidden', 'true');
+  clone.textContent = (link.textContent || '').trim();
+
+  Object.assign(clone.style, {
+    color: style.color,
+    fontFamily: style.fontFamily,
+    fontSize: style.fontSize,
+    fontStyle: style.fontStyle,
+    fontWeight: style.fontWeight,
+    lineHeight: style.lineHeight,
+    letterSpacing: style.letterSpacing,
+    textShadow: style.textShadow,
+    textTransform: style.textTransform,
+  });
+
+  return clone;
+}
+
+function getSceneSignature(links) {
+  return links.map((link) => [
+    link.textContent,
+    link.className,
+    link.getAttribute('aria-current'),
+  ].join('::')).join('||');
+}
+
+function setOriginalLinkMask(link, lensRect) {
+  const linkRect = link.getBoundingClientRect();
+  const overlapLeft = Math.max(linkRect.left, lensRect.left);
+  const overlapRight = Math.min(linkRect.right, lensRect.right);
+
+  if (
+    overlapRight <= overlapLeft
+    || linkRect.width <= 0.01
+  ) {
+    link.style.removeProperty('mask-image');
+    link.style.removeProperty('-webkit-mask-image');
+    return;
+  }
+
+  const start = clamp(
+    ((overlapLeft - linkRect.left) / linkRect.width) * 100,
+    0,
+    100,
+  );
+  const end = clamp(
+    ((overlapRight - linkRect.left) / linkRect.width) * 100,
+    0,
+    100,
+  );
+  const feather = clamp(
+    (0.85 / linkRect.width) * 100,
+    0.08,
+    1.2,
+  );
+  const before = Math.max(0, start - feather);
+  const after = Math.min(100, end + feather);
+
+  const mask = [
+    'linear-gradient(90deg,',
+    '#000 0%,',
+    `#000 ${before.toFixed(3)}%,`,
+    `transparent ${start.toFixed(3)}%,`,
+    `transparent ${end.toFixed(3)}%,`,
+    `#000 ${after.toFixed(3)}%,`,
+    '#000 100%)',
+  ].join(' ');
+
+  link.style.setProperty('mask-image', mask);
+  link.style.setProperty('-webkit-mask-image', mask);
+}
+
+function clearOriginalLinkMask(link) {
+  link.style.removeProperty('mask-image');
+  link.style.removeProperty('-webkit-mask-image');
+}
+
+function attachMovingLens(shell, filterHost) {
+  let disposed = false;
+  let frame = 0;
+  let previousCenter = null;
+  let previousTime = performance.now();
+  let direction = 1;
+  let sceneSignature = '';
+  let mapKey = '';
+  let mapGeneration = 0;
+  let mapsReady = false;
+  let labelClones = [];
+
+  clearLegacyProgressiveEffect(shell);
+
+  const lens = document.createElement('span');
+  const sample = document.createElement('span');
+
+  lens.dataset.rafNavbarMovingLens = 'true';
+  lens.setAttribute('aria-hidden', 'true');
+  sample.dataset.rafNavbarMovingLensSample = 'true';
+
+  lens.appendChild(sample);
+  shell.appendChild(lens);
+  shell.dataset.rafMovingLensRuntime = 'ready';
+
+  const rebuildScene = (links) => {
+    sample.replaceChildren();
+    labelClones = links.map((link) => {
+      const clone = createLabelClone(link);
+      sample.appendChild(clone);
+      return {
+        link,
+        clone,
+      };
     });
   };
 
-  const scheduleUpdate = () => {
-    if (animationFrame === 0) {
-      animationFrame = window.requestAnimationFrame(update);
-    }
-  };
+  const requestMaps = ({ width, height, radius }) => {
+    const nextKey = [
+      Math.round(width),
+      Math.round(height),
+      radius.toFixed(2),
+    ].join('x');
 
-  const handlePointerMove = (event) => {
-    if (shell.dataset.rafNavbarDragging !== 'true') {
-      lastClientX = event.clientX;
-      lastTimestamp = event.timeStamp || performance.now();
+    if (nextKey === mapKey) {
       return;
     }
 
-    const timestamp = event.timeStamp || performance.now();
+    mapKey = nextKey;
+    mapsReady = false;
+    const generation = ++mapGeneration;
 
-    if (lastClientX !== null) {
-      velocity = (
-        event.clientX - lastClientX
-      ) / Math.max(1, timestamp - lastTimestamp);
-    }
+    createDirectionalMaps({
+      width,
+      height,
+      radius,
+    }).then((maps) => {
+      if (
+        disposed
+        || generation !== mapGeneration
+        || !maps
+      ) {
+        return;
+      }
 
-    lastClientX = event.clientX;
-    lastTimestamp = timestamp;
-    scheduleUpdate();
+      applyMap(filterHost.right, maps.right);
+      applyMap(filterHost.left, maps.left);
+      mapsReady = true;
+    }).catch(() => {
+      if (generation === mapGeneration) {
+        mapsReady = false;
+      }
+    });
   };
 
-  const handleDragEnd = () => {
-    if (animationFrame !== 0) {
-      window.cancelAnimationFrame(animationFrame);
-      animationFrame = 0;
+  const render = (time) => {
+    frame = 0;
+
+    if (disposed || !shell.isConnected) {
+      return;
     }
 
-    settleLinks(prepareLinks(), timers);
-    lastClientX = null;
-    lastTimestamp = 0;
-    velocity = 0;
+    const parts = getDesktopParts(shell);
+
+    if (!parts) {
+      lens.style.opacity = '0';
+      frame = window.requestAnimationFrame(render);
+      return;
+    }
+
+    const nextSignature = getSceneSignature(parts.links);
+
+    if (nextSignature !== sceneSignature) {
+      sceneSignature = nextSignature;
+      rebuildScene(parts.links);
+    }
+
+    const shellRect = shell.getBoundingClientRect();
+    const dropRect = parts.drop.getBoundingClientRect();
+    const localLeft = dropRect.left - shellRect.left;
+    const localTop = dropRect.top - shellRect.top;
+    const width = dropRect.width;
+    const height = dropRect.height;
+
+    if (width < 8 || height < 8) {
+      parts.links.forEach(clearOriginalLinkMask);
+      lens.style.opacity = '0';
+      frame = window.requestAnimationFrame(render);
+      return;
+    }
+
+    lens.style.width = `${width}px`;
+    lens.style.height = `${height}px`;
+    lens.style.transform = `translate3d(${localLeft}px, ${localTop}px, 0)`;
+
+    const center = dropRect.left + width * 0.5;
+    const elapsed = Math.max(1, time - previousTime);
+    const velocity = previousCenter === null
+      ? 0
+      : (center - previousCenter) / elapsed;
+
+    if (Math.abs(velocity) > 0.012) {
+      direction = velocity > 0 ? 1 : -1;
+    } else if (shell.dataset.rafNavbarDragDirection === 'right') {
+      direction = 1;
+    } else if (shell.dataset.rafNavbarDragDirection === 'left') {
+      direction = -1;
+    }
+
+    previousCenter = center;
+    previousTime = time;
+
+    const radius = Number.parseFloat(
+      window.getComputedStyle(parts.drop).borderTopLeftRadius,
+    ) || height * 0.5;
+
+    requestMaps({
+      width,
+      height,
+      radius,
+    });
+
+    const scale = Math.round(clamp(
+      height * 1.65 + Math.abs(velocity) * 18,
+      58,
+      92,
+    ));
+
+    filterHost.right.displacement.setAttribute(
+      'scale',
+      String(scale),
+    );
+    filterHost.left.displacement.setAttribute(
+      'scale',
+      String(scale),
+    );
+
+    sample.style.filter = [
+      `url(#raf-navbar-moving-lens-${direction > 0 ? 'right' : 'left'})`,
+      'contrast(1.035)',
+      'brightness(1.008)',
+    ].join(' ');
+
+    const lensRect = {
+      left: dropRect.left,
+      right: dropRect.right,
+      top: dropRect.top,
+      bottom: dropRect.bottom,
+      width,
+      height,
+    };
+
+    labelClones.forEach(({ link, clone }) => {
+      const linkRect = link.getBoundingClientRect();
+
+      clone.style.left = `${linkRect.left - lensRect.left}px`;
+      clone.style.top = `${linkRect.top - lensRect.top}px`;
+      clone.style.width = `${linkRect.width}px`;
+      clone.style.height = `${linkRect.height}px`;
+    });
+
+    if (mapsReady) {
+      parts.links.forEach((link) => {
+        setOriginalLinkMask(link, lensRect);
+      });
+      lens.style.opacity = '1';
+    } else {
+      parts.links.forEach(clearOriginalLinkMask);
+      lens.style.opacity = '0';
+    }
+
+    frame = window.requestAnimationFrame(render);
   };
 
-  window.addEventListener('pointermove', handlePointerMove, {
-    passive: true,
-  });
-  window.addEventListener('pointerup', handleDragEnd, true);
-  window.addEventListener('pointercancel', handleDragEnd, true);
-
-  prepareLinks();
+  frame = window.requestAnimationFrame(render);
 
   return () => {
-    if (animationFrame !== 0) {
-      window.cancelAnimationFrame(animationFrame);
+    disposed = true;
+    mapGeneration += 1;
+
+    if (frame !== 0) {
+      window.cancelAnimationFrame(frame);
     }
 
-    window.removeEventListener('pointermove', handlePointerMove);
-    window.removeEventListener('pointerup', handleDragEnd, true);
-    window.removeEventListener('pointercancel', handleDragEnd, true);
-
-    timers.forEach((timer) => window.clearTimeout(timer));
-    timers.clear();
-
-    getDirectLinks(shell).forEach(clearLink);
-    delete shell.dataset.rafProgressiveTextRuntime;
+    getDirectDesktopLinks(shell).forEach(clearOriginalLinkMask);
+    lens.remove();
+    delete shell.dataset.rafMovingLensRuntime;
   };
 }
 
 export default function NavbarProgressiveTextRefractionRuntime() {
   useEffect(() => {
+    let disposed = false;
     let bindFrame = 0;
-    let cancelled = false;
 
+    const style = document.createElement('style');
+    style.dataset.rafNavbarMovingLensStyles = 'true';
+    style.textContent = RUNTIME_STYLES;
+    document.head.appendChild(style);
+
+    const filterHost = createFilterHost();
     const bindings = new Map();
 
     const bindAll = () => {
       bindFrame = 0;
 
-      if (cancelled) {
+      if (disposed) {
         return;
       }
 
@@ -560,42 +789,38 @@ export default function NavbarProgressiveTextRefractionRuntime() {
       );
 
       bindings.forEach((dispose, shell) => {
-        if (!shell.isConnected || !shells.has(shell)) {
+        if (!shells.has(shell) || !shell.isConnected) {
           dispose();
           bindings.delete(shell);
         }
       });
 
       shells.forEach((shell) => {
-        if (!(shell instanceof HTMLElement)) {
-          return;
-        }
-
-        getDirectLinks(shell).forEach(prepareLink);
-
-        if (!bindings.has(shell) && getDropSurface(shell)) {
-          bindings.set(shell, attachShell(shell));
+        if (
+          shell instanceof HTMLElement
+          && !bindings.has(shell)
+          && getDesktopParts(shell)
+        ) {
+          bindings.set(
+            shell,
+            attachMovingLens(shell, filterHost),
+          );
         }
       });
     };
 
     const scheduleBind = () => {
-      if (bindFrame === 0) {
-        bindFrame = window.requestAnimationFrame(bindAll);
+      if (bindFrame !== 0 || disposed) {
+        return;
       }
+
+      bindFrame = window.requestAnimationFrame(bindAll);
     };
 
     const observer = new MutationObserver(scheduleBind);
-
     observer.observe(document.body, {
       childList: true,
       subtree: true,
-      attributes: true,
-      attributeFilter: [
-        'class',
-        'data-raf-navbar-dragging',
-        'data-raf-navbar-drag-direction',
-      ],
     });
 
     window.addEventListener('resize', scheduleBind, {
@@ -605,19 +830,20 @@ export default function NavbarProgressiveTextRefractionRuntime() {
     scheduleBind();
 
     return () => {
-      cancelled = true;
+      disposed = true;
+      observer.disconnect();
+      window.removeEventListener('resize', scheduleBind);
 
       if (bindFrame !== 0) {
         window.cancelAnimationFrame(bindFrame);
       }
 
-      observer.disconnect();
-      window.removeEventListener('resize', scheduleBind);
-
       bindings.forEach((dispose) => dispose());
       bindings.clear();
+      filterHost.svg.remove();
+      style.remove();
     };
   }, []);
 
-  return <style>{RUNTIME_STYLES}</style>;
+  return null;
 }
