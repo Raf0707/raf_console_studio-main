@@ -29,6 +29,16 @@ function sanitizeSceneClone(clone) {
   clone.setAttribute?.('inert', '');
   clone.setAttribute?.('data-raf-agency-scene-clone', 'true');
 
+  const pageNode = clone.querySelector('.page');
+
+  if (pageNode) {
+    pageNode.style.paddingTop = '0px';
+  }
+
+  if (clone.matches?.('[data-policy-page]')) {
+    clone.style.paddingTop = '0px';
+  }
+
   clone.querySelectorAll?.([
     'script',
     'style',
@@ -38,8 +48,7 @@ function sanitizeSceneClone(clone) {
     'video',
     'audio',
     'canvas',
-    'header',
-    'footer',
+
     '[data-raf-navbar-shell]',
     '[data-raf-mobile-navigation-fab]',
     '[data-raf-agency-lens]',
@@ -164,6 +173,8 @@ function createStableVerticalSceneLens(header, source) {
     }
 
     const nextClone = sanitizeSceneClone(source.cloneNode(true));
+    nextClone.style.paddingTop = '0px';
+    nextClone.style.marginTop = '0px';
     nextClone.classList.add('raf-agency-live-scene-clone');
     syncMutableFormState(source, nextClone);
 
