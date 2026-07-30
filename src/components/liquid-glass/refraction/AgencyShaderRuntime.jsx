@@ -90,6 +90,7 @@ function createStableVerticalSceneLens(header, source) {
   viewport.className = 'raf-agency-live-lens raf-agency-live-lens--vertical';
   viewport.dataset.rafAgencyLens = 'vertical';
   viewport.dataset.rafAgencySampling = 'single-scene';
+  viewport.dataset.rafAgencyReady = 'false';
   viewport.setAttribute('aria-hidden', 'true');
 
   sceneHost.className = 'raf-agency-live-scene-host';
@@ -108,11 +109,14 @@ function createStableVerticalSceneLens(header, source) {
   let rebuildTimer = 0;
   let lastGeometry = '';
 
-  const syncGeometry = () => {
-    geometryFrame = 0;
-
-    if (disposed || !clone || !source.isConnected || !header.isConnected) {
-      return;
+  const writeGeometry = (targetClone) => {
+    if (
+      disposed
+      || !targetClone
+      || !source.isConnected
+      || !header.isConnected
+    ) {
+      return false;
     }
 
     const headerRect = header.getBoundingClientRect();
@@ -122,17 +126,25 @@ function createStableVerticalSceneLens(header, source) {
     const y = snapToDevicePixel(sourceRect.top - headerRect.top);
     const width = snapToDevicePixel(sourceRect.width);
     const height = snapToDevicePixel(sourceRect.height);
-
     const geometry = [x, y, width, height].join('|');
-    if (geometry === lastGeometry) {
-      return;
+
+    if (targetClone === clone && geometry === lastGeometry) {
+      return true;
     }
 
+    targetClone.style.setProperty('--raf-agency-scene-x', `${x}px`);
+    targetClone.style.setProperty('--raf-agency-scene-y', `${y}px`);
+    targetClone.style.setProperty('--raf-agency-scene-width', `${width}px`);
+    targetClone.style.setProperty('--raf-agency-scene-height', `${height}px`);
+
     lastGeometry = geometry;
-    clone.style.setProperty('--raf-agency-scene-x', `${x}px`);
-    clone.style.setProperty('--raf-agency-scene-y', `${y}px`);
-    clone.style.setProperty('--raf-agency-scene-width', `${width}px`);
-    clone.style.setProperty('--raf-agency-scene-height', `${height}px`);
+    viewport.dataset.rafAgencyReady = 'true';
+    return true;
+  };
+
+  const syncGeometry = () => {
+    geometryFrame = 0;
+    writeGeometry(clone);
   };
 
   const scheduleGeometry = () => {
@@ -155,10 +167,14 @@ function createStableVerticalSceneLens(header, source) {
     nextClone.classList.add('raf-agency-live-scene-clone');
     syncMutableFormState(source, nextClone);
 
+    /*
+     * The new clone receives its final coordinates before it is inserted.
+     * Therefore React never exposes an unpositioned duplicate for one frame.
+     */
+    lastGeometry = '';
+    writeGeometry(nextClone);
     clone = nextClone;
     sceneHost.replaceChildren(nextClone);
-    lastGeometry = '';
-    scheduleGeometry();
   };
 
   const scheduleRebuild = () => {
@@ -287,7 +303,11 @@ export default function AgencyShaderRuntime() {
     window.addEventListener('resize', scheduleBind, { passive: true });
     window.addEventListener('orientationchange', scheduleBind, { passive: true });
 
-    bind();
+    /*
+     * This component now hydrates in the same Suspense boundary as Header.
+     * Deferring one frame also lets all Header refs/effects settle before the
+     * first optical node is prepended.
+     */
     bindFrame = window.requestAnimationFrame(bind);
     delayedBindTimer = window.setTimeout(bind, 240);
 
