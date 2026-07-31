@@ -253,6 +253,7 @@ export function createRefractionMap({
                     * verticalEnvelope
                     * verticalBendStrength
                     * horizontalGate
+                    * 1.08
                 );
 
                 /*
@@ -261,7 +262,7 @@ export function createRefractionMap({
                  */
                 const rimBendY = (
                     -normalizedY
-                    * (1 - edgeFade)
+                    * Math.pow(1 - edgeFade, 0.82)
                     * verticalEdgeStrength
                     * horizontalGate
                 );
