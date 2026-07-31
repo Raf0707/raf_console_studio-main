@@ -2,125 +2,27 @@
 
 import { useEffect } from 'react';
 
+import '@/components/navbar-runtime.css';
+
+
 const DESKTOP_DRAG_THRESHOLD = 4;
 const DESKTOP_SNAP_DURATION = 480;
 const MOBILE_REFRACTION_DURATION = 760;
 
-const RUNTIME_STYLES = `
-[data-raf-navbar-shell="true"][data-raf-navbar-drag-runtime="ready"] {
-  --raf-navbar-drag-cursor: grab;
-}
-
-[data-raf-navbar-shell="true"] [data-raf-navbar-drop-owner="true"] {
-  cursor: var(--raf-navbar-drag-cursor, grab) !important;
-  -webkit-user-drag: none;
-}
-
-[data-raf-navbar-shell="true"][data-raf-navbar-dragging="true"] {
-  --raf-navbar-drag-cursor: grabbing;
-  cursor: grabbing !important;
-  user-select: none;
-}
-
-[data-raf-navbar-shell="true"][data-raf-navbar-dragging="true"] a {
-  cursor: grabbing !important;
-  -webkit-user-drag: none;
-}
-
-[data-raf-navbar-text-refraction="active"],
-[data-raf-navbar-text-refraction="settling"] {
-  transform-origin: var(--raf-refraction-origin, 50% 50%) !important;
-  transform:
-    translate3d(var(--raf-refraction-shift, 0px), 0, 0)
-    skewX(var(--raf-refraction-skew, 0deg))
-    scaleX(var(--raf-refraction-scale-x, 1)) !important;
-  letter-spacing: var(--raf-refraction-letter-spacing, normal);
-  text-shadow:
-    var(--raf-refraction-shadow-forward, 0px) 0 0 rgba(255, 255, 255, 0.46),
-    var(--raf-refraction-shadow-back, 0px) 0 0 rgba(122, 184, 255, 0.2),
-    0 0 var(--raf-refraction-glow, 0px) rgba(255, 255, 255, 0.26) !important;
-  will-change: transform, filter, text-shadow, letter-spacing;
-}
-
-[data-raf-navbar-text-refraction="active"] {
-  transition:
-    transform 54ms linear,
-    filter 54ms linear,
-    text-shadow 54ms linear,
-    letter-spacing 54ms linear !important;
-}
-
-[data-raf-navbar-text-refraction="settling"] {
-  transition:
-    transform 430ms cubic-bezier(0.2, 0.9, 0.18, 1),
-    filter 430ms ease,
-    text-shadow 430ms ease,
-    letter-spacing 430ms ease !important;
-}
-
-[data-raf-navbar-text-warp="right"] {
-  filter:
-    url(#raf-navbar-horizontal-text-refraction-right)
-    blur(var(--raf-refraction-blur, 0px))
-    saturate(var(--raf-refraction-saturation, 1)) !important;
-}
-
-[data-raf-navbar-text-warp="left"] {
-  filter:
-    url(#raf-navbar-horizontal-text-refraction-left)
-    blur(var(--raf-refraction-blur, 0px))
-    saturate(var(--raf-refraction-saturation, 1)) !important;
-}
-
-[data-raf-mobile-refraction-role="source"] > span:nth-of-type(2),
-[data-raf-mobile-refraction-role="target"] > span:nth-of-type(2) {
-  will-change: transform, opacity, filter, text-shadow;
-}
-
-[data-raf-mobile-refraction-direction="down"] > span:nth-of-type(2) {
-  filter: url(#raf-navbar-vertical-text-refraction-down);
-}
-
-[data-raf-mobile-refraction-direction="up"] > span:nth-of-type(2) {
-  filter: url(#raf-navbar-vertical-text-refraction-up);
-}
-
-[data-raf-mobile-refraction-role="source"] {
-  transform-origin: 50% var(--raf-mobile-refraction-origin, 100%);
-}
-
-[data-raf-mobile-refraction-role="target"] {
-  transform-origin: 50% var(--raf-mobile-refraction-origin, 0%);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  [data-raf-navbar-text-refraction="active"],
-  [data-raf-navbar-text-refraction="settling"] {
-    transition-duration: 90ms !important;
-  }
-
-  [data-raf-navbar-text-warp="right"],
-  [data-raf-navbar-text-warp="left"],
-  [data-raf-mobile-refraction-direction="down"] > span:nth-of-type(2),
-  [data-raf-mobile-refraction-direction="up"] > span:nth-of-type(2) {
-    filter: none !important;
-  }
-}
-`;
 
 const clamp = (value, min, max) => (
-  Math.min(max, Math.max(min, value))
+    Math.min(max, Math.max(min, value))
 );
 
 function getDirectDesktopLinks(shell) {
   return Array.from(shell.querySelectorAll('a[href]')).filter(
-    (link) => link.parentElement === shell,
+      (link) => link.parentElement === shell,
   );
 }
 
 function getDesktopParts(shell) {
   const warp = shell.querySelector(
-    '[data-raf-refraction-target="navbar-pill"]',
+      '[data-raf-refraction-target="navbar-pill"]',
   );
 
   const surface = warp?.parentElement;
@@ -128,10 +30,10 @@ function getDesktopParts(shell) {
   const links = getDirectDesktopLinks(shell);
 
   if (
-    !(warp instanceof HTMLElement)
-    || !(surface instanceof HTMLElement)
-    || !(drop instanceof HTMLElement)
-    || links.length === 0
+      !(warp instanceof HTMLElement)
+      || !(surface instanceof HTMLElement)
+      || !(drop instanceof HTMLElement)
+      || links.length === 0
   ) {
     return null;
   }
@@ -170,8 +72,8 @@ function markDropOwner(parts, preferredLink = null) {
   const dropRect = parts.drop.getBoundingClientRect();
   const dropCenter = dropRect.left + dropRect.width * 0.5;
   const owner = preferredLink || findClosestLink(
-    parts.links,
-    dropCenter,
+      parts.links,
+      dropCenter,
   );
 
   parts.links.forEach((link) => {
@@ -217,21 +119,21 @@ function removeLinkRefraction(link) {
 }
 
 function applyHorizontalTextRefraction({
-  links,
-  pillCenter,
-  pillWidth,
-  direction,
-  velocity,
-}) {
+                                         links,
+                                         pillCenter,
+                                         pillWidth,
+                                         direction,
+                                         velocity,
+                                       }) {
   const motionStrength = clamp(
-    0.46 + Math.abs(velocity) / 1.05,
-    0.46,
-    1,
+      0.46 + Math.abs(velocity) / 1.05,
+      0.46,
+      1,
   );
 
   const influenceRadius = Math.max(
-    pillWidth * 1.65,
-    86,
+      pillWidth * 1.65,
+      86,
   );
 
   links.forEach((link) => {
@@ -240,68 +142,68 @@ function applyHorizontalTextRefraction({
     const signedDistance = linkCenter - pillCenter;
     const distance = Math.abs(signedDistance);
     const proximity = clamp(
-      1 - distance / influenceRadius,
-      0,
-      1,
+        1 - distance / influenceRadius,
+        0,
+        1,
     );
 
     const isAhead = direction > 0
-      ? signedDistance >= -pillWidth * 0.45
-      : signedDistance <= pillWidth * 0.45;
+        ? signedDistance >= -pillWidth * 0.45
+        : signedDistance <= pillWidth * 0.45;
 
     const directionalWeight = isAhead ? 1 : 0.28;
     const pressure = clamp(
-      proximity * directionalWeight * motionStrength,
-      0,
-      1,
+        proximity * directionalWeight * motionStrength,
+        0,
+        1,
     );
 
     link.dataset.rafNavbarTextRefraction = 'active';
     link.style.setProperty(
-      '--raf-refraction-origin',
-      direction > 0 ? '0% 50%' : '100% 50%',
+        '--raf-refraction-origin',
+        direction > 0 ? '0% 50%' : '100% 50%',
     );
     link.style.setProperty(
-      '--raf-refraction-shift',
-      `${(direction * pressure * 5.4).toFixed(3)}px`,
+        '--raf-refraction-shift',
+        `${(direction * pressure * 5.4).toFixed(3)}px`,
     );
     link.style.setProperty(
-      '--raf-refraction-skew',
-      `${(-direction * pressure * 8.6).toFixed(3)}deg`,
+        '--raf-refraction-skew',
+        `${(-direction * pressure * 8.6).toFixed(3)}deg`,
     );
     link.style.setProperty(
-      '--raf-refraction-scale-x',
-      `${(1 + pressure * 0.085).toFixed(4)}`,
+        '--raf-refraction-scale-x',
+        `${(1 + pressure * 0.085).toFixed(4)}`,
     );
     link.style.setProperty(
-      '--raf-refraction-blur',
-      `${(pressure * 0.18).toFixed(3)}px`,
+        '--raf-refraction-blur',
+        `${(pressure * 0.18).toFixed(3)}px`,
     );
     link.style.setProperty(
-      '--raf-refraction-saturation',
-      `${(1 + pressure * 0.22).toFixed(3)}`,
+        '--raf-refraction-saturation',
+        `${(1 + pressure * 0.22).toFixed(3)}`,
     );
     link.style.setProperty(
-      '--raf-refraction-shadow-forward',
-      `${(direction * pressure * 2.8).toFixed(3)}px`,
+        '--raf-refraction-shadow-forward',
+        `${(direction * pressure * 2.8).toFixed(3)}px`,
     );
     link.style.setProperty(
-      '--raf-refraction-shadow-back',
-      `${(-direction * pressure * 1.9).toFixed(3)}px`,
+        '--raf-refraction-shadow-back',
+        `${(-direction * pressure * 1.9).toFixed(3)}px`,
     );
     link.style.setProperty(
-      '--raf-refraction-glow',
-      `${(pressure * 8).toFixed(3)}px`,
+        '--raf-refraction-glow',
+        `${(pressure * 8).toFixed(3)}px`,
     );
     link.style.setProperty(
-      '--raf-refraction-letter-spacing',
-      `${(pressure * 0.012).toFixed(4)}em`,
+        '--raf-refraction-letter-spacing',
+        `${(pressure * 0.012).toFixed(4)}em`,
     );
 
     if (pressure > 0.075) {
       link.dataset.rafNavbarTextWarp = direction > 0
-        ? 'right'
-        : 'left';
+          ? 'right'
+          : 'left';
     } else {
       delete link.dataset.rafNavbarTextWarp;
     }
@@ -334,16 +236,16 @@ function attachDesktopDrag(shell) {
 
   const refreshOwner = (preferredLink = null) => {
     markDropOwner(
-      getDesktopParts(shell),
-      preferredLink,
+        getDesktopParts(shell),
+        preferredLink,
     );
   };
 
   const resetDropSurface = (surface) => {
     surface.style.transition =
-      'transform 400ms cubic-bezier(0.2, 0.9, 0.18, 1)';
+        'transform 400ms cubic-bezier(0.2, 0.9, 0.18, 1)';
     surface.style.transform =
-      'scaleX(1) scaleY(1) skewX(0deg)';
+        'scaleX(1) scaleY(1) skewX(0deg)';
 
     const timer = window.setTimeout(() => {
       if (surface.isConnected) {
@@ -371,7 +273,7 @@ function attachDesktopDrag(shell) {
     event.preventDefault();
 
     if (
-      shell.hasPointerCapture?.(currentCandidate.pointerId)
+        shell.hasPointerCapture?.(currentCandidate.pointerId)
     ) {
       shell.releasePointerCapture(currentCandidate.pointerId);
     }
@@ -384,27 +286,27 @@ function attachDesktopDrag(shell) {
 
     const currentDropRect = parts.drop.getBoundingClientRect();
     const currentCenter = currentDropRect.left
-      + currentDropRect.width * 0.5;
+        + currentDropRect.width * 0.5;
 
     const targetLink = cancelled
-      ? currentCandidate.ownerLink
-      : findClosestLink(parts.links, currentCenter);
+        ? currentCandidate.ownerLink
+        : findClosestLink(parts.links, currentCenter);
 
     const safeTargetLink = targetLink || parts.links[0];
     const targetTranslate = safeTargetLink.offsetLeft
-      - parts.drop.offsetLeft;
+        - parts.drop.offsetLeft;
 
     parts.drop.style.transition =
-      `transform ${DESKTOP_SNAP_DURATION}ms cubic-bezier(0.2, 0.9, 0.15, 1.08)`;
+        `transform ${DESKTOP_SNAP_DURATION}ms cubic-bezier(0.2, 0.9, 0.15, 1.08)`;
     parts.drop.style.transform =
-      `translate3d(${targetTranslate}px, 0, 0)`;
+        `translate3d(${targetTranslate}px, 0, 0)`;
 
     resetDropSurface(parts.surface);
     settleHorizontalTextRefraction(parts.links, timers);
 
     shell.dataset.rafNavbarDragging = 'settling';
     shell.dataset.rafNavbarDragDirection =
-      currentCandidate.direction > 0 ? 'right' : 'left';
+        currentCandidate.direction > 0 ? 'right' : 'left';
 
     markDropOwner(parts, safeTargetLink);
 
@@ -447,9 +349,9 @@ function attachDesktopDrag(shell) {
 
   const handlePointerDown = (event) => {
     if (
-      event.button !== 0
-      || event.pointerType === 'touch'
-      || candidate !== null
+        event.button !== 0
+        || event.pointerType === 'touch'
+        || candidate !== null
     ) {
       return;
     }
@@ -462,9 +364,9 @@ function attachDesktopDrag(shell) {
 
     const dropRect = parts.drop.getBoundingClientRect();
     const insideDrop = event.clientX >= dropRect.left
-      && event.clientX <= dropRect.right
-      && event.clientY >= dropRect.top
-      && event.clientY <= dropRect.bottom;
+        && event.clientX <= dropRect.right
+        && event.clientY >= dropRect.top
+        && event.clientY <= dropRect.bottom;
 
     if (!insideDrop) {
       return;
@@ -472,8 +374,8 @@ function attachDesktopDrag(shell) {
 
     const shellRect = shell.getBoundingClientRect();
     const ownerLink = findClosestLink(
-      parts.links,
-      dropRect.left + dropRect.width * 0.5,
+        parts.links,
+        dropRect.left + dropRect.width * 0.5,
     );
 
     candidate = {
@@ -498,8 +400,8 @@ function attachDesktopDrag(shell) {
     const deltaY = event.clientY - candidate.startClientY;
 
     if (
-      !candidate.dragged
-      && Math.hypot(deltaX, deltaY) < DESKTOP_DRAG_THRESHOLD
+        !candidate.dragged
+        && Math.hypot(deltaX, deltaY) < DESKTOP_DRAG_THRESHOLD
     ) {
       return;
     }
@@ -526,23 +428,23 @@ function attachDesktopDrag(shell) {
     const baseLeft = parts.drop.offsetLeft;
     const minimumLeft = baseLeft;
     const maximumLeft = shell.clientWidth
-      - parts.drop.offsetWidth
-      - baseLeft;
+        - parts.drop.offsetWidth
+        - baseLeft;
 
     const nextLeft = clamp(
-      candidate.startLocalLeft + deltaX,
-      minimumLeft,
-      maximumLeft,
+        candidate.startLocalLeft + deltaX,
+        minimumLeft,
+        maximumLeft,
     );
 
     const translateX = nextLeft - baseLeft;
     const timestamp = event.timeStamp || performance.now();
     const elapsed = Math.max(
-      1,
-      timestamp - candidate.lastTimestamp,
+        1,
+        timestamp - candidate.lastTimestamp,
     );
     const velocity = (
-      event.clientX - candidate.lastClientX
+        event.clientX - candidate.lastClientX
     ) / elapsed;
 
     if (Math.abs(velocity) > 0.012) {
@@ -555,34 +457,34 @@ function attachDesktopDrag(shell) {
     candidate.lastTimestamp = timestamp;
 
     parts.drop.style.transform =
-      `translate3d(${translateX}px, 0, 0)`;
+        `translate3d(${translateX}px, 0, 0)`;
 
     const stretch = clamp(
-      1 + Math.abs(velocity) * 0.28,
-      1,
-      1.17,
+        1 + Math.abs(velocity) * 0.28,
+        1,
+        1.17,
     );
     const squeeze = clamp(
-      1 - (stretch - 1) * 0.42,
-      0.92,
-      1,
+        1 - (stretch - 1) * 0.42,
+        0.92,
+        1,
     );
     const skew = clamp(
-      velocity * 13,
-      -7,
-      7,
+        velocity * 13,
+        -7,
+        7,
     );
 
     parts.surface.style.transition = 'none';
     parts.surface.style.transform =
-      `scaleX(${stretch.toFixed(4)}) scaleY(${squeeze.toFixed(4)}) skewX(${skew.toFixed(3)}deg)`;
+        `scaleX(${stretch.toFixed(4)}) scaleY(${squeeze.toFixed(4)}) skewX(${skew.toFixed(3)}deg)`;
 
     const pillCenter = shellRect.left
-      + nextLeft
-      + parts.drop.offsetWidth * 0.5;
+        + nextLeft
+        + parts.drop.offsetWidth * 0.5;
 
     shell.dataset.rafNavbarDragDirection =
-      candidate.direction > 0 ? 'right' : 'left';
+        candidate.direction > 0 ? 'right' : 'left';
 
     applyHorizontalTextRefraction({
       links: parts.links,
@@ -623,9 +525,9 @@ function attachDesktopDrag(shell) {
     const parts = getDesktopParts(shell);
 
     if (
-      parts
-      && event.target === parts.drop
-      && !candidate
+        parts
+        && event.target === parts.drop
+        && !candidate
     ) {
       refreshOwner();
     }
@@ -685,8 +587,8 @@ function getMobileItemParts(item) {
   }
 
   const spans = Array.from(item.children).filter(
-    (child) => child instanceof HTMLElement
-      && child.tagName === 'SPAN',
+      (child) => child instanceof HTMLElement
+          && child.tagName === 'SPAN',
   );
 
   if (spans.length < 2) {
@@ -701,18 +603,18 @@ function getMobileItemParts(item) {
 }
 
 function createTransferLayer({
-  left,
-  top,
-  width,
-  height,
-  direction,
-  delay = 0,
-  reducedMotion = false,
-}) {
+                               left,
+                               top,
+                               width,
+                               height,
+                               direction,
+                               delay = 0,
+                               reducedMotion = false,
+                             }) {
   const layer = document.createElement('span');
   const filterId = direction > 0
-    ? '#raf-navbar-vertical-surface-refraction-down'
-    : '#raf-navbar-vertical-surface-refraction-up';
+      ? '#raf-navbar-vertical-surface-refraction-down'
+      : '#raf-navbar-vertical-surface-refraction-up';
 
   layer.dataset.rafMobileRefractionBridge = 'true';
   layer.setAttribute('aria-hidden', 'true');
@@ -749,36 +651,36 @@ function createTransferLayer({
   const duration = reducedMotion ? 180 : 620;
 
   const animation = layer.animate(
-    [
+      [
+        {
+          opacity: 0,
+          transform: 'scaleY(0.04) scaleX(0.66)',
+          filter: 'blur(2px)',
+        },
+        {
+          opacity: 0.78,
+          transform: 'scaleY(1.08) scaleX(1.03)',
+          filter: 'blur(0px)',
+          offset: 0.38,
+        },
+        {
+          opacity: 0.42,
+          transform: 'scaleY(0.92) scaleX(0.95)',
+          filter: 'blur(0.35px)',
+          offset: 0.72,
+        },
+        {
+          opacity: 0,
+          transform: 'scaleY(0.18) scaleX(0.72)',
+          filter: 'blur(1.6px)',
+        },
+      ],
       {
-        opacity: 0,
-        transform: 'scaleY(0.04) scaleX(0.66)',
-        filter: 'blur(2px)',
+        duration,
+        delay,
+        easing: 'cubic-bezier(0.2, 0.88, 0.18, 1)',
+        fill: 'both',
       },
-      {
-        opacity: 0.78,
-        transform: 'scaleY(1.08) scaleX(1.03)',
-        filter: 'blur(0px)',
-        offset: 0.38,
-      },
-      {
-        opacity: 0.42,
-        transform: 'scaleY(0.92) scaleX(0.95)',
-        filter: 'blur(0.35px)',
-        offset: 0.72,
-      },
-      {
-        opacity: 0,
-        transform: 'scaleY(0.18) scaleX(0.72)',
-        filter: 'blur(1.6px)',
-      },
-    ],
-    {
-      duration,
-      delay,
-      easing: 'cubic-bezier(0.2, 0.88, 0.18, 1)',
-      fill: 'both',
-    },
   );
 
   const remove = () => {
@@ -792,26 +694,26 @@ function createTransferLayer({
 }
 
 function createMobileTransferBridge(
-  source,
-  target,
-  direction,
-  reducedMotion,
+    source,
+    target,
+    direction,
+    reducedMotion,
 ) {
   const sourceRect = source.getBoundingClientRect();
   const targetRect = target.getBoundingClientRect();
   const sharedWidth = Math.min(sourceRect.width, targetRect.width);
   const width = Math.max(34, sharedWidth * 0.54);
   const left = Math.max(
-    sourceRect.left,
-    targetRect.left,
+      sourceRect.left,
+      targetRect.left,
   ) + (sharedWidth - width) * 0.5;
 
   const topRect = sourceRect.top <= targetRect.top
-    ? sourceRect
-    : targetRect;
+      ? sourceRect
+      : targetRect;
   const bottomRect = sourceRect.top <= targetRect.top
-    ? targetRect
-    : sourceRect;
+      ? targetRect
+      : sourceRect;
 
   const gapTop = topRect.bottom - 5;
   const gapBottom = bottomRect.top + 5;
@@ -834,8 +736,8 @@ function createMobileTransferBridge(
     removers.push(createTransferLayer({
       left: sourceRect.left + (sourceRect.width - width) * 0.5,
       top: direction > 0
-        ? sourceRect.bottom - 5
-        : sourceRect.top - tailHeight + 5,
+          ? sourceRect.bottom - 5
+          : sourceRect.top - tailHeight + 5,
       width,
       height: tailHeight,
       direction,
@@ -845,8 +747,8 @@ function createMobileTransferBridge(
     removers.push(createTransferLayer({
       left: targetRect.left + (targetRect.width - width) * 0.5,
       top: direction > 0
-        ? targetRect.top - tailHeight + 5
-        : targetRect.bottom - 5,
+          ? targetRect.top - tailHeight + 5
+          : targetRect.bottom - 5,
       width,
       height: tailHeight,
       direction,
@@ -861,11 +763,11 @@ function createMobileTransferBridge(
 }
 
 function animateMobileRefraction({
-  source,
-  target,
-  direction,
-  reducedMotion,
-}) {
+                                   source,
+                                   target,
+                                   direction,
+                                   reducedMotion,
+                                 }) {
   const sourceParts = getMobileItemParts(source);
   const targetParts = getMobileItemParts(target);
 
@@ -876,155 +778,155 @@ function animateMobileRefraction({
   const directionName = direction > 0 ? 'down' : 'up';
   const sign = direction > 0 ? 1 : -1;
   const duration = reducedMotion
-    ? 220
-    : MOBILE_REFRACTION_DURATION;
+      ? 220
+      : MOBILE_REFRACTION_DURATION;
 
   source.dataset.rafMobileRefractionRole = 'source';
   source.dataset.rafMobileRefractionDirection = directionName;
   source.style.setProperty(
-    '--raf-mobile-refraction-origin',
-    direction > 0 ? '100%' : '0%',
+      '--raf-mobile-refraction-origin',
+      direction > 0 ? '100%' : '0%',
   );
 
   target.dataset.rafMobileRefractionRole = 'target';
   target.dataset.rafMobileRefractionDirection = directionName;
   target.style.setProperty(
-    '--raf-mobile-refraction-origin',
-    direction > 0 ? '0%' : '100%',
+      '--raf-mobile-refraction-origin',
+      direction > 0 ? '0%' : '100%',
   );
 
   const animations = [];
 
   animations.push(sourceParts.label.animate(
-    [
+      [
+        {
+          opacity: 1,
+          transform: 'translate3d(0, 0, 0) scaleY(1) scaleX(1)',
+          textShadow: '0 0 0 rgba(255,255,255,0)',
+        },
+        {
+          opacity: 0.9,
+          transform: `translate3d(0, ${sign * 11}px, 0) scaleY(1.34) scaleX(.96)`,
+          textShadow: `0 ${sign * 4}px 5px rgba(255,255,255,.46)`,
+          offset: 0.34,
+        },
+        {
+          opacity: 0.42,
+          transform: `translate3d(0, ${sign * 17}px, 0) scaleY(.72) scaleX(1.04)`,
+          textShadow: `0 ${sign * 7}px 9px rgba(150,195,255,.3)`,
+          offset: 0.68,
+        },
+        {
+          opacity: 0,
+          transform: `translate3d(0, ${sign * 8}px, 0) scaleY(.86) scaleX(1)`,
+          textShadow: '0 0 0 rgba(255,255,255,0)',
+        },
+      ],
       {
-        opacity: 1,
-        transform: 'translate3d(0, 0, 0) scaleY(1) scaleX(1)',
-        textShadow: '0 0 0 rgba(255,255,255,0)',
+        duration: duration * 0.72,
+        easing: 'cubic-bezier(0.2, 0.88, 0.18, 1)',
+        fill: 'both',
       },
-      {
-        opacity: 0.9,
-        transform: `translate3d(0, ${sign * 11}px, 0) scaleY(1.34) scaleX(.96)`,
-        textShadow: `0 ${sign * 4}px 5px rgba(255,255,255,.46)`,
-        offset: 0.34,
-      },
-      {
-        opacity: 0.42,
-        transform: `translate3d(0, ${sign * 17}px, 0) scaleY(.72) scaleX(1.04)`,
-        textShadow: `0 ${sign * 7}px 9px rgba(150,195,255,.3)`,
-        offset: 0.68,
-      },
-      {
-        opacity: 0,
-        transform: `translate3d(0, ${sign * 8}px, 0) scaleY(.86) scaleX(1)`,
-        textShadow: '0 0 0 rgba(255,255,255,0)',
-      },
-    ],
-    {
-      duration: duration * 0.72,
-      easing: 'cubic-bezier(0.2, 0.88, 0.18, 1)',
-      fill: 'both',
-    },
   ));
 
   animations.push(targetParts.label.animate(
-    [
+      [
+        {
+          opacity: 0.34,
+          transform: `translate3d(0, ${-sign * 17}px, 0) scaleY(1.36) scaleX(.95)`,
+          textShadow: `0 ${-sign * 7}px 9px rgba(150,195,255,.34)`,
+        },
+        {
+          opacity: 0.92,
+          transform: `translate3d(0, ${sign * 3}px, 0) scaleY(.9) scaleX(1.04)`,
+          textShadow: `0 ${sign * 3}px 5px rgba(255,255,255,.42)`,
+          offset: 0.46,
+        },
+        {
+          opacity: 1,
+          transform: `translate3d(0, ${-sign * 1}px, 0) scaleY(1.045) scaleX(.99)`,
+          textShadow: '0 0 8px rgba(255,255,255,.22)',
+          offset: 0.76,
+        },
+        {
+          opacity: 1,
+          transform: 'translate3d(0, 0, 0) scaleY(1) scaleX(1)',
+          textShadow: '0 0 0 rgba(255,255,255,0)',
+        },
+      ],
       {
-        opacity: 0.34,
-        transform: `translate3d(0, ${-sign * 17}px, 0) scaleY(1.36) scaleX(.95)`,
-        textShadow: `0 ${-sign * 7}px 9px rgba(150,195,255,.34)`,
+        duration,
+        easing: 'cubic-bezier(0.2, 0.88, 0.18, 1)',
+        fill: 'both',
       },
-      {
-        opacity: 0.92,
-        transform: `translate3d(0, ${sign * 3}px, 0) scaleY(.9) scaleX(1.04)`,
-        textShadow: `0 ${sign * 3}px 5px rgba(255,255,255,.42)`,
-        offset: 0.46,
-      },
-      {
-        opacity: 1,
-        transform: `translate3d(0, ${-sign * 1}px, 0) scaleY(1.045) scaleX(.99)`,
-        textShadow: '0 0 8px rgba(255,255,255,.22)',
-        offset: 0.76,
-      },
-      {
-        opacity: 1,
-        transform: 'translate3d(0, 0, 0) scaleY(1) scaleX(1)',
-        textShadow: '0 0 0 rgba(255,255,255,0)',
-      },
-    ],
-    {
-      duration,
-      easing: 'cubic-bezier(0.2, 0.88, 0.18, 1)',
-      fill: 'both',
-    },
   ));
 
   animations.push(sourceParts.lens.animate(
-    [
+      [
+        {
+          opacity: 1,
+          transform: 'translate3d(0, 0, 0) scaleY(1) scaleX(1)',
+          borderRadius: 'inherit',
+        },
+        {
+          opacity: 0.82,
+          transform: `translate3d(0, ${sign * 12}px, 0) scaleY(1.48) scaleX(.82)`,
+          borderRadius: '42% 58% 50% 50% / 66% 66% 34% 34%',
+          offset: 0.38,
+        },
+        {
+          opacity: 0,
+          transform: `translate3d(0, ${sign * 24}px, 0) scaleY(.28) scaleX(.62)`,
+          borderRadius: '999px',
+        },
+      ],
       {
-        opacity: 1,
-        transform: 'translate3d(0, 0, 0) scaleY(1) scaleX(1)',
-        borderRadius: 'inherit',
+        duration: duration * 0.72,
+        easing: 'cubic-bezier(0.2, 0.88, 0.18, 1)',
+        fill: 'both',
       },
-      {
-        opacity: 0.82,
-        transform: `translate3d(0, ${sign * 12}px, 0) scaleY(1.48) scaleX(.82)`,
-        borderRadius: '42% 58% 50% 50% / 66% 66% 34% 34%',
-        offset: 0.38,
-      },
-      {
-        opacity: 0,
-        transform: `translate3d(0, ${sign * 24}px, 0) scaleY(.28) scaleX(.62)`,
-        borderRadius: '999px',
-      },
-    ],
-    {
-      duration: duration * 0.72,
-      easing: 'cubic-bezier(0.2, 0.88, 0.18, 1)',
-      fill: 'both',
-    },
   ));
 
   animations.push(targetParts.lens.animate(
-    [
+      [
+        {
+          opacity: 0.12,
+          transform: `translate3d(0, ${-sign * 22}px, 0) scaleY(.22) scaleX(.6)`,
+          borderRadius: '999px',
+        },
+        {
+          opacity: 0.96,
+          transform: `translate3d(0, ${-sign * 3}px, 0) scaleY(1.46) scaleX(.84)`,
+          borderRadius: '48% 52% 44% 56% / 34% 34% 66% 66%',
+          offset: 0.44,
+        },
+        {
+          opacity: 1,
+          transform: 'translate3d(0, 0, 0) scaleY(.94) scaleX(1.035)',
+          borderRadius: 'inherit',
+          offset: 0.75,
+        },
+        {
+          opacity: 1,
+          transform: 'translate3d(0, 0, 0) scaleY(1) scaleX(1)',
+          borderRadius: 'inherit',
+        },
+      ],
       {
-        opacity: 0.12,
-        transform: `translate3d(0, ${-sign * 22}px, 0) scaleY(.22) scaleX(.6)`,
-        borderRadius: '999px',
+        duration,
+        easing: 'cubic-bezier(0.2, 0.88, 0.18, 1)',
+        fill: 'both',
       },
-      {
-        opacity: 0.96,
-        transform: `translate3d(0, ${-sign * 3}px, 0) scaleY(1.46) scaleX(.84)`,
-        borderRadius: '48% 52% 44% 56% / 34% 34% 66% 66%',
-        offset: 0.44,
-      },
-      {
-        opacity: 1,
-        transform: 'translate3d(0, 0, 0) scaleY(.94) scaleX(1.035)',
-        borderRadius: 'inherit',
-        offset: 0.75,
-      },
-      {
-        opacity: 1,
-        transform: 'translate3d(0, 0, 0) scaleY(1) scaleX(1)',
-        borderRadius: 'inherit',
-      },
-    ],
-    {
-      duration,
-      easing: 'cubic-bezier(0.2, 0.88, 0.18, 1)',
-      fill: 'both',
-    },
   ));
 
   const removeBridge = reducedMotion
-    ? () => {}
-    : createMobileTransferBridge(
-      source,
-      target,
-      direction,
-      reducedMotion,
-    );
+      ? () => {}
+      : createMobileTransferBridge(
+          source,
+          target,
+          direction,
+          reducedMotion,
+      );
 
   let disposed = false;
 
@@ -1049,7 +951,7 @@ function animateMobileRefraction({
   };
 
   Promise.allSettled(
-    animations.map((animation) => animation.finished),
+      animations.map((animation) => animation.finished),
   ).then(cleanup);
 
   return cleanup;
@@ -1057,19 +959,19 @@ function animateMobileRefraction({
 
 function getArrowDirection(button) {
   const label = (
-    button.getAttribute('aria-label') || ''
+      button.getAttribute('aria-label') || ''
   ).toLocaleLowerCase();
 
   if (
-    label.includes('previous')
-    || label.includes('предыдущ')
+      label.includes('previous')
+      || label.includes('предыдущ')
   ) {
     return -1;
   }
 
   if (
-    label.includes('next')
-    || label.includes('следующ')
+      label.includes('next')
+      || label.includes('следующ')
   ) {
     return 1;
   }
@@ -1079,7 +981,7 @@ function getArrowDirection(button) {
 
 function getMobileArrowButtons(drawer) {
   return Array.from(
-    drawer.querySelectorAll('button[aria-label]'),
+      drawer.querySelectorAll('button[aria-label]'),
   ).filter((button) => getArrowDirection(button) !== 0);
 }
 
@@ -1090,7 +992,7 @@ function attachMobileRefraction(drawer) {
   let resolveAttempts = 0;
 
   const reducedMotion = window.matchMedia(
-    '(prefers-reduced-motion: reduce)',
+      '(prefers-reduced-motion: reduce)',
   ).matches;
 
   const resolveTarget = () => {
@@ -1101,12 +1003,12 @@ function attachMobileRefraction(drawer) {
     }
 
     const target = drawer.querySelector(
-      '[data-raf-mobile-drawer-item="selected"]',
+        '[data-raf-mobile-drawer-item="selected"]',
     );
 
     if (
-      target instanceof HTMLElement
-      && target !== pending.source
+        target instanceof HTMLElement
+        && target !== pending.source
     ) {
       activeCleanup?.();
       activeCleanup = animateMobileRefraction({
@@ -1124,7 +1026,7 @@ function attachMobileRefraction(drawer) {
 
     if (resolveAttempts < 10) {
       resolveFrame = window.requestAnimationFrame(
-        resolveTarget,
+          resolveTarget,
       );
     } else {
       pending = null;
@@ -1141,7 +1043,7 @@ function attachMobileRefraction(drawer) {
     }
 
     const source = drawer.querySelector(
-      '[data-raf-mobile-drawer-item="selected"]',
+        '[data-raf-mobile-drawer-item="selected"]',
     );
 
     if (!(source instanceof HTMLElement)) {
@@ -1159,7 +1061,7 @@ function attachMobileRefraction(drawer) {
     }
 
     resolveFrame = window.requestAnimationFrame(
-      resolveTarget,
+        resolveTarget,
     );
   };
 
@@ -1174,9 +1076,9 @@ function attachMobileRefraction(drawer) {
   return () => {
     buttons.forEach((button) => {
       button.removeEventListener(
-        'click',
-        handleArrowClick,
-        true,
+          'click',
+          handleArrowClick,
+          true,
       );
     });
 
@@ -1205,9 +1107,9 @@ export default function NavbarDragRefractionRuntime() {
       }
 
       const desktopShells = new Set(
-        document.querySelectorAll(
-          '[data-raf-navbar-shell="true"]',
-        ),
+          document.querySelectorAll(
+              '[data-raf-navbar-shell="true"]',
+          ),
       );
 
       desktopBindings.forEach((dispose, shell) => {
@@ -1219,21 +1121,21 @@ export default function NavbarDragRefractionRuntime() {
 
       desktopShells.forEach((shell) => {
         if (
-          shell instanceof HTMLElement
-          && !desktopBindings.has(shell)
-          && getDesktopParts(shell)
+            shell instanceof HTMLElement
+            && !desktopBindings.has(shell)
+            && getDesktopParts(shell)
         ) {
           desktopBindings.set(
-            shell,
-            attachDesktopDrag(shell),
+              shell,
+              attachDesktopDrag(shell),
           );
         }
       });
 
       const drawers = new Set(
-        document.querySelectorAll(
-          '[data-raf-glass-surface="mobile-drawer"]',
-        ),
+          document.querySelectorAll(
+              '[data-raf-glass-surface="mobile-drawer"]',
+          ),
       );
 
       mobileBindings.forEach((dispose, drawer) => {
@@ -1245,13 +1147,13 @@ export default function NavbarDragRefractionRuntime() {
 
       drawers.forEach((drawer) => {
         if (
-          drawer instanceof HTMLElement
-          && !mobileBindings.has(drawer)
-          && getMobileArrowButtons(drawer).length > 0
+            drawer instanceof HTMLElement
+            && !mobileBindings.has(drawer)
+            && getMobileArrowButtons(drawer).length > 0
         ) {
           mobileBindings.set(
-            drawer,
-            attachMobileRefraction(drawer),
+              drawer,
+              attachMobileRefraction(drawer),
           );
         }
       });
@@ -1266,7 +1168,7 @@ export default function NavbarDragRefractionRuntime() {
     };
 
     const mutationObserver = new MutationObserver(
-      scheduleBind,
+        scheduleBind,
     );
 
     mutationObserver.observe(document.body, {
@@ -1303,224 +1205,222 @@ export default function NavbarDragRefractionRuntime() {
       mobileBindings.clear();
 
       document.querySelectorAll(
-        '[data-raf-mobile-refraction-bridge="true"]',
+          '[data-raf-mobile-refraction-bridge="true"]',
       ).forEach((bridge) => bridge.remove());
     };
   }, []);
 
   return (
-    <>
-      <style>{RUNTIME_STYLES}</style>
+      <>
+        <svg
+            aria-hidden="true"
+            focusable="false"
+            width="0"
+            height="0"
+            style={{
+              position: 'absolute',
+              width: 0,
+              height: 0,
+              overflow: 'hidden',
+              pointerEvents: 'none',
+            }}
+        >
+          <defs>
+            <filter
+                id="raf-navbar-horizontal-text-refraction-right"
+                x="-28%"
+                y="-70%"
+                width="156%"
+                height="240%"
+                colorInterpolationFilters="sRGB"
+            >
+              <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency="0.024 0.085"
+                  numOctaves="1"
+                  seed="19"
+                  result="noise"
+              />
+              <feGaussianBlur
+                  in="noise"
+                  stdDeviation="1.1 0.35"
+                  result="smoothNoise"
+              />
+              <feColorMatrix
+                  in="smoothNoise"
+                  values="1 0 0 0 0  0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 1 0"
+                  result="horizontalMap"
+              />
+              <feDisplacementMap
+                  in="SourceGraphic"
+                  in2="horizontalMap"
+                  scale="8"
+                  xChannelSelector="R"
+                  yChannelSelector="G"
+              />
+            </filter>
 
-      <svg
-        aria-hidden="true"
-        focusable="false"
-        width="0"
-        height="0"
-        style={{
-          position: 'absolute',
-          width: 0,
-          height: 0,
-          overflow: 'hidden',
-          pointerEvents: 'none',
-        }}
-      >
-        <defs>
-          <filter
-            id="raf-navbar-horizontal-text-refraction-right"
-            x="-28%"
-            y="-70%"
-            width="156%"
-            height="240%"
-            colorInterpolationFilters="sRGB"
-          >
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.024 0.085"
-              numOctaves="1"
-              seed="19"
-              result="noise"
-            />
-            <feGaussianBlur
-              in="noise"
-              stdDeviation="1.1 0.35"
-              result="smoothNoise"
-            />
-            <feColorMatrix
-              in="smoothNoise"
-              values="1 0 0 0 0  0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 1 0"
-              result="horizontalMap"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="horizontalMap"
-              scale="8"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
+            <filter
+                id="raf-navbar-horizontal-text-refraction-left"
+                x="-28%"
+                y="-70%"
+                width="156%"
+                height="240%"
+                colorInterpolationFilters="sRGB"
+            >
+              <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency="0.024 0.085"
+                  numOctaves="1"
+                  seed="19"
+                  result="noise"
+              />
+              <feGaussianBlur
+                  in="noise"
+                  stdDeviation="1.1 0.35"
+                  result="smoothNoise"
+              />
+              <feColorMatrix
+                  in="smoothNoise"
+                  values="1 0 0 0 0  0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 1 0"
+                  result="horizontalMap"
+              />
+              <feDisplacementMap
+                  in="SourceGraphic"
+                  in2="horizontalMap"
+                  scale="-8"
+                  xChannelSelector="R"
+                  yChannelSelector="G"
+              />
+            </filter>
 
-          <filter
-            id="raf-navbar-horizontal-text-refraction-left"
-            x="-28%"
-            y="-70%"
-            width="156%"
-            height="240%"
-            colorInterpolationFilters="sRGB"
-          >
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.024 0.085"
-              numOctaves="1"
-              seed="19"
-              result="noise"
-            />
-            <feGaussianBlur
-              in="noise"
-              stdDeviation="1.1 0.35"
-              result="smoothNoise"
-            />
-            <feColorMatrix
-              in="smoothNoise"
-              values="1 0 0 0 0  0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 1 0"
-              result="horizontalMap"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="horizontalMap"
-              scale="-8"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
+            <filter
+                id="raf-navbar-vertical-text-refraction-down"
+                x="-32%"
+                y="-80%"
+                width="164%"
+                height="260%"
+                colorInterpolationFilters="sRGB"
+            >
+              <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency="0.08 0.022"
+                  numOctaves="1"
+                  seed="31"
+                  result="noise"
+              />
+              <feGaussianBlur
+                  in="noise"
+                  stdDeviation="0.35 1.15"
+                  result="smoothNoise"
+              />
+              <feColorMatrix
+                  in="smoothNoise"
+                  values="0 0 0 0 0.5  0 1 0 0 0  0 0 0 0 0.5  0 0 0 1 0"
+                  result="verticalMap"
+              />
+              <feDisplacementMap
+                  in="SourceGraphic"
+                  in2="verticalMap"
+                  scale="9"
+                  xChannelSelector="R"
+                  yChannelSelector="G"
+              />
+            </filter>
 
-          <filter
-            id="raf-navbar-vertical-text-refraction-down"
-            x="-32%"
-            y="-80%"
-            width="164%"
-            height="260%"
-            colorInterpolationFilters="sRGB"
-          >
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.08 0.022"
-              numOctaves="1"
-              seed="31"
-              result="noise"
-            />
-            <feGaussianBlur
-              in="noise"
-              stdDeviation="0.35 1.15"
-              result="smoothNoise"
-            />
-            <feColorMatrix
-              in="smoothNoise"
-              values="0 0 0 0 0.5  0 1 0 0 0  0 0 0 0 0.5  0 0 0 1 0"
-              result="verticalMap"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="verticalMap"
-              scale="9"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
+            <filter
+                id="raf-navbar-vertical-text-refraction-up"
+                x="-32%"
+                y="-80%"
+                width="164%"
+                height="260%"
+                colorInterpolationFilters="sRGB"
+            >
+              <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency="0.08 0.022"
+                  numOctaves="1"
+                  seed="31"
+                  result="noise"
+              />
+              <feGaussianBlur
+                  in="noise"
+                  stdDeviation="0.35 1.15"
+                  result="smoothNoise"
+              />
+              <feColorMatrix
+                  in="smoothNoise"
+                  values="0 0 0 0 0.5  0 1 0 0 0  0 0 0 0 0.5  0 0 0 1 0"
+                  result="verticalMap"
+              />
+              <feDisplacementMap
+                  in="SourceGraphic"
+                  in2="verticalMap"
+                  scale="-9"
+                  xChannelSelector="R"
+                  yChannelSelector="G"
+              />
+            </filter>
 
-          <filter
-            id="raf-navbar-vertical-text-refraction-up"
-            x="-32%"
-            y="-80%"
-            width="164%"
-            height="260%"
-            colorInterpolationFilters="sRGB"
-          >
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.08 0.022"
-              numOctaves="1"
-              seed="31"
-              result="noise"
-            />
-            <feGaussianBlur
-              in="noise"
-              stdDeviation="0.35 1.15"
-              result="smoothNoise"
-            />
-            <feColorMatrix
-              in="smoothNoise"
-              values="0 0 0 0 0.5  0 1 0 0 0  0 0 0 0 0.5  0 0 0 1 0"
-              result="verticalMap"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="verticalMap"
-              scale="-9"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
+            <filter
+                id="raf-navbar-vertical-surface-refraction-down"
+                x="-45%"
+                y="-45%"
+                width="190%"
+                height="190%"
+                colorInterpolationFilters="sRGB"
+            >
+              <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency="0.055 0.018"
+                  numOctaves="1"
+                  seed="43"
+                  result="noise"
+              />
+              <feColorMatrix
+                  in="noise"
+                  values="0 0 0 0 0.5  0 1 0 0 0  0 0 0 0 0.5  0 0 0 1 0"
+                  result="verticalMap"
+              />
+              <feDisplacementMap
+                  in="SourceGraphic"
+                  in2="verticalMap"
+                  scale="14"
+                  xChannelSelector="R"
+                  yChannelSelector="G"
+              />
+            </filter>
 
-          <filter
-            id="raf-navbar-vertical-surface-refraction-down"
-            x="-45%"
-            y="-45%"
-            width="190%"
-            height="190%"
-            colorInterpolationFilters="sRGB"
-          >
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.055 0.018"
-              numOctaves="1"
-              seed="43"
-              result="noise"
-            />
-            <feColorMatrix
-              in="noise"
-              values="0 0 0 0 0.5  0 1 0 0 0  0 0 0 0 0.5  0 0 0 1 0"
-              result="verticalMap"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="verticalMap"
-              scale="14"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
-
-          <filter
-            id="raf-navbar-vertical-surface-refraction-up"
-            x="-45%"
-            y="-45%"
-            width="190%"
-            height="190%"
-            colorInterpolationFilters="sRGB"
-          >
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.055 0.018"
-              numOctaves="1"
-              seed="43"
-              result="noise"
-            />
-            <feColorMatrix
-              in="noise"
-              values="0 0 0 0 0.5  0 1 0 0 0  0 0 0 0 0.5  0 0 0 1 0"
-              result="verticalMap"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="verticalMap"
-              scale="-14"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
-        </defs>
-      </svg>
-    </>
+            <filter
+                id="raf-navbar-vertical-surface-refraction-up"
+                x="-45%"
+                y="-45%"
+                width="190%"
+                height="190%"
+                colorInterpolationFilters="sRGB"
+            >
+              <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency="0.055 0.018"
+                  numOctaves="1"
+                  seed="43"
+                  result="noise"
+              />
+              <feColorMatrix
+                  in="noise"
+                  values="0 0 0 0 0.5  0 1 0 0 0  0 0 0 0 0.5  0 0 0 1 0"
+                  result="verticalMap"
+              />
+              <feDisplacementMap
+                  in="SourceGraphic"
+                  in2="verticalMap"
+                  scale="-14"
+                  xChannelSelector="R"
+                  yChannelSelector="G"
+              />
+            </filter>
+          </defs>
+        </svg>
+      </>
   );
 }

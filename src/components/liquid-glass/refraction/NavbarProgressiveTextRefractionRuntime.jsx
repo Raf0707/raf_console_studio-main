@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 
+
 import { createRefractionMap } from './refraction-map';
 
 const FILTER_MARGIN = 32;
@@ -9,123 +10,31 @@ const MAX_MAP_SIZE = 2048;
 const MOTION_VELOCITY_EPSILON = 0.006;
 const MOTION_SETTLE_GRACE = 64;
 const TRANSPARENT_PIXEL =
-  'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+    'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 
-const RUNTIME_STYLES = `
-[data-raf-navbar-shell="true"][data-raf-moving-lens-runtime="ready"]
-[data-raf-navbar-text-refraction] {
-  transform: none !important;
-  filter: none !important;
-  letter-spacing: inherit !important;
-  text-shadow:
-    0 1px 0 rgba(0,0,0,.42),
-    0 0 .55rem rgba(0,0,0,.28) !important;
-}
-
-[data-raf-navbar-shell="true"][data-raf-moving-lens-runtime="ready"]
-a[aria-current="page"][data-raf-navbar-text-refraction],
-[data-raf-navbar-shell="true"][data-raf-moving-lens-runtime="ready"]
-a[data-raf-navbar-drop-owner="true"][data-raf-navbar-text-refraction] {
-  text-shadow:
-    0 1px 0 rgba(0,0,0,.55),
-    0 0 .8rem rgba(255,255,255,.2) !important;
-}
-
-[data-raf-navbar-progressive-text-mask="true"] {
-  display: none !important;
-}
-
-[data-raf-navbar-moving-lens-scene="true"],
-[data-raf-navbar-moving-lens-scene="true"] * {
-  pointer-events: none !important;
-  user-select: none !important;
-}
-
-[data-raf-navbar-moving-lens-scene="true"] {
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  display: block;
-  overflow: visible;
-  border: 0 !important;
-  border-radius: inherit;
-  opacity: 0;
-  background: transparent !important;
-  background-image: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  mix-blend-mode: normal;
-  isolation: isolate;
-  transform-origin: 50% 50%;
-  will-change: transform, opacity;
-}
-
-[data-raf-navbar-moving-lens-sample="true"] {
-  position: absolute;
-  inset: 0;
-  display: block;
-  overflow: visible;
-  border: 0 !important;
-  background: transparent !important;
-  background-image: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  transform: translateZ(0);
-  transform-origin: 50% 50%;
-  will-change: filter;
-}
-
-[data-raf-navbar-moving-lens-label="true"] {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: visible;
-  border: 0 !important;
-  white-space: nowrap;
-  text-align: center;
-  text-decoration: none;
-  background: transparent !important;
-  background-image: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  [data-raf-navbar-moving-lens-scene="true"] {
-    display: none !important;
-  }
-}
-`;
 
 const clamp = (value, min, max) => (
-  Math.min(max, Math.max(min, value))
+    Math.min(max, Math.max(min, value))
 );
 
 function getLinks(shell) {
   return Array.from(shell.querySelectorAll('a[href]')).filter(
-    (link) => link.parentElement === shell,
+      (link) => link.parentElement === shell,
   );
 }
 
 function getParts(shell) {
   const warp = shell.querySelector(
-    '[data-raf-refraction-target="navbar-pill"]',
+      '[data-raf-refraction-target="navbar-pill"]',
   );
   const surface = warp?.parentElement;
   const drop = surface?.parentElement;
   const links = getLinks(shell);
 
   if (
-    !(surface instanceof HTMLElement)
-    || !(drop instanceof HTMLElement)
-    || links.length === 0
+      !(surface instanceof HTMLElement)
+      || !(drop instanceof HTMLElement)
+      || links.length === 0
   ) {
     return null;
   }
@@ -135,7 +44,7 @@ function getParts(shell) {
 
 function clearLegacy(shell) {
   shell.querySelectorAll(
-    '[data-raf-navbar-progressive-text-mask="true"]',
+      '[data-raf-navbar-progressive-text-mask="true"]',
   ).forEach((node) => node.remove());
 
   getLinks(shell).forEach((link) => {
@@ -172,7 +81,7 @@ function rotatePixels(data, width, height, direction) {
   const outputWidth = height;
   const outputHeight = width;
   const output = new Uint8ClampedArray(
-    outputWidth * outputHeight * 4,
+      outputWidth * outputHeight * 4,
   );
 
   for (let y = 0; y < height; y += 1) {
@@ -181,29 +90,29 @@ function rotatePixels(data, width, height, direction) {
       const vectorX = decode(data[sourceOffset]);
       const vectorY = decode(data[sourceOffset + 1]);
       const curvature = clamp(
-        Math.hypot(vectorX, vectorY) * 1.35,
-        0,
-        1,
+          Math.hypot(vectorX, vectorY) * 1.35,
+          0,
+          1,
       );
 
       const destinationX = direction > 0
-        ? height - 1 - y
-        : y;
+          ? height - 1 - y
+          : y;
       const destinationY = direction > 0
-        ? x
-        : width - 1 - x;
+          ? x
+          : width - 1 - x;
       const rotatedX = direction > 0
-        ? -vectorY
-        : vectorY;
+          ? -vectorY
+          : vectorY;
       const rotatedY = direction > 0
-        ? vectorX
-        : -vectorX;
+          ? vectorX
+          : -vectorX;
       const destinationOffset = (
-        destinationY * outputWidth + destinationX
+          destinationY * outputWidth + destinationX
       ) * 4;
 
       output[destinationOffset] = encode(
-        rotatedX + direction * curvature * 0.055,
+          rotatedX + direction * curvature * 0.055,
       );
       output[destinationOffset + 1] = encode(rotatedY);
       output[destinationOffset + 2] = 128;
@@ -255,18 +164,18 @@ async function createMaps(width, height, radius) {
 
   context.drawImage(image, 0, 0);
   const pixels = context.getImageData(
-    0,
-    0,
-    canvas.width,
-    canvas.height,
+      0,
+      0,
+      canvas.width,
+      canvas.height,
   ).data;
 
   const make = (direction) => {
     const rotated = rotatePixels(
-      pixels,
-      canvas.width,
-      canvas.height,
-      direction,
+        pixels,
+        canvas.width,
+        canvas.height,
+        direction,
     );
     const target = document.createElement('canvas');
     target.width = rotated.width;
@@ -276,8 +185,8 @@ async function createMaps(width, height, radius) {
     if (!targetContext) return null;
 
     const imageData = targetContext.createImageData(
-      rotated.width,
-      rotated.height,
+        rotated.width,
+        rotated.height,
     );
     imageData.data.set(rotated.data);
     targetContext.putImageData(imageData, 0, 0);
@@ -298,18 +207,18 @@ async function createMaps(width, height, radius) {
 function setHref(element, value) {
   element.setAttribute('href', value);
   element.setAttributeNS(
-    'http://www.w3.org/1999/xlink',
-    'xlink:href',
-    value,
+      'http://www.w3.org/1999/xlink',
+      'xlink:href',
+      value,
   );
 }
 
 function applyMap(suffix, map) {
   const filter = document.getElementById(
-    `raf-navbar-moving-lens-${suffix}`,
+      `raf-navbar-moving-lens-${suffix}`,
   );
   const image = document.getElementById(
-    `raf-navbar-moving-lens-map-${suffix}`,
+      `raf-navbar-moving-lens-map-${suffix}`,
   );
 
   if (!(filter instanceof SVGElement) || !(image instanceof SVGElement)) {
@@ -419,8 +328,8 @@ function inverseTransform(surface) {
     const Matrix = window.DOMMatrixReadOnly || window.DOMMatrix;
     return {
       value: Matrix
-        ? new Matrix(value).inverse().toString()
-        : 'none',
+          ? new Matrix(value).inverse().toString()
+          : 'none',
       origin: style.transformOrigin || '50% 50%',
     };
   } catch {
@@ -517,8 +426,8 @@ function attach(shell) {
     const center = dropRect.left + dropRect.width * 0.5;
     const elapsed = Math.max(1, time - previousTime);
     const velocity = previousCenter === null
-      ? 0
-      : (center - previousCenter) / elapsed;
+        ? 0
+        : (center - previousCenter) / elapsed;
 
     if (Math.abs(velocity) > 0.012) {
       direction = velocity > 0 ? 1 : -1;
@@ -529,38 +438,38 @@ function attach(shell) {
     }
 
     const dragLifecycleActive = shell.hasAttribute(
-      'data-raf-navbar-dragging',
+        'data-raf-navbar-dragging',
     );
     const physicallyMoving = Math.abs(velocity)
-      > MOTION_VELOCITY_EPSILON;
+        > MOTION_VELOCITY_EPSILON;
 
     if (dragLifecycleActive || physicallyMoving) {
       lastMotionTime = time;
     }
 
     const motionActive = dragLifecycleActive
-      || physicallyMoving
-      || time - lastMotionTime <= MOTION_SETTLE_GRACE;
+        || physicallyMoving
+        || time - lastMotionTime <= MOTION_SETTLE_GRACE;
 
     previousCenter = center;
     previousTime = time;
 
     const radius = Number.parseFloat(
-      window.getComputedStyle(parts.drop).borderTopLeftRadius,
+        window.getComputedStyle(parts.drop).borderTopLeftRadius,
     ) || height * 0.5;
 
     requestMaps(width, height, radius);
 
     const scale = Math.round(clamp(
-      height * 1.45 + Math.abs(velocity) * 10,
-      58,
-      82,
+        height * 1.45 + Math.abs(velocity) * 10,
+        58,
+        82,
     ));
     document.getElementById(
-      'raf-navbar-moving-lens-displacement-right',
+        'raf-navbar-moving-lens-displacement-right',
     )?.setAttribute('scale', String(scale));
     document.getElementById(
-      'raf-navbar-moving-lens-displacement-left',
+        'raf-navbar-moving-lens-displacement-left',
     )?.setAttribute('scale', String(scale));
 
     sample.style.filter = [
@@ -589,10 +498,12 @@ function attach(shell) {
       parts.links.forEach((link) => maskLink(link, lensRect));
       scene.style.opacity = '1';
       scene.dataset.rafNavbarMovingLensActive = 'true';
+      shell.dataset.rafNavbarMovingLensActive = 'true';
     } else {
       parts.links.forEach(clearMask);
       scene.style.opacity = '0';
       delete scene.dataset.rafNavbarMovingLensActive;
+      delete shell.dataset.rafNavbarMovingLensActive;
     }
 
     frame = window.requestAnimationFrame(render);
@@ -607,6 +518,7 @@ function attach(shell) {
     getLinks(shell).forEach(clearMask);
     scene.remove();
     delete shell.dataset.rafMovingLensRuntime;
+    delete shell.dataset.rafNavbarMovingLensActive;
   };
 }
 
@@ -621,7 +533,7 @@ export default function NavbarProgressiveTextRefractionRuntime() {
       if (disposed) return;
 
       const shells = new Set(document.querySelectorAll(
-        '[data-raf-navbar-shell="true"]',
+          '[data-raf-navbar-shell="true"]',
       ));
 
       bindings.forEach((dispose, shell) => {
@@ -633,9 +545,9 @@ export default function NavbarProgressiveTextRefractionRuntime() {
 
       shells.forEach((shell) => {
         if (
-          shell instanceof HTMLElement
-          && !bindings.has(shell)
-          && getParts(shell)
+            shell instanceof HTMLElement
+            && !bindings.has(shell)
+            && getParts(shell)
         ) {
           bindings.set(shell, attach(shell));
         }
@@ -667,73 +579,72 @@ export default function NavbarProgressiveTextRefractionRuntime() {
   }, []);
 
   return (
-    <>
-      <style>{RUNTIME_STYLES}</style>
-      <svg
-        aria-hidden="true"
-        focusable="false"
-        width="0"
-        height="0"
-        style={{
-          position: 'absolute',
-          width: 0,
-          height: 0,
-          overflow: 'hidden',
-          pointerEvents: 'none',
-        }}
-      >
-        <defs>
-          {['right', 'left'].map((direction) => (
-            <filter
-              key={direction}
-              id={`raf-navbar-moving-lens-${direction}`}
-              filterUnits="userSpaceOnUse"
-              primitiveUnits="userSpaceOnUse"
-              x="0"
-              y="0"
-              width="10"
-              height="10"
-              colorInterpolationFilters="sRGB"
-            >
-              <feImage
-                id={`raf-navbar-moving-lens-map-${direction}`}
-                href={TRANSPARENT_PIXEL}
-                x="0"
-                y="0"
-                width="10"
-                height="10"
-                preserveAspectRatio="none"
-                result="map"
-              />
-              <feDisplacementMap
-                id={`raf-navbar-moving-lens-displacement-${direction}`}
-                in="SourceGraphic"
-                in2="map"
-                scale="64"
-                xChannelSelector="R"
-                yChannelSelector="G"
-                result="bent"
-              />
-              <feGaussianBlur
-                in="bent"
-                stdDeviation="0.14"
-                result="softened"
-              />
-              <feColorMatrix
-                in="softened"
-                type="saturate"
-                values="0"
-                result="mono"
-              />
-              <feComponentTransfer in="mono">
-                <feFuncR type="gamma" amplitude="1.18" exponent="0.88" offset="-0.018" />
-                <feFuncG type="gamma" amplitude="1.18" exponent="0.88" offset="-0.018" />
-                <feFuncB type="gamma" amplitude="1.18" exponent="0.88" offset="-0.018" />
-              </feComponentTransfer>
-            </filter>
-          ))}
-        </defs>
-      </svg>
-    </>
+      <>
+        <svg
+            aria-hidden="true"
+            focusable="false"
+            width="0"
+            height="0"
+            style={{
+              position: 'absolute',
+              width: 0,
+              height: 0,
+              overflow: 'hidden',
+              pointerEvents: 'none',
+            }}
+        >
+          <defs>
+            {['right', 'left'].map((direction) => (
+                <filter
+                    key={direction}
+                    id={`raf-navbar-moving-lens-${direction}`}
+                    filterUnits="userSpaceOnUse"
+                    primitiveUnits="userSpaceOnUse"
+                    x="0"
+                    y="0"
+                    width="10"
+                    height="10"
+                    colorInterpolationFilters="sRGB"
+                >
+                  <feImage
+                      id={`raf-navbar-moving-lens-map-${direction}`}
+                      href={TRANSPARENT_PIXEL}
+                      x="0"
+                      y="0"
+                      width="10"
+                      height="10"
+                      preserveAspectRatio="none"
+                      result="map"
+                  />
+                  <feDisplacementMap
+                      id={`raf-navbar-moving-lens-displacement-${direction}`}
+                      in="SourceGraphic"
+                      in2="map"
+                      scale="64"
+                      xChannelSelector="R"
+                      yChannelSelector="G"
+                      result="bent"
+                  />
+                  <feGaussianBlur
+                      in="bent"
+                      stdDeviation="0.14"
+                      result="softened"
+                  />
+                  <feColorMatrix
+                      in="softened"
+                      type="saturate"
+                      values="0"
+                      result="mono"
+                  />
+                  <feComponentTransfer in="mono">
+                    <feFuncR type="gamma" amplitude="1.18" exponent="0.88" offset="-0.018" />
+                    <feFuncG type="gamma" amplitude="1.18" exponent="0.88" offset="-0.018" />
+                    <feFuncB type="gamma" amplitude="1.18" exponent="0.88" offset="-0.018" />
+                  </feComponentTransfer>
+                </filter>
+            ))}
+          </defs>
+        </svg>
+      </>
   );
 }

@@ -1,0 +1,195 @@
+/* Navbar Liquid Glass runtime styles */
+
+
+/*
+ * The original navigation label remains untouched while the drop is idle.
+ * Horizontal transform/filter rules below activate only when the drag runtime
+ * adds data-raf-navbar-text-refraction and data-raf-navbar-text-warp.
+ */
+[data-raf-navbar-shell="true"][data-raf-moving-lens-runtime="ready"]
+[data-raf-navbar-text-refraction]:not([data-raf-navbar-text-refraction="active"]):not([data-raf-navbar-text-refraction="settling"]) {
+    transform: none !important;
+    filter: none !important;
+    letter-spacing: inherit !important;
+}
+
+[data-raf-navbar-shell="true"][data-raf-navbar-drag-runtime="ready"] {
+    --raf-navbar-drag-cursor: grab;
+}
+
+[data-raf-navbar-shell="true"] [data-raf-navbar-drop-owner="true"] {
+    cursor: var(--raf-navbar-drag-cursor, grab) !important;
+    -webkit-user-drag: none;
+}
+
+[data-raf-navbar-shell="true"][data-raf-navbar-dragging="true"] {
+    --raf-navbar-drag-cursor: grabbing;
+    cursor: grabbing !important;
+    user-select: none;
+}
+
+[data-raf-navbar-shell="true"][data-raf-navbar-dragging="true"] a {
+    cursor: grabbing !important;
+    -webkit-user-drag: none;
+}
+
+[data-raf-navbar-text-refraction="active"],
+[data-raf-navbar-text-refraction="settling"] {
+    transform-origin: var(--raf-refraction-origin, 50% 50%) !important;
+    transform:
+            translate3d(var(--raf-refraction-shift, 0px), 0, 0)
+            skewX(var(--raf-refraction-skew, 0deg))
+            scaleX(var(--raf-refraction-scale-x, 1)) !important;
+    letter-spacing: var(--raf-refraction-letter-spacing, normal);
+    text-shadow:
+            var(--raf-refraction-shadow-forward, 0px) 0 0 rgba(255, 255, 255, 0.46),
+            var(--raf-refraction-shadow-back, 0px) 0 0 rgba(122, 184, 255, 0.2),
+            0 0 var(--raf-refraction-glow, 0px) rgba(255, 255, 255, 0.26) !important;
+    will-change: transform, filter, text-shadow, letter-spacing;
+}
+
+[data-raf-navbar-text-refraction="active"] {
+    transition:
+            transform 54ms linear,
+            filter 54ms linear,
+            text-shadow 54ms linear,
+            letter-spacing 54ms linear !important;
+}
+
+[data-raf-navbar-text-refraction="settling"] {
+    transition:
+            transform 430ms cubic-bezier(0.2, 0.9, 0.18, 1),
+            filter 430ms ease,
+            text-shadow 430ms ease,
+            letter-spacing 430ms ease !important;
+}
+
+[data-raf-navbar-text-warp="right"] {
+    filter:
+            url(#raf-navbar-horizontal-text-refraction-right)
+            blur(var(--raf-refraction-blur, 0px))
+            saturate(var(--raf-refraction-saturation, 1)) !important;
+}
+
+[data-raf-navbar-text-warp="left"] {
+    filter:
+            url(#raf-navbar-horizontal-text-refraction-left)
+            blur(var(--raf-refraction-blur, 0px))
+            saturate(var(--raf-refraction-saturation, 1)) !important;
+}
+
+[data-raf-mobile-refraction-role="source"] > span:nth-of-type(2),
+[data-raf-mobile-refraction-role="target"] > span:nth-of-type(2) {
+    will-change: transform, opacity, filter, text-shadow;
+}
+
+[data-raf-mobile-refraction-direction="down"] > span:nth-of-type(2) {
+    filter: url(#raf-navbar-vertical-text-refraction-down);
+}
+
+[data-raf-mobile-refraction-direction="up"] > span:nth-of-type(2) {
+    filter: url(#raf-navbar-vertical-text-refraction-up);
+}
+
+[data-raf-mobile-refraction-role="source"] {
+    transform-origin: 50% var(--raf-mobile-refraction-origin, 100%);
+}
+
+[data-raf-mobile-refraction-role="target"] {
+    transform-origin: 50% var(--raf-mobile-refraction-origin, 0%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-raf-navbar-text-refraction="active"],
+    [data-raf-navbar-text-refraction="settling"] {
+        transition-duration: 90ms !important;
+    }
+
+    [data-raf-navbar-text-warp="right"],
+    [data-raf-navbar-text-warp="left"],
+    [data-raf-mobile-refraction-direction="down"] > span:nth-of-type(2),
+    [data-raf-mobile-refraction-direction="up"] > span:nth-of-type(2) {
+        filter: none !important;
+    }
+}
+
+[data-raf-navbar-shell="true"][data-raf-moving-lens-runtime="ready"]
+a[aria-current="page"][data-raf-navbar-text-refraction],
+[data-raf-navbar-shell="true"][data-raf-moving-lens-runtime="ready"]
+a[data-raf-navbar-drop-owner="true"][data-raf-navbar-text-refraction] {
+    text-shadow:
+            0 1px 0 rgba(0,0,0,.55),
+            0 0 .8rem rgba(255,255,255,.2) !important;
+}
+
+[data-raf-navbar-progressive-text-mask="true"] {
+    display: none !important;
+}
+
+[data-raf-navbar-moving-lens-scene="true"],
+[data-raf-navbar-moving-lens-scene="true"] * {
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
+[data-raf-navbar-moving-lens-scene="true"] {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    display: block;
+    overflow: visible;
+    border: 0 !important;
+    border-radius: inherit;
+    opacity: 0;
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    mix-blend-mode: normal;
+    isolation: isolate;
+    transform-origin: 50% 50%;
+    will-change: transform, opacity;
+}
+
+[data-raf-navbar-moving-lens-sample="true"] {
+    position: absolute;
+    inset: 0;
+    display: block;
+    overflow: visible;
+    border: 0 !important;
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transform: translateZ(0);
+    transform-origin: 50% 50%;
+    will-change: filter;
+}
+
+[data-raf-navbar-moving-lens-label="true"] {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    border: 0 !important;
+    white-space: nowrap;
+    text-align: center;
+    text-decoration: none;
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    [data-raf-navbar-moving-lens-scene="true"] {
+        display: none !important;
+    }
+}

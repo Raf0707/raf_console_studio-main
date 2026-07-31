@@ -11,7 +11,18 @@ import AdaptiveShaderRuntime from '@/components/liquid-glass/AdaptiveShaderRunti
 import FallbackSurfaceRuntime from '@/components/liquid-glass/FallbackSurfaceRuntime';
 import LiquidGlassRuntime from '@/components/liquid-glass/LiquidGlassRuntime';
 import AgencyShaderRuntime from '@/components/liquid-glass/refraction/AgencyShaderRuntime';
-import NavbarDragRefractionRuntime from '@/components/liquid-glass/refraction/NavbarDragRefractionRuntime';
+import dynamic from 'next/dynamic';
+
+
+const NavbarDragRefractionRuntime = dynamic(
+    () =>
+        import(
+            '@/components/liquid-glass/refraction/NavbarDragRefractionRuntime'
+            ),
+    {
+      ssr: false,
+    }
+);
 import NavbarProgressiveTextRefractionRuntime from '@/components/liquid-glass/refraction/NavbarProgressiveTextRefractionRuntime';
 import RouteResponsiveController from '@/components/responsive/RouteResponsiveController';
 
