@@ -111,8 +111,13 @@ function rotatePixels(data, width, height, direction) {
           destinationY * outputWidth + destinationX
       ) * 4;
 
+      /*
+       * Stronger convex mode:
+       * preserve the stable horizontal lens geometry,
+       * but increase the centre magnification and edge reduction.
+       */
       output[destinationOffset] = encode(
-          rotatedX + direction * curvature * 0.055,
+          -((rotatedX * 1.12) + direction * curvature * 0.068),
       );
       output[destinationOffset + 1] = encode(rotatedY);
       output[destinationOffset + 2] = 128;
@@ -138,15 +143,15 @@ async function createMaps(width, height, radius) {
     band: Math.max(8, safeHeight * 0.5),
     profileShape: 3.45,
     edgePower: 1.22,
-    bodyStrength: 0.2,
-    normalStrength: 1.28,
-    shoulderStrength: 0.34,
+    bodyStrength: 0.22,
+    normalStrength: 1.34,
+    shoulderStrength: 0.28,
     shoulderPosition: 0.57,
     shoulderWidth: 0.18,
-    bodyLensStrength: 0.24,
-    bodyLensPower: 0.9,
-    horizontalLensScale: 0.72,
-    verticalLensScale: 1.18,
+    bodyLensStrength: 0.3,
+    bodyLensPower: 0.86,
+    horizontalLensScale: 1.08,
+    verticalLensScale: 1.0,
   });
 
   if (!source) return null;
@@ -242,10 +247,90 @@ function applyMap(suffix, map) {
 function createLabel(link) {
   const clone = document.createElement('span');
   const style = window.getComputedStyle(link);
+  const text = (link.textContent || '').trim();
+  const characters = Array.from(text);
+  const visibleCharacterIndexes = characters
+      .map((character, index) => (
+          character.trim() ? index : -1
+      ))
+      .filter((index) => index >= 0);
+
+  const firstVisibleIndex = visibleCharacterIndexes[0] ?? 0;
+  const lastVisibleIndex = visibleCharacterIndexes.at(-1)
+      ?? Math.max(characters.length - 1, 0);
+  const visibleRange = Math.max(
+      lastVisibleIndex - firstVisibleIndex,
+      1,
+  );
 
   clone.dataset.rafNavbarMovingLensLabel = 'true';
   clone.setAttribute('aria-hidden', 'true');
-  clone.textContent = (link.textContent || '').trim();
+
+  characters.forEach((character, index) => {
+    const glyph = document.createElement('span');
+    const normalizedPosition = clamp(
+        (
+            (index - firstVisibleIndex) / visibleRange
+        ) * 2 - 1,
+        -1,
+        1,
+    );
+
+    /*
+     * Explicit per-glyph anamorphic profile:
+     * edges are narrower; the centre is wider and taller.
+     */
+    const centerWeight = Math.pow(
+        Math.max(1 - Math.abs(normalizedPosition), 0),
+        0.68,
+    );
+    const horizontalScale = 0.74 + centerWeight * 0.92;
+
+    /*
+     * The centre is now visibly larger in both axes.
+     * Edge glyphs remain slightly smaller, while the middle rises
+     * and broadens like a real convex optical bulge.
+     */
+    const verticalScale = 0.84 + centerWeight * 0.76;
+    const overallScale = 0.9 + centerWeight * 0.18;
+
+    /*
+     * Lens-following tilt:
+     * left-side glyphs lean slightly left,
+     * right-side glyphs lean slightly right,
+     * the centre remains upright.
+     */
+    const rotation = normalizedPosition * 4.8;
+    const spacing = -0.045 + centerWeight * 0.11;
+
+    glyph.dataset.rafNavbarMovingLensCharacter = 'true';
+    glyph.textContent = character === ' '
+        ? '\u00a0'
+        : character;
+
+    glyph.style.setProperty(
+        '--raf-navbar-glyph-scale-x',
+        horizontalScale.toFixed(4),
+    );
+    glyph.style.setProperty(
+        '--raf-navbar-glyph-scale-y',
+        verticalScale.toFixed(4),
+    );
+    glyph.style.setProperty(
+        '--raf-navbar-glyph-overall-scale',
+        overallScale.toFixed(4),
+    );
+    glyph.style.setProperty(
+        '--raf-navbar-glyph-rotation',
+        `${rotation.toFixed(3)}deg`,
+    );
+    glyph.style.setProperty(
+        '--raf-navbar-glyph-spacing',
+        `${spacing.toFixed(4)}em`,
+    );
+
+    clone.appendChild(glyph);
+  });
 
   Object.assign(clone.style, {
     color: style.color,
@@ -254,7 +339,7 @@ function createLabel(link) {
     fontStyle: style.fontStyle,
     fontWeight: style.fontWeight,
     lineHeight: style.lineHeight,
-    letterSpacing: style.letterSpacing,
+    letterSpacing: '0px',
     textShadow: style.textShadow,
     textTransform: style.textTransform,
   });
@@ -461,9 +546,9 @@ function attach(shell) {
     requestMaps(width, height, radius);
 
     const scale = Math.round(clamp(
-        height * 1.45 + Math.abs(velocity) * 10,
-        58,
-        82,
+        height * 1.36 + Math.abs(velocity) * 8,
+        52,
+        76,
     ));
     document.getElementById(
         'raf-navbar-moving-lens-displacement-right',
@@ -627,11 +712,12 @@ export default function NavbarProgressiveTextRefractionRuntime() {
                   />
                   <feGaussianBlur
                       in="bent"
-                      stdDeviation="0.14"
-                      result="softened"
+                      stdDeviation="0.085 0.11"
+                      edgeMode="duplicate"
+                      result="smoothed"
                   />
                   <feColorMatrix
-                      in="softened"
+                      in="smoothed"
                       type="saturate"
                       values="0"
                       result="mono"

@@ -193,3 +193,64 @@ a[data-raf-navbar-drop-owner="true"][data-raf-navbar-text-refraction] {
         display: none !important;
     }
 }
+
+/*
+ * Per-glyph anamorphic magnification.
+ * Narrow at the edges, widest in the centre.
+ */
+[data-raf-navbar-moving-lens-label="true"] {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+
+[data-raf-navbar-moving-lens-character="true"] {
+    display: inline-block;
+    flex: 0 0 auto;
+    margin-inline:
+            var(--raf-navbar-glyph-spacing, 0em);
+    transform:
+            rotate(var(--raf-navbar-glyph-rotation, 0deg))
+            scale(var(--raf-navbar-glyph-overall-scale, 1))
+            scaleX(var(--raf-navbar-glyph-scale-x, 1))
+            scaleY(var(--raf-navbar-glyph-scale-y, 1)) !important;
+    transform-origin: 50% 58%;
+    will-change: transform;
+}
+
+[data-raf-navbar-moving-lens-character="true"] {
+    position: relative;
+    top: calc(
+            (1 - var(--raf-navbar-glyph-overall-scale, 1))
+            * 0.14em
+    );
+}
+
+/*
+ * High-quality optical text rendering.
+ *
+ * The centre enlargement is produced mostly by glyph transforms, while the
+ * SVG filter now performs only the final refraction. This keeps edges smoother
+ * and avoids the blocky/pixel-stepped look caused by extreme displacement.
+ */
+[data-raf-navbar-moving-lens-label="true"],
+[data-raf-navbar-moving-lens-character="true"] {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: geometricPrecision;
+    font-kerning: normal;
+    font-synthesis: none;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+[data-raf-navbar-moving-lens-label="true"] {
+    contain: layout paint style;
+    transform: translateZ(0) !important;
+}
+
+[data-raf-navbar-moving-lens-character="true"] {
+    filter: blur(0.055px);
+}
+

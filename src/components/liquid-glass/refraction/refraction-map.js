@@ -5,14 +5,11 @@ const clamp = (value, min, max) => (
 function roundedRectSdf(x, y, width, height, radius) {
     const halfWidth = width * 0.5;
     const halfHeight = height * 0.5;
-    const safeRadius = Math.min(
-        radius,
-        halfWidth,
-        halfHeight,
-    );
+    const safeRadius = Math.min(radius, halfWidth, halfHeight);
 
     const qx = Math.abs(x - halfWidth)
         - (halfWidth - safeRadius);
+
     const qy = Math.abs(y - halfHeight)
         - (halfHeight - safeRadius);
 
@@ -26,72 +23,86 @@ function roundedRectSdf(x, y, width, height, radius) {
     );
 }
 
-function superellipseHeight(depth01, profileShape) {
-    const n = Math.max(profileShape, 1.01);
-    const inverseDepth = clamp(1 - depth01, 0, 1);
-    const inner = Math.max(
-        1 - Math.pow(inverseDepth, n),
-        0,
+function smoothstep(edge0, edge1, value) {
+    const range = Math.max(
+        edge1 - edge0,
+        0.0001,
     );
 
-    return Math.pow(inner, 1 / n);
-}
+    const t = clamp(
+        (value - edge0) / range,
+        0,
+        1,
+    );
 
-function gaussian(value, center, width) {
-    const safeWidth = Math.max(width, 0.001);
-    const normalized = (value - center) / safeWidth;
-
-    return Math.exp(-(normalized * normalized) * 0.5);
+    return t * t * (3 - 2 * t);
 }
 
 function encodeChannel(value) {
     return Math.round(
-        clamp(128 + value * 127, 0, 255),
+        clamp(
+            128 + value * 127,
+            0,
+            255,
+        ),
     );
 }
 
 /**
- * Creates an intentionally art-directed SDF displacement map.
+ * Горизонтальная выпуклая карта преломления.
  *
- * The map combines three optical zones:
- * 1. a strong outward edge bend;
- * 2. an opposite inner shoulder that compresses straight grid lines;
- * 3. a broad barrel-lens field that curves the backdrop through the body.
+ * Профиль:
  *
- * This is deliberately more visible than a physically conservative lens,
- * because the RAF interface uses a dark monochrome grid with few large objects.
+ *   меньше -> больше -> максимум -> больше -> меньше
+ *
+ * То есть визуально:
+ *
+ *   < >
+ *
+ * В красном канале хранится только горизонтальное смещение.
+ * Зелёный канал всегда нейтральный, поэтому текст не должен
+ * троиться или разделяться по вертикали.
  */
 export function createRefractionMap({
-    width,
-    height,
-    radius,
-    margin = 24,
-    band = 20,
-    profileShape = 3.6,
-    edgePower = 1.42,
-    bodyStrength = 0.16,
-    normalStrength = 1,
-    shoulderStrength = 0.34,
-    shoulderPosition = 0.58,
-    shoulderWidth = 0.17,
-    bodyLensStrength = 0.24,
-    bodyLensPower = 0.92,
-    horizontalLensScale = 0.82,
-    verticalLensScale = 1.14,
-}) {
-    const safeWidth = Math.max(1, Math.round(width));
-    const safeHeight = Math.max(1, Math.round(height));
-    const safeMargin = Math.max(0, Math.round(margin));
+                                        width,
+                                        height,
+                                        radius,
+
+                                        margin = 24,
+
+                                        edgeBand = 20,
+                                        edgeStrength = 0.14,
+
+                                        centerStrength = 0.46,
+                                        centerPower = 1.3,
+
+                                        verticalStrength = 0,
+                                    }) {
+    const safeWidth = Math.max(
+        1,
+        Math.round(width),
+    );
+
+    const safeHeight = Math.max(
+        1,
+        Math.round(height),
+    );
+
+    const safeMargin = Math.max(
+        0,
+        Math.round(margin),
+    );
+
     const safeRadius = Math.max(
         0,
-        Math.min(radius, safeHeight * 0.5),
-    );
-    const safeBand = Math.max(
-        2,
-        Math.min(band, safeHeight * 0.5),
+        Math.min(
+            radius,
+            safeHeight * 0.5,
+        ),
     );
 
     const canvas = document.createElement('canvas');
+
     const context = canvas.getContext('2d', {
         alpha: false,
         willReadFrequently: false,
@@ -111,41 +122,47 @@ export function createRefractionMap({
         mapWidth,
         mapHeight,
     );
+
     const pixels = image.data;
 
-    const halfWidth = Math.max(safeWidth * 0.5, 1);
-    const halfHeight = Math.max(safeHeight * 0.5, 1);
-
-    const centerDistance = Math.max(
-        -roundedRectSdf(
-            halfWidth,
-            halfHeight,
-            safeWidth,
-            safeHeight,
-            safeRadius,
-        ),
+    const halfWidth = Math.max(
+        safeWidth * 0.5,
         1,
     );
 
-    const distanceAt = (localX, localY) => (
-        roundedRectSdf(
-            localX,
-            localY,
-            safeWidth,
-            safeHeight,
-            safeRadius,
-        )
+    const halfHeight = Math.max(
+        safeHeight * 0.5,
+        1,
+    );
+
+    const safeEdgeBand = Math.max(
+        2,
+        edgeBand,
     );
 
     for (let y = 0; y < mapHeight; y += 1) {
         for (let x = 0; x < mapWidth; x += 1) {
-            const offset = (y * mapWidth + x) * 4;
+            const offset = (
+                y * mapWidth + x
+            ) * 4;
+
             const localX = x - safeMargin;
             const localY = y - safeMargin;
-            const distance = distanceAt(localX, localY);
+
+            const distance = roundedRectSdf(
+                localX,
+                localY,
+                safeWidth,
+                safeHeight,
+                safeRadius,
+            );
 
             pixels[offset + 3] = 255;
 
+            /*
+             * За пределами линзы карта нейтральная.
+             * Значение 128 означает отсутствие displacement.
+             */
             if (distance >= 0) {
                 pixels[offset] = 128;
                 pixels[offset + 1] = 128;
@@ -153,109 +170,94 @@ export function createRefractionMap({
                 continue;
             }
 
-            const depth = -distance;
-            const depth01 = clamp(
-                depth / centerDistance,
-                0,
-                1,
-            );
-
-            const gradientX = (
-                distanceAt(localX + 1, localY)
-                - distanceAt(localX - 1, localY)
-            ) * 0.5;
-            const gradientY = (
-                distanceAt(localX, localY + 1)
-                - distanceAt(localX, localY - 1)
-            ) * 0.5;
-
-            const gradientLength = Math.hypot(
-                gradientX,
-                gradientY,
-            ) || 1;
-
-            const normalX = gradientX / gradientLength;
-            const normalY = gradientY / gradientLength;
-
-            const edgeDepth = clamp(
-                depth / safeBand,
-                0,
-                1,
-            );
-            const edgeWeight = Math.pow(
-                1 - edgeDepth,
-                edgePower,
-            );
-            const outerFeather = clamp(depth / 1.35, 0, 1);
-
-            const profileHeight = superellipseHeight(
-                depth01,
-                profileShape,
-            );
-            const profileEdge = (
-                1 - profileHeight
-            ) * bodyStrength;
-
-            /*
-             * The opposite shoulder produces a readable S-curve in straight
-             * grid lines: first they bend out at the rim, then compress back.
-             */
-            const shoulder = gaussian(
-                edgeDepth,
-                shoulderPosition,
-                shoulderWidth,
-            ) * shoulderStrength;
-
-            const edgeAmplitude = (
-                edgeWeight * outerFeather
-                + profileEdge
-                - shoulder
-            ) * normalStrength;
-
-            /*
-             * A broad barrel field keeps refraction visible away from the rim.
-             * The envelope is zero at both the boundary and the exact centre,
-             * with maximum curvature through the middle of the glass body.
-             */
-            const bodyEnvelope = Math.pow(
-                Math.max(
-                    Math.sin(Math.PI * depth01),
-                    0,
-                ),
-                bodyLensPower,
-            );
-
             const normalizedX = clamp(
                 (localX - halfWidth) / halfWidth,
                 -1,
                 1,
             );
+
             const normalizedY = clamp(
                 (localY - halfHeight) / halfHeight,
                 -1,
                 1,
             );
 
-            const bodyX = (
-                -normalizedX
-                * bodyEnvelope
-                * bodyLensStrength
-                * horizontalLensScale
+            /*
+             * Вертикальная огибающая.
+             *
+             * Эффект сильнее по центру строки и плавно затухает
+             * возле верхней и нижней границы капли.
+             *
+             * При этом вертикального displacement нет.
+             */
+            const verticalGate = Math.pow(
+                Math.max(
+                    1 - normalizedY * normalizedY,
+                    0,
+                ),
+                0.72,
             );
-            const bodyY = (
-                -normalizedY
-                * bodyEnvelope
-                * bodyLensStrength
-                * verticalLensScale
+
+            /*
+             * Центральная выпуклая зона.
+             *
+             * Смещение направлено к центру карты:
+             * левая половина сдвигается вправо,
+             * правая половина сдвигается влево.
+             *
+             * Для feDisplacementMap это создаёт эффект увеличения
+             * центральных букв.
+             */
+            const centerEnvelope = Math.pow(
+                Math.max(
+                    1 - Math.abs(normalizedX),
+                    0,
+                ),
+                centerPower,
+            );
+
+            const inwardPull = (
+                -normalizedX
+                * centerEnvelope
+                * centerStrength
+                * verticalGate
+            );
+
+            /*
+             * Узкая краевая зона.
+             *
+             * Нужна, чтобы крайние буквы не обрывались резко
+             * и плавно переходили от меньшего размера к центру.
+             */
+            const insideDepth = -distance;
+
+            const edgeFade = smoothstep(
+                0,
+                safeEdgeBand,
+                insideDepth,
+            );
+
+            const edgeTaper = (
+                -normalizedX
+                * (1 - edgeFade)
+                * edgeStrength
+                * verticalGate
             );
 
             const displacementX = clamp(
-                normalX * edgeAmplitude + bodyX,
+                inwardPull + edgeTaper,
                 -1,
                 1,
             );
+
+            /*
+             * По умолчанию verticalStrength = 0.
+             *
+             * Поэтому зелёный канал остаётся нейтральным
+             * и вертикального троения текста быть не должно.
+             */
             const displacementY = clamp(
-                normalY * edgeAmplitude + bodyY,
+                normalizedY * verticalStrength,
                 -1,
                 1,
             );
@@ -263,14 +265,20 @@ export function createRefractionMap({
             pixels[offset] = encodeChannel(
                 displacementX,
             );
+
             pixels[offset + 1] = encodeChannel(
                 displacementY,
             );
+
             pixels[offset + 2] = 128;
         }
     }
 
-    context.putImageData(image, 0, 0);
+    context.putImageData(
+        image,
+        0,
+        0,
+    );
 
     return {
         dataUrl: canvas.toDataURL('image/png'),
