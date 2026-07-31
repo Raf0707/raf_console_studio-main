@@ -215,17 +215,10 @@ a[data-raf-navbar-drop-owner="true"][data-raf-navbar-text-refraction] {
             scale(var(--raf-navbar-glyph-overall-scale, 1))
             scaleX(var(--raf-navbar-glyph-scale-x, 1))
             scaleY(var(--raf-navbar-glyph-scale-y, 1)) !important;
-    transform-origin: 50% 58%;
+    transform-origin: 50% 52%;
     will-change: transform;
 }
 
-[data-raf-navbar-moving-lens-character="true"] {
-    position: relative;
-    top: calc(
-            (1 - var(--raf-navbar-glyph-overall-scale, 1))
-            * 0.14em
-    );
-}
 
 /*
  * High-quality optical text rendering.
@@ -254,3 +247,29 @@ a[data-raf-navbar-drop-owner="true"][data-raf-navbar-text-refraction] {
     filter: blur(0.055px);
 }
 
+/*
+ * Desktop capsule magnifier refinement:
+ * the word behaves like one enlarged optical subject; only the two rim glyphs
+ * are reduced and slightly rotated.
+ */
+[data-raf-navbar-moving-lens-label="true"] {
+    overflow: visible !important;
+}
+
+[data-raf-navbar-moving-lens-character="true"] {
+    position: relative;
+    top: 0;
+}
+
+
+
+/*
+ * Stable uniform desktop magnifier.
+ * Every glyph uses the same optical geometry, so the word stays on one
+ * baseline and no character jumps relative to its neighbours.
+ */
+[data-raf-navbar-moving-lens-character="true"] {
+    top: 0 !important;
+    vertical-align: middle;
+    transform-origin: 50% 50% !important;
+}

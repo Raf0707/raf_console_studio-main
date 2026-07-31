@@ -117,7 +117,7 @@ function rotatePixels(data, width, height, direction) {
        * but increase the centre magnification and edge reduction.
        */
       output[destinationOffset] = encode(
-          -((rotatedX * 1.12) + direction * curvature * 0.068),
+          -((rotatedX * 0.78) + direction * curvature * 0.036),
       );
       output[destinationOffset + 1] = encode(rotatedY);
       output[destinationOffset + 2] = 128;
@@ -143,15 +143,15 @@ async function createMaps(width, height, radius) {
     band: Math.max(8, safeHeight * 0.5),
     profileShape: 3.45,
     edgePower: 1.22,
-    bodyStrength: 0.22,
-    normalStrength: 1.34,
-    shoulderStrength: 0.28,
-    shoulderPosition: 0.57,
-    shoulderWidth: 0.18,
-    bodyLensStrength: 0.3,
-    bodyLensPower: 0.86,
-    horizontalLensScale: 1.08,
-    verticalLensScale: 1.0,
+    bodyStrength: 0.14,
+    normalStrength: 0.92,
+    shoulderStrength: 0.16,
+    shoulderPosition: 0.6,
+    shoulderWidth: 0.22,
+    bodyLensStrength: 0.2,
+    bodyLensPower: 1.08,
+    horizontalLensScale: 0.92,
+    verticalLensScale: 0.9,
   });
 
   if (!source) return null;
@@ -249,59 +249,27 @@ function createLabel(link) {
   const style = window.getComputedStyle(link);
   const text = (link.textContent || '').trim();
   const characters = Array.from(text);
-  const visibleCharacterIndexes = characters
-      .map((character, index) => (
-          character.trim() ? index : -1
-      ))
-      .filter((index) => index >= 0);
-
-  const firstVisibleIndex = visibleCharacterIndexes[0] ?? 0;
-  const lastVisibleIndex = visibleCharacterIndexes.at(-1)
-      ?? Math.max(characters.length - 1, 0);
-  const visibleRange = Math.max(
-      lastVisibleIndex - firstVisibleIndex,
-      1,
-  );
-
   clone.dataset.rafNavbarMovingLensLabel = 'true';
   clone.setAttribute('aria-hidden', 'true');
 
-  characters.forEach((character, index) => {
+  characters.forEach((character) => {
     const glyph = document.createElement('span');
-    const normalizedPosition = clamp(
-        (
-            (index - firstVisibleIndex) / visibleRange
-        ) * 2 - 1,
-        -1,
-        1,
-    );
-
     /*
      * Explicit per-glyph anamorphic profile:
      * edges are narrower; the centre is wider and taller.
      */
-    const centerWeight = Math.pow(
-        Math.max(1 - Math.abs(normalizedPosition), 0),
-        0.68,
-    );
-    const horizontalScale = 0.74 + centerWeight * 0.92;
-
     /*
-     * The centre is now visibly larger in both axes.
-     * Edge glyphs remain slightly smaller, while the middle rises
-     * and broadens like a real convex optical bulge.
+     * Uniform capsule magnifier:
+     *
+     * Every glyph receives exactly the same width, height, overall scale,
+     * spacing and angle. The SVG map still provides a small optical bend for
+     * the whole word, but individual letters no longer jump or fan out.
      */
-    const verticalScale = 0.84 + centerWeight * 0.76;
-    const overallScale = 0.9 + centerWeight * 0.18;
-
-    /*
-     * Lens-following tilt:
-     * left-side glyphs lean slightly left,
-     * right-side glyphs lean slightly right,
-     * the centre remains upright.
-     */
-    const rotation = normalizedPosition * 4.8;
-    const spacing = -0.045 + centerWeight * 0.11;
+    const horizontalScale = 1.22;
+    const verticalScale = 1.42;
+    const overallScale = 1;
+    const rotation = 0;
+    const spacing = 0.008;
 
     glyph.dataset.rafNavbarMovingLensCharacter = 'true';
     glyph.textContent = character === ' '
@@ -546,9 +514,9 @@ function attach(shell) {
     requestMaps(width, height, radius);
 
     const scale = Math.round(clamp(
-        height * 1.36 + Math.abs(velocity) * 8,
-        52,
-        76,
+        height * 1.12 + Math.abs(velocity) * 6,
+        42,
+        62,
     ));
     document.getElementById(
         'raf-navbar-moving-lens-displacement-right',
@@ -712,7 +680,7 @@ export default function NavbarProgressiveTextRefractionRuntime() {
                   />
                   <feGaussianBlur
                       in="bent"
-                      stdDeviation="0.085 0.11"
+                      stdDeviation="0.065 0.085"
                       edgeMode="duplicate"
                       result="smoothed"
                   />
