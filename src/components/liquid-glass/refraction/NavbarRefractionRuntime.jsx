@@ -28,10 +28,27 @@ const FILTERS = [
         bodyLensPower: 0.9,
         horizontalLensScale: 0.72,
         verticalLensScale: 1.18,
-        scaleRatio: 0.82,
-        minScale: 38,
-        maxScale: 58,
-        blur: 0.38,
+
+        /*
+         * Dedicated background-content refraction for the desktop header.
+         * This bends page content vertically as it passes through the glass,
+         * without changing the navbar text magnifier or the active drop.
+         */
+        mapMode: 'vertical-surface',
+        edgeBand: 15,
+        edgeStrength: 0.055,
+        centerStrength: 0.08,
+        centerPower: 1.1,
+        verticalStrength: 0,
+        verticalBendStrength: 0.62,
+        verticalBendPower: 0.7,
+        verticalEdgeStrength: 0.24,
+        sideBendStrength: 0.07,
+
+        scaleRatio: 1.02,
+        minScale: 54,
+        maxScale: 72,
+        blur: 0.28,
     },
     {
         key: 'navbar',
@@ -160,6 +177,21 @@ function updateFilter(config, target) {
         bodyLensPower: config.bodyLensPower,
         horizontalLensScale: config.horizontalLensScale,
         verticalLensScale: config.verticalLensScale,
+
+        /*
+         * These options are used only by the desktop header configuration.
+         * Other filters fall back to the original horizontal map.
+         */
+        mode: config.mapMode,
+        edgeBand: config.edgeBand,
+        edgeStrength: config.edgeStrength,
+        centerStrength: config.centerStrength,
+        centerPower: config.centerPower,
+        verticalStrength: config.verticalStrength,
+        verticalBendStrength: config.verticalBendStrength,
+        verticalBendPower: config.verticalBendPower,
+        verticalEdgeStrength: config.verticalEdgeStrength,
+        sideBendStrength: config.sideBendStrength,
     });
 
     if (!map) {

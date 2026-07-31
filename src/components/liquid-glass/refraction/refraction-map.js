@@ -77,6 +77,20 @@ export function createRefractionMap({
                                         centerPower = 1.3,
 
                                         verticalStrength = 0,
+
+                                        /*
+                                         * `horizontal` preserves the existing
+                                         * navbar/text behavior.
+                                         *
+                                         * `vertical-surface` is used only for
+                                         * background content under the wide
+                                         * desktop header.
+                                         */
+                                        mode = 'horizontal',
+                                        verticalBendStrength = 0.46,
+                                        verticalBendPower = 0.72,
+                                        verticalEdgeStrength = 0.16,
+                                        sideBendStrength = 0.05,
                                     }) {
     const safeWidth = Math.max(
         1,
@@ -198,37 +212,6 @@ export function createRefractionMap({
                 0.72,
             );
 
-            /*
-             * Центральная выпуклая зона.
-             *
-             * Смещение направлено к центру карты:
-             * левая половина сдвигается вправо,
-             * правая половина сдвигается влево.
-             *
-             * Для feDisplacementMap это создаёт эффект увеличения
-             * центральных букв.
-             */
-            const centerEnvelope = Math.pow(
-                Math.max(
-                    1 - Math.abs(normalizedX),
-                    0,
-                ),
-                centerPower,
-            );
-
-            const inwardPull = (
-                -normalizedX
-                * centerEnvelope
-                * centerStrength
-                * verticalGate
-            );
-
-            /*
-             * Узкая краевая зона.
-             *
-             * Нужна, чтобы крайние буквы не обрывались резко
-             * и плавно переходили от меньшего размера к центру.
-             */
             const insideDepth = -distance;
 
             const edgeFade = smoothstep(
@@ -237,30 +220,115 @@ export function createRefractionMap({
                 insideDepth,
             );
 
-            const edgeTaper = (
-                -normalizedX
-                * (1 - edgeFade)
-                * edgeStrength
-                * verticalGate
-            );
+            let displacementX;
+            let displacementY;
 
-            const displacementX = clamp(
-                inwardPull + edgeTaper,
-                -1,
-                1,
-            );
+            if (mode === 'vertical-surface') {
+                /*
+                 * Wide desktop-header lens.
+                 *
+                 * The vertical bend is strongest through the body of the
+                 * glass and gradually returns to neutral at its top/bottom
+                 * boundaries. This makes page elements visibly curve while
+                 * scrolling through the navbar instead of merely blurring.
+                 */
+                const horizontalGate = Math.pow(
+                    Math.max(
+                        1 - normalizedX * normalizedX,
+                        0,
+                    ),
+                    0.7,
+                );
 
-            /*
-             * По умолчанию verticalStrength = 0.
-             *
-             * Поэтому зелёный канал остаётся нейтральным
-             * и вертикального троения текста быть не должно.
-             */
-            const displacementY = clamp(
-                normalizedY * verticalStrength,
-                -1,
-                1,
-            );
+                const verticalEnvelope = Math.pow(
+                    Math.max(
+                        1 - Math.abs(normalizedY),
+                        0,
+                    ),
+                    verticalBendPower,
+                );
+
+                const bodyBendY = (
+                    -normalizedY
+                    * verticalEnvelope
+                    * verticalBendStrength
+                    * horizontalGate
+                );
+
+                /*
+                 * A controlled rim bend makes the transition at the upper
+                 * and lower glass edges readable, but avoids a harsh wave.
+                 */
+                const rimBendY = (
+                    -normalizedY
+                    * (1 - edgeFade)
+                    * verticalEdgeStrength
+                    * horizontalGate
+                );
+
+                /*
+                 * Very small side curvature preserves the rounded-rectangle
+                 * volume without turning the header into a circular lens.
+                 */
+                const sideBendX = (
+                    -normalizedX
+                    * sideBendStrength
+                    * verticalGate
+                );
+
+                displacementX = clamp(
+                    sideBendX,
+                    -1,
+                    1,
+                );
+
+                displacementY = clamp(
+                    bodyBendY
+                    + rimBendY
+                    + normalizedY * verticalStrength,
+                    -1,
+                    1,
+                );
+            } else {
+                /*
+                 * Original horizontal convex map.
+                 * This branch remains unchanged for navbar text, nav shell,
+                 * active pill and mobile FAB.
+                 */
+                const centerEnvelope = Math.pow(
+                    Math.max(
+                        1 - Math.abs(normalizedX),
+                        0,
+                    ),
+                    centerPower,
+                );
+
+                const inwardPull = (
+                    -normalizedX
+                    * centerEnvelope
+                    * centerStrength
+                    * verticalGate
+                );
+
+                const edgeTaper = (
+                    -normalizedX
+                    * (1 - edgeFade)
+                    * edgeStrength
+                    * verticalGate
+                );
+
+                displacementX = clamp(
+                    inwardPull + edgeTaper,
+                    -1,
+                    1,
+                );
+
+                displacementY = clamp(
+                    normalizedY * verticalStrength,
+                    -1,
+                    1,
+                );
+            }
 
             pixels[offset] = encodeChannel(
                 displacementX,
