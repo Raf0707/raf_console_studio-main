@@ -923,7 +923,7 @@ export default function PrivacyPolicy() {
                             </a>
 
                             <a
-                                href="https://t.me/ibn_Rustum"
+                                href="https://t.me/raf_console_official"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={styles.contactCard}
@@ -936,7 +936,7 @@ export default function PrivacyPolicy() {
                                     <small>Telegram</small>
 
                                     <strong>
-                                        @ibn_Rustum
+                                        @raf_console_official
                                     </strong>
                                 </span>
 

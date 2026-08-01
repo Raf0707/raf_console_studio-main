@@ -141,7 +141,7 @@ export default function ContactFormWeb() {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1">Contact Info (WhatsApp / Telegram / MAX)*</label>
+                    <label className="block text-sm font-medium mb-1">Contact Info (WhatsApp | Telegram)*</label>
                     <Input
                         name="contact"
                         value={formData.contact}

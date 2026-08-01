@@ -504,7 +504,7 @@ function DirectContact({ content }) {
 
                 <div className="mt-8 flex justify-center gap-4">
                     <a
-                        href="https://t.me/ibn_Rustum"
+                        href="https://t.me/raf_console_official"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="raf-studio-glass-button flex min-w-28 flex-col items-center gap-3 rounded-[1.5rem] bg-white/[0.05] p-4 transition hover:bg-white/[0.1]"
@@ -514,7 +514,7 @@ function DirectContact({ content }) {
                     </a>
 
                     <a
-                        href="https://wa.me/79162736856"
+                        href="https://wa.me/79891163433"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="raf-studio-glass-button flex min-w-28 flex-col items-center gap-3 rounded-[1.5rem] bg-white/[0.05] p-4 transition hover:bg-white/[0.1]"

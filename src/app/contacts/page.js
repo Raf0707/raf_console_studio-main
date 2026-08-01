@@ -36,10 +36,10 @@ const contactItems = [
     },
     {
         title: 'Telegram',
-        value: '@ibn_Rustum',
+        value: '@raf_console_official',
         description:
             'The fastest way to discuss an idea or collaboration',
-        href: 'https://t.me/ibn_Rustum',
+        href: 'https://t.me/raf_console_official',
         external: true,
         icon: (
             <svg
@@ -52,10 +52,10 @@ const contactItems = [
     },
     {
         title: 'WhatsApp',
-        value: '+7 916 273 68 56',
+        value: '+7 989 116 34 33',
         description:
             'Messages and calls about current projects',
-        href: 'https://wa.me/79162736856',
+        href: 'https://wa.me/79891163433',
         external: true,
         icon: (
             <svg

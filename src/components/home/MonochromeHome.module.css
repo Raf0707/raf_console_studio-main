@@ -11,6 +11,7 @@
 
     --line: rgba(255, 255, 255, 0.76);
     --line-dark: rgba(17, 17, 17, 0.14);
+    --content-grid-line: rgba(0, 0, 0, 0.54);
 
     --shadow:
             0 2.2rem 6rem
@@ -81,6 +82,7 @@
 
     --line: rgba(255, 255, 255, 0.2);
     --line-dark: rgba(255, 255, 255, 0.08);
+    --content-grid-line: rgba(0, 0, 0, 0.54);
 
     --shadow:
             0 2.4rem 7rem
@@ -601,11 +603,54 @@
             clamp(6rem, 11vw, 10rem)
             clamp(1rem, 4vw, 3rem)
             clamp(3rem, 7vw, 7rem);
+
+    isolation: isolate;
+
+    /*
+     * Dark illuminated grid matching the other screens:
+     * near-black foundation, soft light in the middle and large dark cells.
+     */
+    background-color: #0b0c0e;
+
+    background-image:
+            radial-gradient(
+                    ellipse at 50% 42%,
+                    rgba(255, 255, 255, 0.065) 0%,
+                    rgba(255, 255, 255, 0.032) 27%,
+                    rgba(255, 255, 255, 0.012) 48%,
+                    transparent 72%
+            ),
+            linear-gradient(
+                    var(--content-grid-line) 2px,
+                    transparent 2px
+            ),
+            linear-gradient(
+                    90deg,
+                    var(--content-grid-line) 2px,
+                    transparent 2px
+            );
+
+    background-size:
+            100% 100%,
+            clamp(3.5rem, 7vw, 6rem)
+            clamp(3.5rem, 7vw, 6rem),
+            clamp(3.5rem, 7vw, 6rem)
+            clamp(3.5rem, 7vw, 6rem);
+
+    background-position:
+            center,
+            center top,
+            center top;
+
+    background-blend-mode:
+            normal,
+            multiply,
+            multiply;
 }
 
 .contentSurface::before {
     position: absolute;
-    z-index: -1;
+    z-index: 0;
 
     inset: 0;
 
@@ -613,15 +658,32 @@
 
     content: '';
 
+    /*
+     * Subtle top seam and dark vignette keep the illumination focused
+     * without covering the grid.
+     */
     background:
             linear-gradient(
                     180deg,
-                    rgba(255, 255, 255, 0.08),
-                    transparent 20%
+                    rgba(255, 255, 255, 0.025),
+                    transparent 12rem
+            ),
+            radial-gradient(
+                    ellipse at center,
+                    transparent 42%,
+                    rgba(0, 0, 0, 0.22) 78%,
+                    rgba(0, 0, 0, 0.48) 100%
             );
+
+    box-shadow:
+            inset 0 0 8rem
+            rgba(0, 0, 0, 0.34);
 }
 
 .section {
+    position: relative;
+    z-index: 1;
+
     width:
             min(100%, 82rem);
 
@@ -731,14 +793,7 @@
             1px solid
             var(--line);
 
-    background:
-            linear-gradient(
-                    135deg,
-                    rgba(255, 255, 255, 0.28),
-                    rgba(255, 255, 255, 0.055) 46%,
-                    rgba(38, 38, 38, 0.035)
-            ),
-            rgba(245, 245, 245, 0.12);
+    background: transparent;
 
     box-shadow:
             inset 0 1px 0
@@ -801,14 +856,7 @@
     border-color:
             rgba(255, 255, 255, 0.15);
 
-    background:
-            linear-gradient(
-                    135deg,
-                    rgba(255, 255, 255, 0.052),
-                    rgba(255, 255, 255, 0.009) 48%,
-                    rgba(0, 0, 0, 0.035)
-            ),
-            rgba(10, 10, 10, 0.095);
+    background: transparent;
 
     box-shadow:
             inset 0 1px 0
@@ -845,19 +893,6 @@
             cubic-bezier(0.2, 0.8, 0.2, 1),
             box-shadow
             420ms ease;
-
-    animation:
-            cardReveal
-            800ms
-            both;
-}
-
-.serviceCard:nth-child(2) {
-    animation-delay: 120ms;
-}
-
-.serviceCard:nth-child(3) {
-    animation-delay: 240ms;
 }
 
 .serviceCard:hover {
@@ -1125,18 +1160,18 @@
     background:
             radial-gradient(
                     circle at 50% 45%,
-                    rgba(255, 255, 255, 0.12),
+                    rgba(255, 255, 255, 0.1),
                     transparent 28%
             ),
             radial-gradient(
                     circle at 50% 62%,
-                    rgba(255, 255, 255, 0.035),
+                    rgba(255, 255, 255, 0.025),
                     transparent 30%
             ),
             linear-gradient(
                     145deg,
-                    rgba(34, 34, 34, 0.96),
-                    rgba(5, 5, 5, 0.99)
+                    rgba(255, 255, 255, 0.025),
+                    rgba(0, 0, 0, 0.025)
             );
 
     box-shadow:
@@ -1741,21 +1776,6 @@
     }
 }
 
-@keyframes cardReveal {
-    from {
-        opacity: 0;
-
-        transform:
-                translateY(2.5rem);
-    }
-
-    to {
-        opacity: 1;
-
-        transform:
-                translateY(0);
-    }
-}
 
 /* -------------------------------------------------------------------------- */
 /*                              АДАПТИВНОСТЬ                                  */
@@ -2031,5 +2051,28 @@
     .heroTitleSecondary {
         font-size: 0.62em;
         line-height: 0.96;
+    }
+}
+
+/*
+ * Main content is intentionally dark in both theme states.
+ * The hero remains completely independent and unchanged.
+ */
+.contentSurface {
+    --text-primary: #f2f2f2;
+    --text-secondary: rgba(242, 242, 242, 0.68);
+    --text-tertiary: rgba(242, 242, 242, 0.46);
+    --line: rgba(255, 255, 255, 0.15);
+    --line-dark: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 48rem) {
+    .contentSurface {
+        background-size:
+                100% 100%,
+                clamp(5.5rem, 26vw, 7.5rem)
+                clamp(5.5rem, 26vw, 7.5rem),
+                clamp(5.5rem, 26vw, 7.5rem)
+                clamp(5.5rem, 26vw, 7.5rem);
     }
 }

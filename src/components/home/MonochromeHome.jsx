@@ -142,14 +142,14 @@ const CONTENT = {
       },
       {
         label: 'Telegram',
-        value: '@ibn_Rustum',
-        href: 'https://t.me/ibn_Rustum',
+        value: '@raf_console_official',
+        href: 'https://t.me/raf_console_official',
         icon: Send,
       },
       {
         label: 'WhatsApp',
-        value: '+7 916 273 68 56',
-        href: 'https://wa.me/79162736856',
+        value: '+7 989 116 34 33',
+        href: 'https://wa.me/79891163433',
         icon: MessageSquare,
       },
     ],
@@ -283,14 +283,14 @@ const CONTENT = {
       },
       {
         label: 'Telegram',
-        value: '@ibn_Rustum',
-        href: 'https://t.me/ibn_Rustum',
+        value: '@raf_console_official',
+        href: 'https://t.me/raf_console_official',
         icon: Send,
       },
       {
         label: 'WhatsApp',
-        value: '+7 916 273 68 56',
-        href: 'https://wa.me/79162736856',
+        value: '+7 989 116 34 33',
+        href: 'https://wa.me/79891163433',
         icon: MessageSquare,
       },
     ],
@@ -438,7 +438,7 @@ export default function MonochromeHome({
                   {copy.titlePrimary}
                 </span>
 
-                  <span className={styles.heroTitleSecondary}>
+              <span className={styles.heroTitleSecondary}>
                   <span className={styles.heroTitleLine}>
                     {copy.titleSecondaryFirst}
                   </span>
@@ -720,7 +720,7 @@ export default function MonochromeHome({
                 ${styles.actionButton}
                 ${styles.actionButtonPrimary}
               `}
-                  href="https://t.me/ibn_Rustum"
+                  href="https://t.me/raf_console_official"
                   target="_blank"
                   rel="noreferrer"
               >

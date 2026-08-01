@@ -146,7 +146,7 @@ export default function ContactFormAppRu() {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1">Контактные данные (WhatsApp / Telegram / MAX)*</label>
+                    <label className="block text-sm font-medium mb-1">Контактные данные (WhatsApp | Telegram)*</label>
                     <Input
                         name="contact"
                         value={formData.contact}

@@ -234,7 +234,7 @@ export default function ContactFormWEBRu() {
                         htmlFor="web-contact-ru"
                         className="mb-1 block text-sm font-medium"
                     >
-                        Контактные данные (WhatsApp / Telegram / MAX)*
+                        Контактные данные (WhatsApp | Telegram)*
                     </label>
 
                     <Input

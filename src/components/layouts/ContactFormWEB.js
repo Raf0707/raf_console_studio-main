@@ -231,7 +231,7 @@ export default function ContactFormWEB() {
                         htmlFor="web-contact"
                         className="mb-1 block text-sm font-medium"
                     >
-                        Contact Info (WhatsApp / Telegram / MAX)*
+                        Contact Info (WhatsApp | Telegram)*
                     </label>
 
                     <Input
