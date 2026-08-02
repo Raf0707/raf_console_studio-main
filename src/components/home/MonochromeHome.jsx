@@ -7,14 +7,81 @@ import {
   BarChart3,
   Code2,
   Github,
+  ContactRound,
   Mail,
-  MessageSquare,
+  Phone,
   Send,
   Smartphone,
 } from 'lucide-react';
 
-import LiquidRafLogo from './LiquidRafLogo';
+// Старый жидкий логотип сохранён для быстрого возврата.
+// import LiquidRafLogo from './LiquidRafLogo';
+import RafMinimalizmLogo from './RafMinimalizmLogo';
 import styles from './MonochromeHome.module.css';
+
+
+function VkIcon(props) {
+  return (
+      <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+          {...props}
+      >
+        <path
+            d="M3.2 6.6h3.3c.2 0 .4.1.5.4.8 2.1 1.9 3.8 3 4.7.6.5.9.4.9-.5V7.3c0-.5.2-.7.7-.7h2.5c.4 0 .6.2.6.7v2.8c0 .9.4 1 1 .4.9-.9 1.8-2.1 2.4-3.3.2-.4.5-.6.9-.6h3.2c.6 0 .8.3.5.8-.8 1.5-1.8 2.9-3 4.2-.4.4-.4.7 0 1.1 1.3 1.2 2.4 2.6 3.3 4.1.3.5.1.8-.5.8h-3.5c-.4 0-.7-.2-.9-.5-.7-1-1.5-2-2.4-2.8-.5-.5-.9-.4-.9.4v2.1c0 .5-.2.8-.8.8h-1.5C7.2 17.6 4.5 14.1 2.8 7.4c-.1-.5 0-.8.4-.8Z"
+            fill="currentColor"
+        />
+      </svg>
+  );
+}
+
+function MaxIcon({
+                   className = '',
+                   ...props
+                 }) {
+  return (
+      <img
+          src="/max.svg"
+          alt=""
+          className={className}
+          draggable="false"
+          {...props}
+      />
+  );
+}
+
+function MailRuIcon(props) {
+  return (
+      <svg
+          data-brand="mailru"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+          {...props}
+      >
+        <path
+            d="M12 4.2a7.8 7.8 0 1 0 4.8 14"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+        />
+        <path
+            d="M16.8 8.4v5.2c0 1.1.6 1.7 1.5 1.7 1 0 1.7-.8 1.7-2.2V12a8 8 0 0 0-8-8"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+        />
+        <circle
+            cx="12"
+            cy="12"
+            r="3.7"
+            stroke="currentColor"
+            strokeWidth="1.7"
+        />
+      </svg>
+  );
+}
 
 const CONTENT = {
   ru: {
@@ -137,7 +204,13 @@ const CONTENT = {
       {
         label: 'Email',
         value: 'raf_android-dev@mail.ru',
-        href: 'https://mailto:raf_android-dev@mail.ru',
+        href: 'mailto:raf_android-dev@mail.ru',
+        icon: MailRuIcon,
+      },
+      {
+        label: 'Gmail',
+        value: 'raf.console@gmail.com',
+        href: 'mailto:raf.console@gmail.com',
         icon: Mail,
       },
       {
@@ -147,15 +220,29 @@ const CONTENT = {
         icon: Send,
       },
       {
-        label: 'WhatsApp',
+        label: 'VK',
+        value: '@raf_console_official',
+        href: 'https://vk.ru/raf_console_official',
+        icon: VkIcon,
+      },
+      {
+        label: 'MAX',
         value: '+7 989 116 34 33',
-        href: 'https://wa.me/79891163433',
-        icon: MessageSquare,
+        href: 'https://max.ru/u/f9LHodD0cOJ7Ixa-3E9mekZ7fo13O0Pzdjm3xIZKMt-X7hkV3ThDFjasFV4',
+        icon: MaxIcon,
       },
     ],
 
     contactAction:
         'Написать в Telegram',
+
+    saveContactAction:
+        'Сохранить контакт',
+
+    callAction:
+        'Позвонить',
+
+
   },
 
   en: {
@@ -278,7 +365,13 @@ const CONTENT = {
       {
         label: 'Email',
         value: 'raf_android-dev@mail.ru',
-        href: 'https://mailto:raf_android-dev@mail.ru',
+        href: 'mailto:raf_android-dev@mail.ru',
+        icon: MailRuIcon,
+      },
+      {
+        label: 'Gmail',
+        value: 'raf.console@gmail.com',
+        href: 'mailto:raf.console@gmail.com',
         icon: Mail,
       },
       {
@@ -288,15 +381,27 @@ const CONTENT = {
         icon: Send,
       },
       {
-        label: 'WhatsApp',
+        label: 'VK',
+        value: '@raf_console_official',
+        href: 'https://vk.ru/raf_console_official',
+        icon: VkIcon,
+      },
+      {
+        label: 'MAX',
         value: '+7 989 116 34 33',
-        href: 'https://wa.me/79891163433',
-        icon: MessageSquare,
+        href: 'https://max.ru/u/f9LHodD0cOJ7Ixa-3E9mekZ7fo13O0Pzdjm3xIZKMt-X7hkV3ThDFjasFV4',
+        icon: MaxIcon,
       },
     ],
 
     contactAction:
         'Message on Telegram',
+
+    saveContactAction:
+        'Save contact',
+
+    callAction:
+        'Call',
   },
 };
 
@@ -309,23 +414,60 @@ export default function MonochromeHome({
   const isRussian =
       locale === 'ru';
 
-  const restartVideo = (event) => {
-    const video =
-        event.currentTarget;
 
-    video.currentTime = 0;
+  const saveContact = () => {
+    const vCard = [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      'N:Console;Raf</>;;;',
+      'FN:Raf</>Console',
+      'ORG:Raf</>Console',
+      'TITLE:Сайты и мобильные приложения под ключ',
+      'TEL;TYPE=CELL:+79891163433',
+      'NOTE:Сайты и мобильные приложения под ключ',
+      'END:VCARD',
+    ].join('\r\n');
 
-    const playbackPromise =
-        video.play();
+    const blob = new Blob(
+        [vCard],
+        {
+          type: 'text/vcard;charset=utf-8',
+        },
+    );
 
-    if (
-        playbackPromise &&
-        typeof playbackPromise.catch ===
-        'function'
-    ) {
-      playbackPromise.catch(() => {});
-    }
+    const url = URL.createObjectURL(blob);
+    const downloadLink = document.createElement('a');
+
+    downloadLink.href = url;
+    downloadLink.download = 'Raf-Console.vcf';
+
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    downloadLink.remove();
+
+    window.setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 1000);
   };
+
+  /*
+   * Обработчик старого видеофона сохранён вместе с прежним вариантом hero.
+   * Для быстрого возврата раскомментируйте его и блок <video> ниже.
+   *
+   * const restartVideo = (event) => {
+   *   const video = event.currentTarget;
+   *   video.currentTime = 0;
+   *
+   *   const playbackPromise = video.play();
+   *
+   *   if (
+   *       playbackPromise &&
+   *       typeof playbackPromise.catch === 'function'
+   *   ) {
+   *     playbackPromise.catch(() => {});
+   *   }
+   * };
+   */
 
   return (
       <main className={styles.page}>
@@ -383,34 +525,50 @@ export default function MonochromeHome({
             className={styles.hero}
             aria-labelledby="hero-title"
         >
-          <video
-              className={styles.heroVideo}
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              disablePictureInPicture
-              aria-hidden="true"
-              onEnded={restartVideo}
-          >
-            <source
-                src="/rafconsole_demo.mp4"
-                type="video/mp4"
-            />
-          </video>
+          {/*
+           * ПРЕЖНИЙ ВАРИАНТ ПЕРВОГО ЭКРАНА СОХРАНЁН.
+           * Для возврата видеофона раскомментируйте этот блок вместе с
+           * restartVideo выше и снова подключите LiquidRafLogo в импортах.
+           *
+           * <video
+           *     className={styles.heroVideo}
+           *     autoPlay
+           *     loop
+           *     muted
+           *     playsInline
+           *     preload="auto"
+           *     disablePictureInPicture
+           *     aria-hidden="true"
+           *     onEnded={restartVideo}
+           * >
+           *   <source
+           *       src="/rafconsole_demo.mp4"
+           *       type="video/mp4"
+           *   />
+           * </video>
+           *
+           * <div
+           *     className={styles.heroVeil}
+           *     aria-hidden="true"
+           * />
+           *
+           * <div
+           *     className={styles.heroGrid}
+           *     aria-hidden="true"
+           * />
+           *
+           * <LiquidRafLogo placement="hero" />
+           */}
 
           <div
-              className={styles.heroVeil}
+              className={styles.minimalHeroGrid}
               aria-hidden="true"
           />
 
-          <div
-              className={styles.heroGrid}
-              aria-hidden="true"
+          <RafMinimalizmLogo
+              placement="hero"
+              className={styles.heroDesktopLogo}
           />
-
-          <LiquidRafLogo placement="hero" />
 
           <div
               className={`
@@ -422,23 +580,24 @@ export default function MonochromeHome({
               }
           `}
           >
-            <p className={styles.eyebrow}>
-              {copy.eyebrow}
-            </p>
+            <div className={styles.heroIntro}>
+              <p className={styles.eyebrow}>
+                {copy.eyebrow}
+              </p>
 
-            <h1
-                id="hero-title"
-                className={`${styles.heroTitle} ${
-                    isRussian
-                        ? styles.heroTitleRussian
-                        : styles.heroTitleEnglish
-                }`}
-            >
+              <h1
+                  id="hero-title"
+                  className={`${styles.heroTitle} ${
+                      isRussian
+                          ? styles.heroTitleRussian
+                          : styles.heroTitleEnglish
+                  }`}
+              >
                 <span className={styles.heroTitlePrimary}>
                   {copy.titlePrimary}
                 </span>
 
-              <span className={styles.heroTitleSecondary}>
+                <span className={styles.heroTitleSecondary}>
                   <span className={styles.heroTitleLine}>
                     {copy.titleSecondaryFirst}
                   </span>
@@ -447,46 +606,59 @@ export default function MonochromeHome({
                     {copy.titleSecondarySecond}
                   </span>
                 </span>
-            </h1>
+              </h1>
+            </div>
 
-            <p className={styles.heroSubtitle}>
-              {copy.subtitle}
-            </p>
+            <div
+                className={styles.heroMobileLogoSlot}
+                aria-hidden="true"
+            >
+              <RafMinimalizmLogo
+                  placement="hero"
+                  className={styles.heroMobileLogo}
+              />
+            </div>
 
-            <div className={styles.heroActions}>
-              <Link
-                  href={
-                    isRussian
-                        ? '/contacts_ru'
-                        : '/contacts'
-                  }
-                  className={`
-                ${styles.actionButton}
-                ${styles.actionButtonPrimary}
-              `}
-              >
-              <span>
-                {copy.primaryAction}
-              </span>
+            <div className={styles.heroAfterLogo}>
+              <p className={styles.heroSubtitle}>
+                {copy.subtitle}
+              </p>
 
-                <ArrowDownRight
-                    aria-hidden="true"
-                />
-              </Link>
+              <div className={styles.heroActions}>
+                <Link
+                    href={
+                      isRussian
+                          ? '/contacts_ru'
+                          : '/contacts'
+                    }
+                    className={`
+                  ${styles.actionButton}
+                  ${styles.actionButtonPrimary}
+                `}
+                >
+                  <span>
+                    {copy.primaryAction}
+                  </span>
 
-              <Link
-                  href={
-                    isRussian
-                        ? '/projects_ru'
-                        : '/projects'
-                  }
-                  className={`
-                ${styles.actionButton}
-                ${styles.actionButtonGhost}
-              `}
-              >
-                {copy.secondaryAction}
-              </Link>
+                  <ArrowDownRight
+                      aria-hidden="true"
+                  />
+                </Link>
+
+                <Link
+                    href={
+                      isRussian
+                          ? '/projects_ru'
+                          : '/projects'
+                    }
+                    className={`
+                  ${styles.actionButton}
+                  ${styles.actionButtonGhost}
+                `}
+                >
+                  {copy.secondaryAction}
+                </Link>
+              </div>
             </div>
 
             <div
@@ -500,8 +672,8 @@ export default function MonochromeHome({
               {copy.heroMeta.map(
                   (item) => (
                       <span key={item}>
-                  {item}
-                </span>
+                        {item}
+                      </span>
                   )
               )}
             </div>
@@ -633,7 +805,11 @@ export default function MonochromeHome({
                 }
                 aria-hidden="true"
             >
-              <LiquidRafLogo placement="about" />
+              {/*
+               * Старый вариант оставлен для быстрого переключения:
+               * <LiquidRafLogo placement="about" />
+               */}
+              <RafMinimalizmLogo placement="about" />
             </div>
 
             <div
@@ -715,23 +891,54 @@ export default function MonochromeHome({
                 {copy.contactLead}
               </p>
 
-              <a
-                  className={`
-                ${styles.actionButton}
-                ${styles.actionButtonPrimary}
-              `}
-                  href="https://t.me/raf_console_official"
-                  target="_blank"
-                  rel="noreferrer"
-              >
-              <span>
-                {copy.contactAction}
-              </span>
+              <div className={styles.contactActions}>
+                <a
+                    className={`
+                  ${styles.actionButton}
+                  ${styles.actionButtonPrimary}
+                `}
+                    href="https://t.me/raf_console_official"
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                  <span>
+                    {copy.contactAction}
+                  </span>
 
-                <ArrowDownRight
-                    aria-hidden="true"
-                />
-              </a>
+                  <Send aria-hidden="true" />
+                </a>
+
+                <button
+                    type="button"
+                    className={`
+                  ${styles.actionButton}
+                  ${styles.actionButtonGhost}
+                  ${styles.mobileContactAction}
+                `}
+                    onClick={saveContact}
+                >
+                  <span>
+                    {copy.saveContactAction}
+                  </span>
+
+                  <ContactRound aria-hidden="true" />
+                </button>
+
+                <a
+                    className={`
+                  ${styles.actionButton}
+                  ${styles.actionButtonGhost}
+                  ${styles.mobileContactAction}
+                `}
+                    href="tel:+79891163433"
+                >
+                  <span>
+                    {copy.callAction}
+                  </span>
+
+                  <Phone aria-hidden="true" />
+                </a>
+              </div>
             </div>
 
             <div className={styles.contactGrid}>

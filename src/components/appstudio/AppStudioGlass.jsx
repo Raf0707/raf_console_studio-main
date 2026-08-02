@@ -1,12 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-    usePathname,
-    useRouter,
-    useSearchParams,
-} from 'next/navigation';
-import {
+    Mail,
     ArrowRight,
     BadgeCheck,
     Bot,
@@ -26,7 +22,6 @@ import {
     MonitorSmartphone,
     Rocket,
     SearchCheck,
-    Send,
     ShieldCheck,
     ShoppingCart,
     Smartphone,
@@ -34,6 +29,7 @@ import {
     Store,
     TestTube2,
     WandSparkles,
+    Send,
 } from 'lucide-react';
 
 const iconMap = {
@@ -187,8 +183,55 @@ function ServiceSegment({ activeService, labels, onChange }) {
     );
 }
 
-function Hero({ content, activeService, segmentLabels, onServiceChange, onPrimaryAction }) {
+function Hero({
+                  content,
+                  activeService,
+                  segmentLabels,
+                  onServiceChange,
+                  onPrimaryAction,
+              }) {
     const isWeb = activeService === 'web';
+
+    const [titleShineMode, setTitleShineMode] =
+        useState('idle');
+
+    const titleShineTimerRef =
+        useRef(null);
+
+    useEffect(() => {
+        return () => {
+            if (titleShineTimerRef.current) {
+                window.clearTimeout(
+                    titleShineTimerRef.current,
+                );
+            }
+        };
+    }, []);
+
+    const handleTitlePointerEnter = () => {
+        if (titleShineTimerRef.current) {
+            window.clearTimeout(
+                titleShineTimerRef.current,
+            );
+        }
+
+        setTitleShineMode('forward');
+    };
+
+    const handleTitlePointerLeave = () => {
+        if (titleShineTimerRef.current) {
+            window.clearTimeout(
+                titleShineTimerRef.current,
+            );
+        }
+
+        setTitleShineMode('reverse');
+
+        titleShineTimerRef.current =
+            window.setTimeout(() => {
+                setTitleShineMode('idle');
+            }, 920);
+    };
 
     return (
         <section className="relative flex min-h-[82svh] items-center pt-28 sm:pt-32">
@@ -207,34 +250,73 @@ function Hero({ content, activeService, segmentLabels, onServiceChange, onPrimar
                         </div>
 
                         <div className="space-y-5">
-                            <h1 className="text-balance text-5xl font-semibold leading-[0.94] tracking-[-0.065em] text-white sm:text-6xl lg:text-7xl">
-    <span className="block">
-        {content.titlePrimary}
-    </span>
+                            <h1
+                                className="
+                                    text-balance
+                                    text-[clamp(2.7rem,11vw,4.75rem)]
+                                    font-semibold
+                                    leading-[0.94]
+                                    tracking-[-0.065em]
+                                    text-white
+                                    lg:text-[4.6rem]
+                                "
+                                                        >
+                                <span className="block">
+                                    {content.titlePrimary}
+                                </span>
 
-                                <span className="mt-[0.08em] block text-[0.84em] font-medium leading-none text-white/[0.42]">
-        {content.titleSecondary}
-    </span>
+                                <span
+                                    className={cn(
+                                        'raf-studio-title-secondary',
+                                        titleShineMode === 'forward' &&
+                                        'raf-studio-title-secondary-forward',
+                                        titleShineMode === 'reverse' &&
+                                        'raf-studio-title-secondary-reverse',
+                                    )}
+                                    onMouseEnter={
+                                        handleTitlePointerEnter
+                                    }
+                                    onMouseLeave={
+                                        handleTitlePointerLeave
+                                    }
+                                >
+                                    <span className="raf-studio-title-secondary-text">
+                                        {content.titleSecondary}
+                                    </span>
+                                </span>
                             </h1>
+
                             <p className="mx-auto max-w-2xl text-pretty text-lg leading-8 text-white/55 lg:mx-0">
                                 {content.subtitle}
                             </p>
                         </div>
 
                         <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
-                            <GlassButton onClick={onPrimaryAction}>{content.primaryAction}</GlassButton>
-                            <GlassButton href="#process" variant="secondary">
+                            <GlassButton onClick={onPrimaryAction}>
+                                {content.primaryAction}
+                            </GlassButton>
+
+                            <GlassButton
+                                href="#process"
+                                variant="secondary"
+                            >
                                 {content.secondaryAction}
                             </GlassButton>
                         </div>
 
                         <div className="grid grid-cols-3 gap-3 pt-3">
                             {content.metrics.map((metric) => (
-                                <div key={metric.label} className="min-w-0 text-center lg:text-left">
+                                <div
+                                    key={metric.label}
+                                    className="min-w-0 text-center lg:text-left"
+                                >
                                     <p className="text-xl font-semibold tracking-[-0.03em] text-white sm:text-2xl">
                                         {metric.value}
                                     </p>
-                                    <p className="mt-1 text-xs leading-5 text-white/45">{metric.label}</p>
+
+                                    <p className="mt-1 text-xs leading-5 text-white/45">
+                                        {metric.label}
+                                    </p>
                                 </div>
                             ))}
                         </div>
@@ -248,6 +330,7 @@ function Hero({ content, activeService, segmentLabels, onServiceChange, onPrimar
                                     <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
                                     <span className="h-2.5 w-2.5 rounded-full bg-white/5" />
                                 </div>
+
                                 <div className="rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-[11px] font-medium text-white/50">
                                     Raf&lt;/&gt;Console Studio
                                 </div>
@@ -256,15 +339,48 @@ function Hero({ content, activeService, segmentLabels, onServiceChange, onPrimar
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div className="space-y-4">
                                     <PreviewTile
-                                        icon={isWeb ? MonitorSmartphone : Smartphone}
-                                        label={content.preview.product}
+                                        icon={
+                                            isWeb
+                                                ? MonitorSmartphone
+                                                : Smartphone
+                                        }
+                                        label={
+                                            content.preview.product
+                                        }
                                         large
                                     />
-                                    <PreviewTile icon={isWeb ? LayoutTemplate : Layers3} label={content.preview.architecture} />
+
+                                    <PreviewTile
+                                        icon={
+                                            isWeb
+                                                ? LayoutTemplate
+                                                : Layers3
+                                        }
+                                        label={
+                                            content.preview.architecture
+                                        }
+                                    />
                                 </div>
+
                                 <div className="space-y-4 sm:pt-12">
-                                    <PreviewTile icon={WandSparkles} label={content.preview.design} />
-                                    <PreviewTile icon={isWeb ? SearchCheck : Bot} label={content.preview.ai} large />
+                                    <PreviewTile
+                                        icon={WandSparkles}
+                                        label={
+                                            content.preview.design
+                                        }
+                                    />
+
+                                    <PreviewTile
+                                        icon={
+                                            isWeb
+                                                ? SearchCheck
+                                                : Bot
+                                        }
+                                        label={
+                                            content.preview.ai
+                                        }
+                                        large
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -492,7 +608,80 @@ function Services({ content }) {
     );
 }
 
-function DirectContact({ content }) {
+function MailRuIcon({
+                        className = '',
+                    }) {
+    return (
+        <svg
+            className={className}
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+        >
+            <path
+                d="M12 4.2a7.8 7.8 0 1 0 4.8 14"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+            />
+
+            <path
+                d="M16.8 8.4v5.2c0 1.1.6 1.7 1.5 1.7 1 0 1.7-.8 1.7-2.2V12a8 8 0 0 0-8-8"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+            />
+
+            <circle
+                cx="12"
+                cy="12"
+                r="3.7"
+                stroke="currentColor"
+                strokeWidth="1.7"
+            />
+        </svg>
+    );
+}
+
+function VkIcon({
+                    className = '',
+                }) {
+    return (
+        <svg
+            className={className}
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+        >
+            <path
+                d="M3.2 6.6h3.3c.2 0 .4.1.5.4.8 2.1 1.9 3.8 3 4.7.6.5.9.4.9-.5V7.3c0-.5.2-.7.7-.7h2.5c.4 0 .6.2.6.7v2.8c0 .9.4 1 1 .4.9-.9 1.8-2.1 2.4-3.3.2-.4.5-.6.9-.6h3.2c.6 0 .8.3.5.8-.8 1.5-1.8 2.9-3 4.2-.4.4-.4.7 0 1.1 1.3 1.2 2.4 2.6 3.3 4.1.3.5.1.8-.5.8h-3.5c-.4 0-.7-.2-.9-.5-.7-1-1.5-2-2.4-2.8-.5-.5-.9-.4-.9.4v2.1c0 .5-.2.8-.8.8h-1.5C7.2 17.6 4.5 14.1 2.8 7.4c-.1-.5 0-.8.4-.8Z"
+                fill="currentColor"
+            />
+        </svg>
+    );
+}
+
+function DirectContact({
+                           content,
+                       }) {
+    const contactButtonClass = `
+        raf-studio-glass-button
+        flex
+        min-w-[7.5rem]
+        flex-1
+        flex-col
+        items-center
+        justify-center
+        gap-3
+        rounded-[1.5rem]
+        bg-white/[0.05]
+        p-4
+        text-center
+        transition
+        hover:bg-white/[0.1]
+        sm:max-w-36
+    `;
+
     return (
         <section>
             <GlassSurface className="p-8 text-center sm:p-10">
@@ -502,25 +691,89 @@ function DirectContact({ content }) {
                     description={content.text}
                 />
 
-                <div className="mt-8 flex justify-center gap-4">
+                <div
+                    className="
+                        mx-auto
+                        mt-8
+                        flex
+                        max-w-4xl
+                        flex-wrap
+                        justify-center
+                        gap-4
+                    "
+                >
+                    <a
+                        href="mailto:raf_android-dev@mail.ru"
+                        className={contactButtonClass}
+                    >
+                        <MailRuIcon className="h-7 w-7" />
+
+                        <span className="text-sm font-medium">
+                            Mail.ru
+                        </span>
+                    </a>
+
+                    <a
+                        href="mailto:raf.console@gmail.com"
+                        className={contactButtonClass}
+                    >
+                        <Mail className="h-5 w-5" />
+
+                        <span className="text-sm font-medium">
+                            Gmail
+                        </span>
+                    </a>
+
                     <a
                         href="https://t.me/raf_console_official"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="raf-studio-glass-button flex min-w-28 flex-col items-center gap-3 rounded-[1.5rem] bg-white/[0.05] p-4 transition hover:bg-white/[0.1]"
+                        className={contactButtonClass}
                     >
                         <Send className="h-5 w-5" />
-                        <span className="text-sm font-medium">Telegram</span>
+
+                        <span className="text-sm font-medium">
+                            Telegram
+                        </span>
                     </a>
 
                     <a
-                        href="https://wa.me/79891163433"
+                        href="https://vk.ru/raf_console_official"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="raf-studio-glass-button flex min-w-28 flex-col items-center gap-3 rounded-[1.5rem] bg-white/[0.05] p-4 transition hover:bg-white/[0.1]"
+                        className={contactButtonClass}
                     >
-                        <MessageSquare className="h-5 w-5" />
-                        <span className="text-sm font-medium">WhatsApp</span>
+                        <VkIcon className="h-6 w-6" />
+
+                        <span className="text-sm font-medium">
+                            VK
+                        </span>
+                    </a>
+
+                    <a
+                        href="https://max.ru/u/f9LHodD0cOJ7Ixa-3E9mekZ7fo13O0Pzdjm3xIZKMt-X7hkV3ThDFjasFV4"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={contactButtonClass}
+                    >
+                        <img
+                            src="/max.svg"
+                            alt=""
+                            aria-hidden="true"
+                            draggable="false"
+                            className="
+                                h-6
+                                w-6
+                                object-contain
+                                grayscale
+                                brightness-0
+                                invert
+                            "
+                        />
+
+                        <span className="text-sm font-medium">
+                            MAX
+                        </span>
                     </a>
                 </div>
             </GlassSurface>
@@ -551,73 +804,29 @@ function Faq({ content }) {
     );
 }
 
-const STUDIO_SERVICE_STORAGE_KEY = 'raf-console-studio-service';
+export function AppStudioGlass({
+                                   content,
+                                   forms,
+                               }) {
+    /*
+     * При каждом новом открытии страницы студии всегда начинаем
+     * с раздела мобильных приложений
+     *
+     * Состояние больше не читается из localStorage и URL, поэтому
+     * после ухода на другую вкладку и возврата SegmentButton,
+     * контент и форма гарантированно синхронизированы
+     */
+    const [activeService, setActiveService] =
+        useState('mobile');
 
-function normalizeStudioService(value, fallback = 'mobile') {
-    if (value === 'mobile' || value === 'web') {
-        return value;
-    }
-
-    return fallback === 'web' ? 'web' : 'mobile';
-}
-
-export function AppStudioGlass({ content, forms, initialService = 'mobile' }) {
-    const pathname = usePathname();
-    const router = useRouter();
-    const searchParams = useSearchParams();
-
-    const serviceFromQuery = searchParams.get('service');
-    const normalizedInitialService = normalizeStudioService(initialService);
-
-    const [activeService, setActiveService] = useState(() =>
-        normalizeStudioService(serviceFromQuery, normalizedInitialService),
-    );
-
-    useEffect(() => {
-        if (serviceFromQuery === 'mobile' || serviceFromQuery === 'web') {
-            setActiveService(serviceFromQuery);
-            window.localStorage.setItem(
-                STUDIO_SERVICE_STORAGE_KEY,
-                serviceFromQuery,
-            );
-            return;
-        }
-
-        const storedService = window.localStorage.getItem(
-            STUDIO_SERVICE_STORAGE_KEY,
+    const handleServiceChange = (
+        nextService,
+    ) => {
+        setActiveService(
+            nextService === 'web'
+                ? 'web'
+                : 'mobile',
         );
-
-        if (storedService === 'mobile' || storedService === 'web') {
-            setActiveService(storedService);
-            return;
-        }
-
-        setActiveService(normalizedInitialService);
-    }, [normalizedInitialService, serviceFromQuery]);
-
-    const handleServiceChange = (nextService) => {
-        const normalizedService = normalizeStudioService(
-            nextService,
-            normalizedInitialService,
-        );
-
-        setActiveService(normalizedService);
-        window.localStorage.setItem(
-            STUDIO_SERVICE_STORAGE_KEY,
-            normalizedService,
-        );
-
-        const params = new URLSearchParams(searchParams.toString());
-        params.set('service', normalizedService);
-
-        const queryString = params.toString();
-        const destination = queryString
-            ? `${pathname}?${queryString}`
-            : pathname;
-
-        router.replace(destination, {
-            scroll: false,
-        });
     };
 
     const activeContent = useMemo(
@@ -638,6 +847,288 @@ export function AppStudioGlass({ content, forms, initialService = 'mobile' }) {
         <main className="raf-studio-page relative isolate min-h-screen overflow-hidden bg-transparent text-white">
 
             <style jsx global>{`
+                /*
+                 * Второй фрагмент hero-заголовка крупнее первого
+                 * и получает самостоятельный световой блик
+                 */
+                .raf-studio-title-secondary {
+                    position: relative;
+
+                    display: block;
+
+                    width: fit-content;
+                    max-width: 100%;
+
+                    margin:
+                            0.12em auto 0;
+
+                    overflow: hidden;
+
+                    color:
+                            rgba(
+                                    255,
+                                    255,
+                                    255,
+                                    0.46
+                            );
+
+                    font-size: inherit;
+                    
+                    font-weight: 560;
+                    line-height: 0.96;
+                    letter-spacing: -0.065em;
+
+                    isolation: isolate;
+                }
+
+                .raf-studio-title-secondary-text {
+                    position: relative;
+                    z-index: 1;
+
+                    display: block;
+                }
+
+                /*
+                 * Регулярный проход выполняется каждые две секунды
+                 * и работает как на ПК, так и на мобильных устройствах
+                 */
+                .raf-studio-title-secondary::after {
+                    position: absolute;
+                    z-index: 2;
+
+                    top: -28%;
+                    bottom: -28%;
+                    left: -36%;
+
+                    width: 25%;
+
+                    pointer-events: none;
+                    content: '';
+
+                    opacity: 0;
+
+                    background:
+                            linear-gradient(
+                                    100deg,
+                                    transparent 0%,
+                                    rgba(
+                                            255,
+                                            255,
+                                            255,
+                                            0.04
+                                    ) 30%,
+                                    rgba(
+                                            255,
+                                            255,
+                                            255,
+                                            0.72
+                                    ) 49%,
+                                    rgba(
+                                            255,
+                                            255,
+                                            255,
+                                            0.08
+                                    ) 67%,
+                                    transparent 100%
+                            );
+
+                    filter: blur(0.08rem);
+
+                    transform:
+                            translate3d(
+                                    0,
+                                    0,
+                                    0
+                            )
+                            rotate(10deg);
+
+                    mix-blend-mode: screen;
+
+                    animation:
+                            rafStudioTitleShineAuto
+                            2s
+                            linear
+                            infinite;
+
+                    will-change:
+                            transform,
+                            opacity;
+                }
+
+                /*
+                 * На ПК при наведении запускается отдельный
+                 * проход слева направо
+                 */
+                .raf-studio-title-secondary-forward::after {
+                    animation:
+                            rafStudioTitleShineForward
+                            900ms
+                            cubic-bezier(
+                                    0.2,
+                                    0.72,
+                                    0.2,
+                                    1
+                            )
+                            both;
+                }
+
+                /*
+                 * После отвода курсора блик возвращается
+                 * справа налево
+                 */
+                .raf-studio-title-secondary-reverse::after {
+                    animation:
+                            rafStudioTitleShineReverse
+                            900ms
+                            cubic-bezier(
+                                    0.2,
+                                    0.72,
+                                    0.2,
+                                    1
+                            )
+                            both;
+                }
+
+                @media (min-width: 64rem) {
+                    .raf-studio-title-secondary {
+                        margin-inline: 0;
+
+                        
+                    }
+                }
+
+                /*
+                 * На мобильном вторичная строка ограничена по ширине,
+                 * поэтому длинная фраза аккуратно занимает до трёх строк
+                 */
+                @media (max-width: 39.99rem) {
+                    .raf-studio-title-secondary {
+                        max-width: 11ch;
+
+                        font-size: inherit;
+
+                        line-height: 0.9;
+
+                        text-wrap: balance;
+                    }
+                }
+
+                @keyframes rafStudioTitleShineAuto {
+                    0%,
+                    14% {
+                        opacity: 0;
+
+                        transform:
+                                translate3d(
+                                        0,
+                                        0,
+                                        0
+                                )
+                                rotate(10deg);
+                    }
+
+                    20% {
+                        opacity: 0.18;
+                    }
+
+                    35% {
+                        opacity: 0.92;
+                    }
+
+                    50% {
+                        opacity: 0;
+
+                        transform:
+                                translate3d(
+                                        565%,
+                                        0,
+                                        0
+                                )
+                                rotate(10deg);
+                    }
+
+                    50.01%,
+                    100% {
+                        opacity: 0;
+
+                        transform:
+                                translate3d(
+                                        565%,
+                                        0,
+                                        0
+                                )
+                                rotate(10deg);
+                    }
+                }
+
+                @keyframes rafStudioTitleShineForward {
+                    0% {
+                        opacity: 0;
+
+                        transform:
+                                translate3d(
+                                        0,
+                                        0,
+                                        0
+                                )
+                                rotate(10deg);
+                    }
+
+                    18% {
+                        opacity: 0.26;
+                    }
+
+                    48% {
+                        opacity: 1;
+                    }
+
+                    100% {
+                        opacity: 0;
+
+                        transform:
+                                translate3d(
+                                        565%,
+                                        0,
+                                        0
+                                )
+                                rotate(10deg);
+                    }
+                }
+
+                @keyframes rafStudioTitleShineReverse {
+                    0% {
+                        opacity: 0;
+
+                        transform:
+                                translate3d(
+                                        565%,
+                                        0,
+                                        0
+                                )
+                                rotate(10deg);
+                    }
+
+                    18% {
+                        opacity: 0.26;
+                    }
+
+                    48% {
+                        opacity: 1;
+                    }
+
+                    100% {
+                        opacity: 0;
+
+                        transform:
+                                translate3d(
+                                        0,
+                                        0,
+                                        0
+                                )
+                                rotate(10deg);
+                    }
+                }
+
                 .raf-studio-liquid-card {
                     position: relative;
                     isolation: isolate;
@@ -925,7 +1416,8 @@ export function AppStudioGlass({ content, forms, initialService = 'mobile' }) {
                     .raf-studio-liquid-card,
                     .raf-studio-liquid-card::before,
                     .raf-studio-liquid-card::after,
-                    .raf-studio-glass-button {
+                    .raf-studio-glass-button,
+                    .raf-studio-title-secondary::after {
                         animation: none !important;
                         transition: none !important;
                     }

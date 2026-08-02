@@ -1,5 +1,85 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+
 import styles from './ContactsPage.module.css';
-;
+
+
+function VkIcon() {
+    return (
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+            data-brand="vk"
+        >
+            <path
+                d="M3.2 6.6h3.3c.2 0 .4.1.5.4.8 2.1 1.9 3.8 3 4.7.6.5.9.4.9-.5V7.3c0-.5.2-.7.7-.7h2.5c.4 0 .6.2.6.7v2.8c0 .9.4 1 1 .4.9-.9 1.8-2.1 2.4-3.3.2-.4.5-.6.9-.6h3.2c.6 0 .8.3.5.8-.8 1.5-1.8 2.9-3 4.2-.4.4-.4.7 0 1.1 1.3 1.2 2.4 2.6 3.3 4.1.3.5.1.8-.5.8h-3.5c-.4 0-.7-.2-.9-.5-.7-1-1.5-2-2.4-2.8-.5-.5-.9-.4-.9.4v2.1c0 .5-.2.8-.8.8h-1.5C7.2 17.6 4.5 14.1 2.8 7.4c-.1-.5 0-.8.4-.8Z"
+                fill="currentColor"
+            />
+        </svg>
+    );
+}
+
+function MailRuIcon() {
+    return (
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+            data-brand="mailru"
+        >
+            <path
+                d="M12 4.2a7.8 7.8 0 1 0 4.8 14"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+            />
+            <path
+                d="M16.8 8.4v5.2c0 1.1.6 1.7 1.5 1.7 1 0 1.7-.8 1.7-2.2V12a8 8 0 0 0-8-8"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+            />
+            <circle
+                cx="12"
+                cy="12"
+                r="3.7"
+                stroke="currentColor"
+                strokeWidth="1.7"
+            />
+        </svg>
+    );
+}
+
+function MaxIcon() {
+    return (
+        <img
+            src="/max.svg"
+            alt=""
+            aria-hidden="true"
+            draggable="false"
+            data-brand="max"
+        />
+    );
+}
+
+function EnvelopeIcon() {
+    return (
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+            data-brand="gmail"
+        >
+            <path
+                d="M4.75 5.5h14.5A2.75 2.75 0 0 1 22 8.25v7.5a2.75 2.75 0 0 1-2.75 2.75H4.75A2.75 2.75 0 0 1 2 15.75v-7.5A2.75 2.75 0 0 1 4.75 5.5Zm.17 1.8 6.4 5.18a1.08 1.08 0 0 0 1.36 0l6.4-5.18H4.92Zm15.28 1.16-6.39 5.17a2.88 2.88 0 0 1-3.62 0L3.8 8.46v7.29c0 .52.43.95.95.95h14.5c.52 0 .95-.43.95-.95V8.46Z"
+                fill="currentColor"
+            />
+        </svg>
+    );
+}
+
 
 const contactItems = [
     {
@@ -25,14 +105,16 @@ const contactItems = [
             'Business inquiries and detailed project briefs',
         href: 'mailto:raf_android-dev@mail.ru',
         external: false,
-        icon: (
-            <svg
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-            >
-                <path d="M4.75 5.5h14.5A2.75 2.75 0 0 1 22 8.25v7.5a2.75 2.75 0 0 1-2.75 2.75H4.75A2.75 2.75 0 0 1 2 15.75v-7.5A2.75 2.75 0 0 1 4.75 5.5Zm.17 1.8 6.4 5.18a1.08 1.08 0 0 0 1.36 0l6.4-5.18H4.92Zm15.28 1.16-6.39 5.17a2.88 2.88 0 0 1-3.62 0L3.8 8.46v7.29c0 .52.43.95.95.95h14.5c.52 0 .95-.43.95-.95V8.46Z" />
-            </svg>
-        ),
+        icon: <MailRuIcon />,
+    },
+    {
+        title: 'Gmail',
+        value: 'raf.console@gmail.com',
+        description:
+            'Business inquiries and detailed project briefs',
+        href: 'mailto:raf.console@gmail.com',
+        external: false,
+        icon: <EnvelopeIcon />,
     },
     {
         title: 'Telegram',
@@ -51,20 +133,22 @@ const contactItems = [
         ),
     },
     {
-        title: 'WhatsApp',
+        title: 'VK',
+        value: '@raf_console_official',
+        description:
+            'The fastest way to discuss an idea or collaboration',
+        href: 'https://vk.ru/raf_console_official',
+        external: true,
+        icon: <VkIcon />,
+    },
+    {
+        title: 'MAX',
         value: '+7 989 116 34 33',
         description:
             'Messages and calls about current projects',
-        href: 'https://wa.me/79891163433',
+        href: 'https://max.ru/u/f9LHodD0cOJ7Ixa-3E9mekZ7fo13O0Pzdjm3xIZKMt-X7hkV3ThDFjasFV4',
         external: true,
-        icon: (
-            <svg
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-            >
-                <path d="M12.05 2a9.8 9.8 0 0 0-8.49 14.7L2.2 21.8l5.22-1.37A9.8 9.8 0 1 0 12.05 2Zm0 17.82a8 8 0 0 1-4.08-1.11l-.29-.17-3.1.82.83-3.03-.19-.31a8.02 8.02 0 1 1 6.83 3.8Zm4.4-5.98c-.24-.12-1.43-.7-1.65-.79-.22-.08-.38-.12-.54.12-.16.24-.62.79-.76.95-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.93-1.19-.71-.63-1.2-1.42-1.34-1.66-.14-.24-.01-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.4-.54-.41h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.1.16 1.52.1.46-.07 1.43-.59 1.63-1.16.2-.57.2-1.07.14-1.17-.06-.1-.22-.16-.46-.28Z" />
-            </svg>
-        ),
+        icon: <MaxIcon />,
     },
 ];
 
@@ -80,6 +164,48 @@ function ArrowIcon() {
 }
 
 export default function ContactPage() {
+    const [titleShineMode, setTitleShineMode] =
+        useState('idle');
+
+    const titleShineTimerRef =
+        useRef(null);
+
+    useEffect(() => {
+        return () => {
+            if (titleShineTimerRef.current !== null) {
+                window.clearTimeout(
+                    titleShineTimerRef.current,
+                );
+            }
+        };
+    }, []);
+
+    const handleTitleMouseEnter = () => {
+        if (titleShineTimerRef.current !== null) {
+            window.clearTimeout(
+                titleShineTimerRef.current,
+            );
+        }
+
+        setTitleShineMode('forward');
+    };
+
+    const handleTitleMouseLeave = () => {
+        if (titleShineTimerRef.current !== null) {
+            window.clearTimeout(
+                titleShineTimerRef.current,
+            );
+        }
+
+        setTitleShineMode('reverse');
+
+        titleShineTimerRef.current =
+            window.setTimeout(() => {
+                setTitleShineMode('idle');
+                titleShineTimerRef.current = null;
+            }, 920);
+    };
+
     return (
         <main className={styles.page}>
             <section className={styles.hero}>
@@ -92,11 +218,33 @@ export default function ContactPage() {
                 </div>
 
                 <h1 className={styles.title}>
-                    Let&apos;s create
+                    <span className={styles.titlePrimary}>
+                        Let&apos;s create
+                    </span>
 
-                    <span>
-                        {' '}
-                        something meaningful.
+                    <span
+                        className={[
+                            styles.titleSecondary,
+                            titleShineMode === 'forward'
+                                ? styles.titleSecondaryForward
+                                : '',
+                            titleShineMode === 'reverse'
+                                ? styles.titleSecondaryReverse
+                                : '',
+                        ]
+                            .filter(Boolean)
+                            .join(' ')}
+                        onMouseEnter={handleTitleMouseEnter}
+                        onMouseLeave={handleTitleMouseLeave}
+                    >
+                        <span
+                            className={
+                                styles.titleSecondaryText
+                            }
+                            data-shine-text="something meaningful"
+                        >
+                            something meaningful
+                        </span>
                     </span>
                 </h1>
 
@@ -106,7 +254,7 @@ export default function ContactPage() {
                     a convenient channel and get in
                     touch with
                     {' '}
-                    Raf&lt;/&gt;Console Studio.
+                    Raf&lt;/&gt;Console Studio
                 </p>
             </section>
 
@@ -248,7 +396,9 @@ export default function ContactPage() {
                         styles.developerButton
                     }
                 >
-                    <span>Join Telegram</span>
+                    <span>
+                        Join Telegram
+                    </span>
 
                     <ArrowIcon />
                 </a>

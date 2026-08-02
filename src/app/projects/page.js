@@ -754,6 +754,10 @@ export default function Page() {
     const [appStatus, setAppStatus] = useState('published');
     const [siteStatus, setSiteStatus] = useState('published');
 
+    const [titleShineMode, setTitleShineMode] =
+        useState('idle');
+
+    const titleShineTimerRef = useRef(null);
     const [isProjectsLoading, setIsProjectsLoading] =
         useState(false);
 
@@ -768,8 +772,39 @@ export default function Page() {
             if (loadingTimerRef.current !== null) {
                 window.clearTimeout(loadingTimerRef.current);
             }
+
+            if (titleShineTimerRef.current !== null) {
+                window.clearTimeout(
+                    titleShineTimerRef.current,
+                );
+            }
         };
     }, []);
+    const handleTitleMouseEnter = () => {
+        if (titleShineTimerRef.current !== null) {
+            window.clearTimeout(
+                titleShineTimerRef.current,
+            );
+        }
+
+        setTitleShineMode('forward');
+    };
+
+    const handleTitleMouseLeave = () => {
+        if (titleShineTimerRef.current !== null) {
+            window.clearTimeout(
+                titleShineTimerRef.current,
+            );
+        }
+
+        setTitleShineMode('reverse');
+
+        titleShineTimerRef.current =
+            window.setTimeout(() => {
+                setTitleShineMode('idle');
+                titleShineTimerRef.current = null;
+            }, 900);
+    };
 
     const runProjectFilterChange = useCallback((updateState) => {
         /*
@@ -1008,7 +1043,7 @@ export default function Page() {
             />
 
             <section className="projects-shell mx-auto flex w-full max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
-                <div className="projects-hero mx-auto flex max-w-5xl flex-col items-center text-center">
+                <div className="projects-hero mx-auto flex w-full max-w-[86rem] flex-col items-center text-center">
                     <div
                         className={`
                             mb-7 inline-flex items-center gap-2
@@ -1023,25 +1058,34 @@ export default function Page() {
 
                     <h1
                         className="
-        max-w-5xl text-balance
-        text-4xl font-semibold tracking-[-0.015em]
-        leading-[1.08] text-white
-        sm:text-6xl
-        lg:text-7xl
-    "
+                            projects-main-title
+                            w-full
+                            text-balance
+                            text-[clamp(3rem,7.4vw,6.9rem)]
+                            font-semibold
+                            leading-[0.95]
+                            tracking-[-0.075em]
+                            text-white
+                        "
                     >
-                        Projects that turn ideas
+                        <span className="projects-title-line block">
+                            Projects that turn ideas
+                        </span>
+
                         <span
-                            className="
-        mt-[0.08em] block
-        text-[0.84em]
-        font-medium
-        leading-none
-        text-white/[0.42]
-    "
+                            className={`projects-title-secondary ${
+                                titleShineMode === 'forward'
+                                    ? 'projects-title-secondary--forward'
+                                    : titleShineMode === 'reverse'
+                                        ? 'projects-title-secondary--reverse'
+                                        : ''
+                            }`}
+                            onMouseEnter={handleTitleMouseEnter}
+                            onMouseLeave={handleTitleMouseLeave}
+                            data-shine-text="into digital products"
                         >
-    into digital products
-</span>
+                            into digital products
+                        </span>
                     </h1>
 
                     <p

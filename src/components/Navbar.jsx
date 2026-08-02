@@ -248,7 +248,7 @@ export default function Navbar({
 
     mobileTransitionTimerRef.current = window.setTimeout(() => {
       setMobileTransitionIndex(null);
-    }, 760);
+    }, 620);
   };
 
   const navigateToMobileSelection = () => {
@@ -463,63 +463,86 @@ export default function Navbar({
                 className={styles.drawerInstall}
               />
 
-              <ul className={styles.mobileList}>
+              <ul
+                className={styles.mobileList}
+                style={{
+                  '--mobile-active-index': mobileSelectedIndex,
+                }}
+              >
+                <span
+                  aria-hidden="true"
+                  className={styles.mobileSegmentIndicator}
+                >
+                  <span
+                    key={`${mobileSelectedIndex}-${mobileImpactId}`}
+                    className={[
+                      styles.mobileSegmentIndicatorSurface,
+                      mobileImpactId > 0
+                        ? styles.mobileSegmentIndicatorImpact
+                        : '',
+                    ].filter(Boolean).join(' ')}
+                  />
+                </span>
+
                 {navLinks.map((link, index) => {
                   const routeActive = isActivePath(
-                      normalizedPathname,
-                      link.href,
+                    normalizedPathname,
+                    link.href,
                   );
 
                   const selected = mobileSelectedIndex === index;
                   const transitioning = mobileTransitionIndex === index;
 
                   return (
-                      <li
-                          key={link.href}
-                          className={styles.mobileListItem}
-                      >
-                        <DrawerClose asChild>
-                          <Link
-                              href={ensureTrailingSlash(link.href)}
-                              prefetch
-                              aria-current={routeActive ? 'page' : undefined}
-                              data-raf-mobile-drawer-item={
-                                selected ? 'selected' : 'idle'
-                              }
-                              data-raf-glass-surface="mobile-navigation-item"
-                              onPointerDown={() => {
-                                setMobileSelectedIndex(index);
+                    <li
+                      key={link.href}
+                      className={styles.mobileListItem}
+                    >
+                      <DrawerClose asChild>
+                        <Link
+                          href={ensureTrailingSlash(link.href)}
+                          prefetch
+                          aria-current={routeActive ? 'page' : undefined}
+                          data-raf-mobile-drawer-item={
+                            selected ? 'selected' : 'idle'
+                          }
+                          onPointerDown={() => {
+                            setMobileSelectedIndex(index);
+                            setMobileTransitionIndex(index);
+                            setMobileImpactId((current) => current + 1);
+
+                            if (mobileTransitionTimerRef.current) {
+                              window.clearTimeout(
+                                mobileTransitionTimerRef.current,
+                              );
+                            }
+
+                            mobileTransitionTimerRef.current =
+                              window.setTimeout(() => {
                                 setMobileTransitionIndex(null);
-                              }}
-                              className={[
-                                styles.mobileLink,
-                                selected ? styles.mobileLinkSelected : '',
-                                routeActive ? styles.mobileLinkRouteActive : '',
-                                transitioning ? styles.mobileLinkTransitioning : '',
-                              ].filter(Boolean).join(' ')}
-                          >
-            <span
-                aria-hidden="true"
-                className={styles.mobileItemLens}
-            >
-              <span className={styles.mobileItemHighlight} />
-              <span className={styles.mobileItemCaustic} />
-              <span
-                  key={`${index}-${mobileImpactId}`}
-                  className={styles.mobileItemRipple}
-              />
-            </span>
+                              }, 620);
+                          }}
+                          className={[
+                            styles.mobileLink,
+                            selected ? styles.mobileLinkSelected : '',
+                            routeActive
+                              ? styles.mobileLinkRouteActive
+                              : '',
+                            transitioning
+                              ? styles.mobileLinkTransitioning
+                              : '',
+                          ].filter(Boolean).join(' ')}
+                        >
+                          <span className={styles.mobileLinkLabel}>
+                            {link.label}
+                          </span>
 
-                            <span className={styles.mobileLinkLabel}>
-              {link.label}
-            </span>
-
-                            <span className={styles.mobileLinkNumber}>
-              {String(index + 1).padStart(2, '0')}
-            </span>
-                          </Link>
-                        </DrawerClose>
-                      </li>
+                          <span className={styles.mobileLinkNumber}>
+                            {String(index + 1).padStart(2, '0')}
+                          </span>
+                        </Link>
+                      </DrawerClose>
+                    </li>
                   );
                 })}
               </ul>

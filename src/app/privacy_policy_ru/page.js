@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
+
 
 import styles from './PrivacyPolicy.module.css';
 
@@ -273,6 +275,48 @@ function PolicySection({
 }
 
 export default function PrivacyPolicy() {
+    const [titleShineMode, setTitleShineMode] =
+        useState('idle');
+
+    const titleShineTimerRef =
+        useRef(null);
+
+    useEffect(() => {
+        return () => {
+            if (titleShineTimerRef.current !== null) {
+                window.clearTimeout(
+                    titleShineTimerRef.current,
+                );
+            }
+        };
+    }, []);
+
+    const handleTitleMouseEnter = () => {
+        if (titleShineTimerRef.current !== null) {
+            window.clearTimeout(
+                titleShineTimerRef.current,
+            );
+        }
+
+        setTitleShineMode('forward');
+    };
+
+    const handleTitleMouseLeave = () => {
+        if (titleShineTimerRef.current !== null) {
+            window.clearTimeout(
+                titleShineTimerRef.current,
+            );
+        }
+
+        setTitleShineMode('reverse');
+
+        titleShineTimerRef.current =
+            window.setTimeout(() => {
+                setTitleShineMode('idle');
+                titleShineTimerRef.current = null;
+            }, 900);
+    };
+
     return (
         <main
             className={styles.page}
@@ -300,11 +344,28 @@ export default function PrivacyPolicy() {
                         Raf&lt;/&gt;Console Studio
                     </span>
 
-                    <h1>
-                        Политика
+                    <h1 className={styles.policyTitle}>
+                        <span className={styles.titlePrimary}>
+                            Политика
+                        </span>
 
-                        <span className={styles.titleSecondary}>
-                            конфиденциальности
+                        <span
+                            className={[
+                                styles.titleSecondary,
+                                titleShineMode === 'forward'
+                                    ? styles.titleSecondaryForward
+                                    : '',
+                                titleShineMode === 'reverse'
+                                    ? styles.titleSecondaryReverse
+                                    : '',
+                            ]
+                                .filter(Boolean)
+                                .join(' ')}
+                            onMouseEnter={handleTitleMouseEnter}
+                            onMouseLeave={handleTitleMouseLeave}
+                            data-shine-text="Приватности"
+                        >
+                            приватности
                         </span>
                     </h1>
 

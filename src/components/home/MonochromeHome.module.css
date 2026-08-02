@@ -315,16 +315,16 @@
 }
 
 .heroTitleEnglish {
-    max-width: 9.8ch;
+    max-width: 11ch;
 
     font-size:
             clamp(
-                    3rem,
-                    6.25vw,
-                    6.55rem
+                    3.25rem,
+                    8vw,
+                    8.4rem
             );
 
-    line-height: 1.06;
+    line-height: 1.02;
 }
 
 .heroSubtitle {
@@ -2075,4 +2075,1733 @@
                 clamp(5.5rem, 26vw, 7.5rem)
                 clamp(5.5rem, 26vw, 7.5rem);
     }
+}
+/* -------------------------------------------------------------------------- */
+/*                    НОВЫЙ МИНИМАЛИСТИЧНЫЙ ВАРИАНТ HERO                     */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * Старые .heroVideo, .heroVeil и .heroGrid выше намеренно не удалены.
+ * Их JSX временно закомментирован в MonochromeHome.jsx, поэтому прежний
+ * LiquidRafLogo и видеофон можно вернуть без восстановления удалённого кода.
+ */
+.hero {
+    background-color: #0b0c0e;
+
+    background-image:
+            radial-gradient(
+                    ellipse at 50% 42%,
+                    rgba(255, 255, 255, 0.065) 0%,
+                    rgba(255, 255, 255, 0.032) 27%,
+                    rgba(255, 255, 255, 0.012) 48%,
+                    transparent 72%
+            ),
+            linear-gradient(
+                    var(--content-grid-line) 2px,
+                    transparent 2px
+            ),
+            linear-gradient(
+                    90deg,
+                    var(--content-grid-line) 2px,
+                    transparent 2px
+            );
+
+    background-size:
+            100% 100%,
+            clamp(3.5rem, 7vw, 6rem)
+            clamp(3.5rem, 7vw, 6rem),
+            clamp(3.5rem, 7vw, 6rem)
+            clamp(3.5rem, 7vw, 6rem);
+
+    background-position:
+            center,
+            center top,
+            center top;
+
+    background-blend-mode:
+            normal,
+            multiply,
+            multiply;
+}
+
+/*
+ * Отдельный слой повторяет виньетку contentSurface и не затрагивает
+ * сохранённые стили старой сетки .heroGrid.
+ */
+.minimalHeroGrid {
+    position: absolute;
+    z-index: 1;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+            linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.022),
+                    transparent 12rem
+            ),
+            radial-gradient(
+                    ellipse at center,
+                    transparent 39%,
+                    rgba(0, 0, 0, 0.18) 76%,
+                    rgba(0, 0, 0, 0.5) 100%
+            );
+
+    box-shadow:
+            inset 0 0 8rem
+            rgba(0, 0, 0, 0.36);
+}
+
+/*
+ * Контент остаётся поверх нового логотипа и фоновой сетки.
+ */
+.heroContent {
+    z-index: 5;
+}
+
+@media (max-width: 48rem) {
+    .hero {
+        background-size:
+                100% 100%,
+                clamp(5.5rem, 26vw, 7.5rem)
+                clamp(5.5rem, 26vw, 7.5rem),
+                clamp(5.5rem, 26vw, 7.5rem)
+                clamp(5.5rem, 26vw, 7.5rem);
+    }
+}
+
+
+/* -------------------------------------------------------------------------- */
+/*      ЕДИНЫЙ ФОН HERO И HOME + ЕДИНЫЙ БЕЛЫЙ ЗАГОЛОВОК                      */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * HERO и основной Home теперь используют один и тот же фон без заметного
+ * перехода между первым экраном и секцией «Направления».
+ */
+.hero,
+.contentSurface {
+    background-color: #0b0c0e;
+
+    background-image:
+            radial-gradient(
+                    ellipse at 50% 42%,
+                    rgba(255, 255, 255, 0.065) 0%,
+                    rgba(255, 255, 255, 0.032) 27%,
+                    rgba(255, 255, 255, 0.012) 48%,
+                    transparent 72%
+            ),
+            linear-gradient(
+                    var(--content-grid-line) 2px,
+                    transparent 2px
+            ),
+            linear-gradient(
+                    90deg,
+                    var(--content-grid-line) 2px,
+                    transparent 2px
+            );
+
+    background-size:
+            100% 100%,
+            clamp(3.5rem, 7vw, 6rem)
+            clamp(3.5rem, 7vw, 6rem),
+            clamp(3.5rem, 7vw, 6rem)
+            clamp(3.5rem, 7vw, 6rem);
+
+    background-position:
+            center,
+            center top,
+            center top;
+
+    background-blend-mode:
+            normal,
+            multiply,
+            multiply;
+}
+
+/*
+ * Убираем отдельную затемняющую виньетку первого экрана, из-за которой
+ * у границы секций появлялся сильный перепад яркости.
+ */
+.minimalHeroGrid {
+    background:
+            radial-gradient(
+                    ellipse at center,
+                    transparent 54%,
+                    rgba(0, 0, 0, 0.12) 84%,
+                    rgba(0, 0, 0, 0.24) 100%
+            );
+
+    box-shadow: none;
+}
+
+/*
+ * Все три строки заголовка теперь одинаковые:
+ * белый цвет, один размер, одна насыщенность и одинаковая высота строки.
+ */
+.heroTitlePrimary,
+.heroTitleSecondary,
+.heroTitleLine {
+    color: #f7f7f7;
+
+    font-size: 1em;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+.heroTitleSecondary {
+    margin-top: 0.08em;
+}
+
+@media (max-width: 639px) {
+    .heroTitlePrimary,
+    .heroTitleSecondary {
+        font-size: 1em;
+        line-height: inherit;
+    }
+}
+
+
+/* -------------------------------------------------------------------------- */
+/*                 ЕДИНЫЙ НЕПРЕРЫВНЫЙ ФОН ДЛЯ ВСЕЙ HOME                      */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * Сетка теперь рисуется один раз на .page и продолжается через весь экран:
+ * HERO, основной контент и вертикальный блок «О студии» больше не создают
+ * собственные локальные фоны. Поэтому нет перепадов яркости и разрывов сетки.
+ */
+.page {
+    --home-grid-size:
+            clamp(
+                    5.5rem,
+                    7.2vw,
+                    9rem
+            );
+
+    background-color: #0b0c0e;
+
+    background-image:
+            linear-gradient(
+                    rgba(0, 0, 0, 0.58) 2px,
+                    transparent 2px
+            ),
+            linear-gradient(
+                    90deg,
+                    rgba(0, 0, 0, 0.58) 2px,
+                    transparent 2px
+            );
+
+    background-size:
+            var(--home-grid-size)
+            var(--home-grid-size);
+
+    background-position:
+            center top;
+
+    background-repeat: repeat;
+}
+
+/* Убираем общий шумовой слой, который менял яркость разных участков. */
+.page::before {
+    display: none;
+}
+
+/*
+ * Все крупные секции становятся прозрачными и показывают одну общую сетку
+ * родительского .page.
+ */
+.hero,
+.contentSurface,
+.aboutLogoVisual {
+    background: transparent;
+    background-color: transparent;
+    background-image: none;
+}
+
+/* Убираем локальные затемнения и дополнительные сетки секций. */
+.heroVeil,
+.heroGrid,
+.minimalHeroGrid,
+.contentSurface::before,
+.aboutLogoVisual::before,
+.aboutLogoVisual::after {
+    display: none;
+}
+
+/*
+ * Вертикальная карточка сохраняет форму и рамку, но внутри неё виден тот же
+ * самый непрерывный фон страницы без отдельного градиента.
+ */
+.aboutLogoVisual {
+    box-shadow:
+            inset 0 1px 0
+            rgba(255, 255, 255, 0.12),
+            inset 0 -1px 0
+            rgba(0, 0, 0, 0.52),
+            0 2.5rem 6rem
+            rgba(0, 0, 0, 0.38);
+}
+
+/*
+ * На мобильных используется тот же физический размер клетки, чтобы переход
+ * между секциями также оставался незаметным.
+ */
+@media (max-width: 48rem) {
+    .page {
+        --home-grid-size:
+                clamp(
+                        5.5rem,
+                        26vw,
+                        7.5rem
+                );
+    }
+
+    .contentSurface {
+        background: transparent;
+        background-image: none;
+    }
+}
+
+
+/* -------------------------------------------------------------------------- */
+/*           ФИНАЛЬНЫЙ ЕДИНЫЙ ФОН: ОДИН ОТТЕНОК И ОДНО ОСВЕЩЕНИЕ             */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * В тёмной теме старое правило :global(.dark) .page имело более высокую
+ * специфичность, поэтому продолжало подмешивать собственные radial-gradient.
+ * Здесь переопределяем фон с той же специфичностью.
+ */
+.page,
+:global(.dark) .page {
+    --home-background: #0b0c0e;
+    --home-grid-line: rgba(0, 0, 0, 0.58);
+    --home-grid-size:
+            clamp(
+                    5.5rem,
+                    7.2vw,
+                    9rem
+            );
+
+    background-color: var(--home-background);
+
+    background-image:
+            linear-gradient(
+                    var(--home-grid-line) 2px,
+                    transparent 2px
+            ),
+            linear-gradient(
+                    90deg,
+                    var(--home-grid-line) 2px,
+                    transparent 2px
+            );
+
+    background-size:
+            var(--home-grid-size)
+            var(--home-grid-size);
+
+    background-position:
+            center top;
+
+    background-repeat: repeat;
+
+    background-blend-mode: normal;
+}
+
+/*
+ * Ни HERO, ни основной контент больше не имеют собственного оттенка,
+ * освещения, виньетки или локальной сетки.
+ */
+.hero,
+.contentSurface,
+.aboutLogoVisual,
+:global(.dark) .hero,
+:global(.dark) .contentSurface,
+:global(.dark) .aboutLogoVisual {
+    background-color: transparent;
+    background-image: none;
+    background: transparent;
+}
+
+/* Полностью убираем все слои, способные менять яркость между секциями. */
+.page::before,
+.heroVeil,
+.heroGrid,
+.heroGrid::after,
+.minimalHeroGrid,
+.contentSurface::before,
+.aboutLogoVisual::before,
+.aboutLogoVisual::after {
+    display: none;
+}
+
+/*
+ * Убираем внутреннее затемнение вертикальной области с логотипом:
+ * остаются только рамка и внешняя тень, фон внутри идентичен странице.
+ */
+.aboutLogoVisual {
+    box-shadow:
+            inset 0 1px 0
+            rgba(255, 255, 255, 0.12),
+            0 2.5rem 6rem
+            rgba(0, 0, 0, 0.3);
+}
+
+/*
+ * Сетка не должна менять шаг на границе секций.
+ */
+@media (max-width: 48rem) {
+    .page,
+    :global(.dark) .page {
+        --home-grid-size:
+                clamp(
+                        5.5rem,
+                        26vw,
+                        7.5rem
+                );
+    }
+
+    .hero,
+    .contentSurface,
+    .aboutLogoVisual {
+        background: transparent;
+        background-image: none;
+    }
+}
+
+
+/* -------------------------------------------------------------------------- */
+/*        ОДНОТОННАЯ СЕТКА В СТИЛЕ СТРАНИЦЫ PROJECTS                         */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * Один ровный тёмный оттенок и одна тонкая сетка.
+ * Без radial-gradient, подсветок, виньеток и второй крупной сетки.
+ */
+.page,
+:global(.dark) .page {
+    --home-background: #0b0c0e;
+    --home-grid-line: rgba(255, 255, 255, 0.035);
+    --home-grid-size:
+            clamp(
+                    3.75rem,
+                    5vw,
+                    5.25rem
+            );
+
+    background-color: var(--home-background);
+
+    background-image: none;
+
+    background-size:
+            var(--home-grid-size)
+            var(--home-grid-size);
+
+    background-position:
+            left top;
+
+    background-repeat: repeat;
+}
+
+/*
+ * Все дочерние области полностью прозрачны:
+ * через них видна одна и та же сетка родительской .page.
+ */
+.hero,
+.contentSurface,
+.aboutLogoVisual,
+:global(.dark) .hero,
+:global(.dark) .contentSurface,
+:global(.dark) .aboutLogoVisual {
+    background: transparent;
+    background-color: transparent;
+    background-image: none;
+}
+
+/*
+ * Отключаем все старые слои освещения и дополнительные сетки.
+ */
+.page::before,
+.heroVeil,
+.heroGrid,
+.heroGrid::after,
+.minimalHeroGrid,
+.contentSurface::before,
+.aboutLogoVisual::before,
+.aboutLogoVisual::after {
+    display: none;
+}
+
+/*
+ * У вертикального блока остаётся только стеклянная рамка.
+ * Внутренний фон совпадает с остальной страницей.
+ */
+.aboutLogoVisual {
+    box-shadow:
+            inset 0 1px 0
+            rgba(255, 255, 255, 0.12),
+            0 2.5rem 6rem
+            rgba(0, 0, 0, 0.28);
+}
+
+@media (max-width: 48rem) {
+    .page,
+    :global(.dark) .page {
+        --home-grid-size:
+                clamp(
+                        3.5rem,
+                        17vw,
+                        4.75rem
+                );
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                  ФИНАЛЬНОЕ ИСПРАВЛЕНИЕ МОБИЛЬНОГО HERO                    */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 48rem) {
+    /*
+     * width: 100% вместе с padding раньше делал heroContent шире viewport.
+     * border-box удерживает весь блок строго внутри экрана.
+     */
+    .heroContent,
+    .heroContentRussian,
+    .heroContentEnglish {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        padding-right:
+                clamp(
+                        1rem,
+                        5vw,
+                        1.35rem
+                );
+
+        padding-left:
+                clamp(
+                        1rem,
+                        5vw,
+                        1.35rem
+                );
+
+        box-sizing: border-box;
+    }
+
+    /*
+     * Одинаковый компактный размер для RU и EN.
+     * Этот блок расположен в самом конце файла и перекрывает старые
+     * мобильные значения 14vw и 21vw.
+     */
+    .heroTitle,
+    .heroTitleRussian,
+    .heroTitleEnglish {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        font-size:
+                clamp(
+                        2.25rem,
+                        10vw,
+                        3.35rem
+                );
+
+        line-height: 1.02;
+        letter-spacing: -0.035em;
+
+        text-wrap: pretty;
+        overflow-wrap: normal;
+
+        box-sizing: border-box;
+    }
+
+    .heroTitlePrimary,
+    .heroTitleSecondary,
+    .heroTitleLine {
+        max-width: 100%;
+
+        font-size: 1em;
+        line-height: inherit;
+    }
+
+    /*
+     * Отдельные строки сохраняются, но больше не могут выходить
+     * за правую границу экрана.
+     */
+    .heroTitlePrimary,
+    .heroTitleLine {
+        width: 100%;
+
+        white-space: normal;
+    }
+
+    .heroTitleSecondary {
+        width: 100%;
+        margin-top: 0.08em;
+    }
+
+    .heroSubtitle {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        font-size:
+                clamp(
+                        0.92rem,
+                        4.2vw,
+                        1.05rem
+                );
+
+        line-height: 1.55;
+
+        overflow-wrap: anywhere;
+
+        box-sizing: border-box;
+    }
+
+    /*
+     * Кнопки располагаются строго в одну колонку и не могут стать
+     * шире внутренней области heroContent.
+     */
+    .heroActions {
+        display: grid;
+
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        grid-template-columns:
+                minmax(
+                        0,
+                        1fr
+                );
+
+        gap: 0.75rem;
+
+        box-sizing: border-box;
+    }
+
+    .actionButton {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        padding:
+                0.82rem
+                1rem;
+
+        box-sizing: border-box;
+
+        text-align: center;
+        white-space: normal;
+    }
+
+    /*
+     * Ограничиваем полноэкранный RAF фактической шириной мобильного
+     * viewport. Селектор работает только для нового PNG-логотипа.
+     */
+    .hero img[src*="raf-minimal-logo"] {
+        width: min(88vw, 28rem) !important;
+        max-width: 88vw !important;
+        height: auto !important;
+
+        object-fit: contain;
+
+        transform: none !important;
+    }
+
+    /*
+     * Родитель нового логотипа не должен расширять HERO до 118–132vw,
+     * как это было в RafMinimalizmLogo.module.css.
+     */
+    .hero div:has(> img[src*="raf-minimal-logo"]) {
+        right: 0 !important;
+        left: 0 !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+
+        box-sizing: border-box;
+
+        transform: none !important;
+    }
+
+    .heroMeta {
+        width: 100%;
+        max-width: 100%;
+
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 390px) {
+    .heroTitle,
+    .heroTitleRussian,
+    .heroTitleEnglish {
+        font-size:
+                clamp(
+                        2rem,
+                        9.4vw,
+                        2.7rem
+                );
+
+        line-height: 1.04;
+    }
+
+    .heroSubtitle {
+        font-size: 0.9rem;
+    }
+
+    .actionButton {
+        min-height: 3.25rem;
+
+        font-size: 0.88rem;
+    }
+
+    .hero img[src*="raf-minimal-logo"] {
+        width: 84vw !important;
+        max-width: 84vw !important;
+    }
+}
+
+
+/* ==========================================================================
+   FINAL MOBILE HERO COMPOSITION — TITLE → RAF → COPY → BUTTONS
+   ========================================================================== */
+
+/*
+ * На desktop новые обёртки не меняют прежнюю композицию.
+ */
+.heroIntro,
+.heroAfterLogo {
+    display: contents;
+}
+
+@media (max-width: 48rem) {
+    /*
+     * HERO перестаёт зависеть от высокой фиксированной минимальной высоты.
+     * Высота формируется реальным содержимым без огромного пустого участка.
+     */
+    .hero {
+        display: grid;
+
+        min-height: auto;
+
+        padding:
+                clamp(7rem, 19vw, 8.5rem)
+                0
+                clamp(3.5rem, 10vw, 5rem);
+
+        place-items: stretch;
+
+        overflow: hidden;
+    }
+
+    .heroContent,
+    .heroContentRussian,
+    .heroContentEnglish {
+        position: relative;
+        z-index: 5;
+
+        display: grid;
+
+        width: 100%;
+        max-width: 100%;
+
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+                "intro"
+                "logo-space"
+                "after-logo"
+                "meta";
+
+        row-gap: 0;
+
+        padding:
+                0
+                clamp(1rem, 5vw, 1.35rem);
+
+        box-sizing: border-box;
+    }
+
+    .heroIntro {
+        display: block;
+        grid-area: intro;
+    }
+
+    .heroAfterLogo {
+        display: block;
+        grid-area: after-logo;
+
+        margin-top:
+                clamp(
+                        0.8rem,
+                        3.4vw,
+                        1.25rem
+                );
+    }
+
+    /*
+     * Резервируем место под RAF между заголовком и описанием.
+     * Это не пустой прогал: внутри этой зоны расположен сам логотип.
+     */
+    .heroContent::after {
+        display: block;
+
+        grid-area: logo-space;
+
+        height:
+                clamp(
+                        8.6rem,
+                        31vw,
+                        11.2rem
+                );
+
+        content: '';
+    }
+
+    .heroMeta {
+        grid-area: meta;
+
+        margin-top:
+                clamp(
+                        1.65rem,
+                        6vw,
+                        2.4rem
+                );
+    }
+
+    /*
+     * Заголовок остаётся компактным и полностью помещается.
+     */
+    .heroTitle,
+    .heroTitleRussian,
+    .heroTitleEnglish {
+        width: 100%;
+        max-width: 100%;
+
+        font-size:
+                clamp(
+                        2.15rem,
+                        9.7vw,
+                        3.2rem
+                );
+
+        line-height: 1.02;
+        letter-spacing: -0.038em;
+    }
+
+    .heroTitlePrimary,
+    .heroTitleSecondary,
+    .heroTitleLine {
+        width: 100%;
+        max-width: 100%;
+
+        white-space: normal;
+    }
+
+    /*
+     * Описание и кнопки расположены сразу под RAF.
+     */
+    .heroSubtitle {
+        margin-top: 0;
+
+        font-size:
+                clamp(
+                        0.94rem,
+                        4.15vw,
+                        1.06rem
+                );
+
+        line-height: 1.56;
+    }
+
+    .heroActions {
+        display: grid;
+
+        grid-template-columns: minmax(0, 1fr);
+
+        width: 100%;
+
+        gap: 0.72rem;
+
+        margin-top:
+                clamp(
+                        1.35rem,
+                        5vw,
+                        1.9rem
+                );
+    }
+
+    .actionButton {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        box-sizing: border-box;
+    }
+
+    /*
+     * Новый RAF размещается точно в зарезервированной зоне,
+     * а не растягивается на всю высоту первого экрана.
+     */
+    .hero div:has(> img[src*="raf-minimal-logo"]) {
+        top:
+                clamp(
+                        19.5rem,
+                        70vw,
+                        26rem
+                ) !important;
+
+        right: 0 !important;
+        bottom: auto !important;
+        left: 0 !important;
+
+        width: 100% !important;
+        height:
+                clamp(
+                        8.6rem,
+                        31vw,
+                        11.2rem
+                ) !important;
+
+        padding: 0 !important;
+
+        transform: none !important;
+    }
+
+    .hero img[src*="raf-minimal-logo"] {
+        width:
+                min(
+                        86vw,
+                        28rem
+                ) !important;
+
+        max-width: 86vw !important;
+
+        opacity: 0.2 !important;
+
+        transform: none !important;
+    }
+}
+
+@media (max-width: 390px) {
+    .hero {
+        padding-top: 6.8rem;
+    }
+
+    .heroTitle,
+    .heroTitleRussian,
+    .heroTitleEnglish {
+        font-size:
+                clamp(
+                        2rem,
+                        9.2vw,
+                        2.65rem
+                );
+    }
+
+    .heroContent::after,
+    .hero div:has(> img[src*="raf-minimal-logo"]) {
+        height: 8.25rem !important;
+    }
+
+    .hero div:has(> img[src*="raf-minimal-logo"]) {
+        top:
+                clamp(
+                        18.2rem,
+                        72vw,
+                        22rem
+                ) !important;
+    }
+}
+
+
+/* ==========================================================================
+   FINAL MOBILE RAF → COPY SPACING
+   ========================================================================== */
+
+@media (max-width: 48rem) {
+    /*
+     * Отступ после RAF теперь сопоставим с расстоянием
+     * между заголовком и изображением логотипа.
+     */
+    .heroAfterLogo {
+        margin-top:
+                clamp(
+                        2.35rem,
+                        8vw,
+                        3.35rem
+                );
+    }
+}
+
+@media (max-width: 390px) {
+    .heroAfterLogo {
+        margin-top:
+                clamp(
+                        2rem,
+                        7.4vw,
+                        2.75rem
+                );
+    }
+}
+
+
+/* ==========================================================================
+   FINAL MOBILE HERO — DYNAMIC VIEWPORT SPLASH
+   ========================================================================== */
+
+/*
+ * На desktop сохраняется прежняя композиция.
+ * Дополнительный мобильный логотип скрыт.
+ */
+.heroMobileLogoSlot {
+    display: none;
+}
+
+@media (max-width: 48rem) {
+    /*
+     * svh/dvh получают фактическую высоту экрана конкретного устройства.
+     * Первый экран занимает ровно viewport, а элементы распределяются сеткой.
+     */
+    .hero {
+        display: block;
+
+        min-height: 100svh;
+        height: auto;
+
+        padding: 0;
+
+        overflow: hidden;
+    }
+
+    @supports (height: 100dvh) {
+        .hero {
+            min-height: 100dvh;
+        }
+    }
+
+    .heroContent,
+    .heroContentRussian,
+    .heroContentEnglish {
+        position: relative;
+        z-index: 5;
+
+        display: grid;
+
+        width: 100%;
+        max-width: 100%;
+        min-height: 100svh;
+
+        /*
+         * 1. Заголовок
+         * 2. Гибкая зона с RAF
+         * 3. Описание и кнопки
+         * 4. Метаданные
+         */
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows:
+                auto
+                minmax(0, 1fr)
+                auto
+                auto;
+
+        grid-template-areas:
+                "intro"
+                "mobile-logo"
+                "after-logo"
+                "meta";
+
+        align-content: stretch;
+
+        /*
+         * Только безопасные края. Основные расстояния создаются fr-строкой,
+         * а не фиксированными margin/top.
+         */
+        padding:
+                calc(
+                        env(safe-area-inset-top, 0px)
+                        + clamp(6.6rem, 17vw, 8rem)
+                )
+                clamp(1rem, 5vw, 1.35rem)
+                max(
+                        1rem,
+                        env(safe-area-inset-bottom, 0px)
+                );
+
+        box-sizing: border-box;
+    }
+
+    @supports (height: 100dvh) {
+        .heroContent,
+        .heroContentRussian,
+        .heroContentEnglish {
+            min-height: 100dvh;
+        }
+    }
+
+    .heroIntro {
+        display: block;
+        grid-area: intro;
+
+        min-width: 0;
+    }
+
+    /*
+     * Desktop-логотип отключается.
+     * Мобильный RAF становится обычным участником grid-layout:
+     * никаких top, left и вычисленных координат.
+     */
+    .heroDesktopLogo {
+        display: none !important;
+    }
+
+    .heroMobileLogoSlot {
+        position: relative;
+        z-index: 2;
+
+        display: grid;
+        grid-area: mobile-logo;
+
+        min-width: 0;
+        min-height: 0;
+
+        place-items: center;
+
+        padding-block:
+                clamp(
+                        0.75rem,
+                        2.4svh,
+                        1.5rem
+                );
+    }
+
+    .heroMobileLogoSlot > div,
+    .heroMobileLogo {
+        position: relative !important;
+
+        inset: auto !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100% !important;
+        min-height: 0 !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        transform: none !important;
+    }
+
+    .heroMobileLogoSlot img {
+        width:
+                min(
+                        88vw,
+                        29rem
+                ) !important;
+
+        max-width: 100% !important;
+        max-height:
+                min(
+                        19svh,
+                        11rem
+                ) !important;
+
+        height: auto !important;
+
+        object-fit: contain;
+
+        opacity: 0.2 !important;
+
+        transform: none !important;
+    }
+
+    .heroAfterLogo {
+        display: block;
+        grid-area: after-logo;
+
+        min-width: 0;
+
+        /*
+         * Небольшой адаптивный отступ после RAF.
+         * Он зависит от высоты viewport, а не от конкретного телефона.
+         */
+        margin-top:
+                clamp(
+                        0.8rem,
+                        2.4svh,
+                        1.5rem
+                );
+    }
+
+    .heroMeta {
+        grid-area: meta;
+
+        width: 100%;
+        min-width: 0;
+
+        margin-top:
+                clamp(
+                        1.1rem,
+                        2.8svh,
+                        1.8rem
+                );
+    }
+
+    /*
+     * Размер учитывает и ширину, и высоту экрана.
+     * На низких устройствах заголовок автоматически становится компактнее.
+     */
+    .heroTitle,
+    .heroTitleRussian,
+    .heroTitleEnglish {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        font-size:
+                clamp(
+                        2rem,
+                        min(9.7vw, 6.6svh),
+                        3.2rem
+                );
+
+        line-height: 1.02;
+        letter-spacing: -0.038em;
+    }
+
+    .heroTitlePrimary,
+    .heroTitleSecondary,
+    .heroTitleLine {
+        width: 100%;
+        max-width: 100%;
+
+        white-space: normal;
+    }
+
+    .heroSubtitle {
+        width: 100%;
+        max-width: 100%;
+
+        margin-top: 0;
+
+        font-size:
+                clamp(
+                        0.9rem,
+                        min(4.1vw, 2.5svh),
+                        1.05rem
+                );
+
+        line-height: 1.5;
+    }
+
+    .heroActions {
+        display: grid;
+
+        width: 100%;
+
+        grid-template-columns: minmax(0, 1fr);
+
+        gap:
+                clamp(
+                        0.58rem,
+                        1.5svh,
+                        0.8rem
+                );
+
+        margin-top:
+                clamp(
+                        1rem,
+                        2.6svh,
+                        1.65rem
+                );
+    }
+
+    .actionButton {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        min-height:
+                clamp(
+                        3.2rem,
+                        7svh,
+                        4rem
+                );
+
+        box-sizing: border-box;
+    }
+
+    /*
+     * Старый псевдоэлемент резервировал фиксированное пространство под RAF.
+     * Теперь логотип находится в grid, поэтому резерв больше не нужен.
+     */
+    .heroContent::after {
+        display: none !important;
+        content: none !important;
+    }
+
+    /*
+     * Перекрываем старые мобильные правила с :has(), которые задавали
+     * абсолютные координаты изображения.
+     */
+    .hero div:has(> img[src*="raf-minimal-logo"]) {
+        position: relative !important;
+
+        inset: auto !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100% !important;
+
+        padding: 0 !important;
+
+        transform: none !important;
+    }
+}
+
+/*
+ * Низкие экраны: уменьшаем только типографику и внутренние элементы.
+ * Структура по-прежнему занимает ровно один динамический viewport.
+ */
+@media (max-width: 48rem) and (max-height: 46rem) {
+    .heroContent,
+    .heroContentRussian,
+    .heroContentEnglish {
+        padding-top:
+                calc(
+                        env(safe-area-inset-top, 0px)
+                        + clamp(5.8rem, 14vw, 6.8rem)
+                );
+    }
+
+    .eyebrow {
+        font-size: 0.62rem;
+    }
+
+    .heroTitle,
+    .heroTitleRussian,
+    .heroTitleEnglish {
+        font-size:
+                clamp(
+                        1.85rem,
+                        min(8.9vw, 5.8svh),
+                        2.75rem
+                );
+    }
+
+    .heroMobileLogoSlot img {
+        max-height: 15svh !important;
+    }
+
+    .heroSubtitle {
+        font-size: 0.88rem;
+        line-height: 1.42;
+    }
+
+    .actionButton {
+        min-height: 3rem;
+        padding-block: 0.68rem;
+    }
+
+    .heroMeta {
+        margin-top: 0.8rem;
+    }
+}
+
+
+/* ==========================================================================
+   FINAL MOBILE HERO — COMPACT TITLE / RAF / COPY GROUP
+   ========================================================================== */
+
+@media (max-width: 48rem) {
+    /*
+     * Контент больше не растягивается большими промежутками между блоками.
+     * Свободная высота viewport уходит после метаданных, а не между
+     * заголовком, RAF и подзаголовком.
+     */
+    .heroContent,
+    .heroContentRussian,
+    .heroContentEnglish {
+        grid-template-rows:
+                auto
+                auto
+                auto
+                auto
+                minmax(0, 1fr);
+
+        grid-template-areas:
+                "intro"
+                "mobile-logo"
+                "after-logo"
+                "meta"
+                "spacer";
+
+        align-content: stretch;
+    }
+
+    /*
+     * Заголовок немного крупнее, но остаётся адаптивным
+     * и учитывает высоту устройства.
+     */
+    .heroTitle,
+    .heroTitleRussian,
+    .heroTitleEnglish {
+        font-size:
+                clamp(
+                        2.2rem,
+                        min(10.4vw, 7svh),
+                        3.45rem
+                );
+
+        line-height: 1;
+        letter-spacing: -0.042em;
+    }
+
+    /*
+     * RAF располагается ближе к заголовку.
+     */
+    .heroMobileLogoSlot {
+        min-height:
+                clamp(
+                        7.4rem,
+                        16svh,
+                        9.8rem
+                );
+
+        margin-top:
+                clamp(
+                        0.55rem,
+                        1.4svh,
+                        0.95rem
+                );
+
+        padding-block:
+                clamp(
+                        0.2rem,
+                        0.8svh,
+                        0.55rem
+                );
+    }
+
+    .heroMobileLogoSlot img {
+        max-height:
+                min(
+                        16svh,
+                        9.8rem
+                ) !important;
+    }
+
+    /*
+     * Подзаголовок также подтягивается ближе к RAF.
+     */
+    .heroAfterLogo {
+        margin-top:
+                clamp(
+                        0.65rem,
+                        1.7svh,
+                        1.05rem
+                );
+    }
+
+    .heroSubtitle {
+        line-height: 1.48;
+    }
+
+    .heroActions {
+        margin-top:
+                clamp(
+                        0.95rem,
+                        2.1svh,
+                        1.35rem
+                );
+    }
+
+    .heroMeta {
+        margin-top:
+                clamp(
+                        0.9rem,
+                        2.2svh,
+                        1.4rem
+                );
+    }
+
+    /*
+     * Оставшаяся часть первого экрана размещается после WEB/MOBILE/PRODUCT
+     * DESIGN, поэтому внутри основной композиции нет больших прогалов.
+     */
+    .heroContent::after {
+        display: block !important;
+
+        grid-area: spacer;
+
+        min-height: 0;
+
+        content: '' !important;
+    }
+}
+
+@media (max-width: 48rem) and (max-height: 46rem) {
+    .heroTitle,
+    .heroTitleRussian,
+    .heroTitleEnglish {
+        font-size:
+                clamp(
+                        2rem,
+                        min(9.6vw, 6.1svh),
+                        2.9rem
+                );
+    }
+
+    .heroMobileLogoSlot {
+        min-height: 6.6rem;
+    }
+
+    .heroMobileLogoSlot img {
+        max-height: 13.5svh !important;
+    }
+
+    .heroAfterLogo {
+        margin-top: 0.5rem;
+    }
+}
+
+
+/* ==========================================================================
+   MOBILE CARDS — NO LIFT, ONLY LIQUID DROP
+   ========================================================================== */
+
+@media (max-width: 48rem) {
+    /*
+     * На сенсорных устройствах карточки больше не поднимаются и не смещаются.
+     * Сохраняется только liquid-анимация через отдельное свойство scale
+     * и изменение border-radius.
+     */
+    .serviceCard,
+    .serviceCard:hover,
+    .serviceCard:active,
+    .aboutPanel,
+    .aboutPanel:hover,
+    .aboutPanel:active,
+    .contactCard,
+    .contactCard:hover,
+    .contactCard:active {
+        transform: none !important;
+    }
+
+    /*
+     * Убираем вертикальный подъём и перспективный наклон,
+     * которые были заданы в desktop hover-правилах.
+     */
+    .serviceCard:hover,
+    .serviceCard:active {
+        transform:
+                translateY(0)
+                rotateX(0) !important;
+    }
+
+    .contactCard:hover,
+    .contactCard:active {
+        transform:
+                translateX(0) !important;
+    }
+
+    /*
+     * Жидкая капля остаётся:
+     * карточка слегка растекается и собирается обратно,
+     * но не меняет своё положение на странице.
+     */
+    .serviceCard:hover,
+    .serviceCard:active,
+    .aboutPanel:hover,
+    .aboutPanel:active,
+    .contactCard:hover,
+    .contactCard:active {
+        animation:
+                homeCardLiquidHover
+                780ms
+                cubic-bezier(
+                        0.2,
+                        0.88,
+                        0.18,
+                        1
+                )
+                both;
+    }
+
+    /*
+     * На мобильных после завершения касания карточка
+     * спокойно возвращается в исходную форму.
+     */
+    .serviceCard:not(:hover),
+    .aboutPanel:not(:hover),
+    .contactCard:not(:hover) {
+        transform: none !important;
+
+        scale: 1 1;
+        border-radius: var(--liquid-radius-base);
+    }
+
+    /*
+     * Отключаем desktop transition по transform,
+     * чтобы браузер не пытался приподнять карточку после tap.
+     */
+    .serviceCard,
+    .aboutPanel,
+    .contactCard {
+        transition:
+                scale 620ms
+                cubic-bezier(
+                        0.2,
+                        0.88,
+                        0.18,
+                        1
+                ),
+                border-radius 620ms
+                cubic-bezier(
+                        0.2,
+                        0.88,
+                        0.18,
+                        1
+                ),
+                box-shadow 320ms ease !important;
+
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+@media (hover: none), (pointer: coarse) {
+    .serviceCard,
+    .serviceCard:hover,
+    .serviceCard:active,
+    .aboutPanel,
+    .aboutPanel:hover,
+    .aboutPanel:active,
+    .contactCard,
+    .contactCard:hover,
+    .contactCard:active {
+        transform: none !important;
+    }
+}
+
+
+/* ==========================================================================
+   CONTACT ACTIONS + BRAND ICONS
+   ========================================================================== */
+
+.contactActions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.8rem;
+
+    margin-top: 2.2rem;
+}
+
+.contactActions .actionButton {
+    margin-top: 0;
+}
+
+.mobileContactAction {
+    display: none;
+}
+
+/*
+ * Все брендовые SVG получают одинаковый визуальный размер,
+ * но сохраняют собственную форму.
+ */
+.contactIcon svg {
+    display: block;
+
+    width: 1.3rem;
+    height: 1.3rem;
+
+    flex: 0 0 auto;
+}
+.contactIcon svg[data-brand='mailru'] {
+    width: 1.65rem;
+    height: 1.65rem;
+}
+
+@media (max-width: 48rem) {
+    .contactActions {
+        display: grid;
+
+        width: 100%;
+
+        grid-template-columns:
+                minmax(
+                        0,
+                        1fr
+                );
+
+        gap: 0.75rem;
+
+        margin-top:
+                clamp(
+                        1.35rem,
+                        4.8vw,
+                        2rem
+                );
+    }
+
+    .contactActions .actionButton {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        box-sizing: border-box;
+    }
+
+    /*
+     * На мобильных доступны все три действия:
+     * Telegram, сохранение VCF и звонок.
+     */
+    .mobileContactAction {
+        display: inline-flex;
+    }
+}
+
+
+/* ==========================================================================
+   MAX PUBLIC SVG + STANDARD GMAIL ENVELOPE
+   ========================================================================== */
+
+/*
+ * Gmail снова использует стандартный lucide-react Mail.
+ * MAX загружается из public/max.svg.
+ */
+.contactIcon img {
+    display: block;
+
+    width: 1.3rem;
+    height: 1.3rem;
+
+    object-fit: contain;
+
+    opacity: 0.94;
+
+    pointer-events: none;
+    user-select: none;
+}
+
+/*
+ * Если исходный max.svg цветной, этот фильтр приводит его
+ * к монохромному белому виду сайта.
+ */
+:global(.dark) .contactIcon img {
+    filter:
+            grayscale(1)
+            brightness(0)
+            invert(1);
 }

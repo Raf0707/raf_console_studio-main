@@ -640,3 +640,199 @@
         animation: none !important;
     }
 }
+
+
+
+/* =========================================================
+   PROJECTS HERO TITLE — STABLE, NO ANIMATION
+   ========================================================= */
+
+.projects-main-title {
+    width: 100%;
+    max-width: none;
+
+    overflow: visible;
+
+    text-align: center;
+}
+
+.projects-title-line,
+.projects-title-secondary {
+    width: max-content;
+    max-width: none;
+
+    margin-inline: auto;
+
+    overflow: visible;
+
+    white-space: nowrap;
+}
+
+.projects-title-secondary {
+    display: block;
+
+    margin-top: 0.08em;
+    padding:
+            0
+            0.08em
+            0.16em;
+
+    color: rgba(255, 255, 255, 0.42);
+
+    font-size: 1em;
+    font-weight: 500;
+    line-height: 1.08;
+}
+
+/*
+ * На мобильных устройствах строки могут переноситься,
+ * поэтому текст полностью помещается в ширину экрана.
+ */
+@media (max-width: 767px) {
+    .projects-main-title {
+        max-width: 100%;
+
+        font-size:
+                clamp(
+                        2.8rem,
+                        14vw,
+                        4.7rem
+                ) !important;
+
+        line-height: 0.98 !important;
+        letter-spacing: -0.07em !important;
+
+        overflow: visible !important;
+    }
+
+    .projects-title-line,
+    .projects-title-secondary {
+        width: auto;
+        max-width: 100%;
+
+        white-space: normal;
+
+        overflow: visible;
+        overflow-wrap: normal;
+
+        text-wrap: balance;
+    }
+
+    .projects-title-secondary {
+        margin-top: 0.12em;
+        padding-bottom: 0.18em;
+
+        line-height: 1.08;
+    }
+}
+
+
+/*
+ * Световой блик для серой строки заголовка.
+ * Основной текст остаётся обычным и всегда видимым.
+ * Отдельная текстовая копия используется только как маска блика.
+ */
+.projects-title-secondary {
+    position: relative;
+    isolation: isolate;
+}
+
+.projects-title-secondary::after {
+    position: absolute;
+    z-index: 1;
+
+    inset: 0;
+
+    pointer-events: none;
+    content: attr(data-shine-text);
+
+    color: transparent;
+
+    background:
+            linear-gradient(
+                    100deg,
+                    transparent 0%,
+                    transparent 40%,
+                    rgba(255, 255, 255, 0.2) 45%,
+                    rgba(255, 255, 255, 0.92) 50%,
+                    rgba(255, 255, 255, 0.26) 55%,
+                    transparent 60%,
+                    transparent 100%
+            );
+
+    background-repeat: no-repeat;
+    background-size: 250% 100%;
+    background-position: 125% 0;
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+    animation:
+            projectsTitleTextShineAuto
+            2s
+            ease-in-out
+            infinite;
+
+    will-change: background-position;
+}
+
+.projects-title-secondary--forward::after {
+    animation:
+            projectsTitleTextShineForward
+            850ms
+            cubic-bezier(0.2, 0.72, 0.2, 1)
+            both;
+}
+
+.projects-title-secondary--reverse::after {
+    animation:
+            projectsTitleTextShineReverse
+            850ms
+            cubic-bezier(0.2, 0.72, 0.2, 1)
+            both;
+}
+
+@keyframes projectsTitleTextShineAuto {
+    0%,
+    14% {
+        background-position: 125% 0;
+    }
+
+    48% {
+        background-position: -25% 0;
+    }
+
+    48.01%,
+    100% {
+        background-position: 125% 0;
+    }
+}
+
+@keyframes projectsTitleTextShineForward {
+    from {
+        background-position: 125% 0;
+    }
+
+    to {
+        background-position: -25% 0;
+    }
+}
+
+@keyframes projectsTitleTextShineReverse {
+    from {
+        background-position: -25% 0;
+    }
+
+    to {
+        background-position: 125% 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .projects-title-secondary::after {
+        animation: none !important;
+        background-position: 125% 0;
+    }
+}

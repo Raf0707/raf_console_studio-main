@@ -70,9 +70,107 @@
     text-wrap: balance;
 }
 
-.title span {
+.titlePrimary {
     display: block;
+}
+
+.titleSecondary {
+    position: relative;
+
+    display: block;
+
+    width: fit-content;
+    max-width: 100%;
+
+    margin: 0.08em auto 0;
+    padding-bottom: 0.14em;
+
+    overflow: visible;
+
     color: rgba(255, 255, 255, 0.38);
+
+    font-size: 1em;
+    font-weight: 650;
+    line-height: 1.06;
+
+    isolation: isolate;
+}
+
+.titleSecondaryText {
+    position: relative;
+    z-index: 1;
+
+    display: block;
+
+    /*
+     * Основной текст всегда остаётся видимым.
+     */
+    color: rgba(255, 255, 255, 0.38);
+
+    -webkit-text-fill-color:
+            rgba(255, 255, 255, 0.38);
+}
+
+/*
+ * Отдельная копия текста используется только для светового блика.
+ * Благодаря background-clip блик показывается строго внутри букв.
+ */
+.titleSecondaryText::after {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+    content: attr(data-shine-text);
+
+    color: transparent;
+
+    background:
+            linear-gradient(
+                    100deg,
+                    transparent 0%,
+                    transparent 39%,
+                    rgba(255, 255, 255, 0.24) 45%,
+                    rgba(255, 255, 255, 0.96) 50%,
+                    rgba(255, 255, 255, 0.3) 55%,
+                    transparent 61%,
+                    transparent 100%
+            );
+
+    background-repeat: no-repeat;
+    background-size: 260% 100%;
+    background-position: 125% 0;
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+    animation:
+            contactsTitleTextShineAuto
+            2s
+            ease-in-out
+            infinite;
+
+    will-change: background-position;
+}
+
+.titleSecondaryForward
+.titleSecondaryText::after {
+    animation:
+            contactsTitleTextShineForward
+            850ms
+            cubic-bezier(0.2, 0.72, 0.2, 1)
+            both;
+}
+
+.titleSecondaryReverse
+.titleSecondaryText::after {
+    animation:
+            contactsTitleTextShineReverse
+            850ms
+            cubic-bezier(0.2, 0.72, 0.2, 1)
+            both;
 }
 
 .subtitle {
@@ -470,6 +568,43 @@
     transform: translateY(-0.2rem) scale(1.02);
 }
 
+
+@keyframes contactsTitleTextShineAuto {
+    0%,
+    12% {
+        background-position: 125% 0;
+    }
+
+    48% {
+        background-position: -25% 0;
+    }
+
+    48.01%,
+    100% {
+        background-position: 125% 0;
+    }
+}
+
+@keyframes contactsTitleTextShineForward {
+    from {
+        background-position: 125% 0;
+    }
+
+    to {
+        background-position: -25% 0;
+    }
+}
+
+@keyframes contactsTitleTextShineReverse {
+    from {
+        background-position: -25% 0;
+    }
+
+    to {
+        background-position: 125% 0;
+    }
+}
+
 @keyframes statusPulse {
     0% {
         opacity: 0.8;
@@ -516,6 +651,18 @@
         font-size: clamp(2.8rem, 14vw, 4.7rem);
     }
 
+    .titleSecondary {
+        max-width: 10ch;
+
+        margin-top: 0.12em;
+        padding-bottom: 0.16em;
+
+        font-size: 1em;
+        line-height: 1.08;
+
+        text-wrap: balance;
+    }
+
     .contactsGrid {
         grid-template-columns: minmax(0, 1fr);
     }
@@ -560,7 +707,8 @@
 
 @media (prefers-reduced-motion: reduce) {
     .statusDot::after,
-    .contactCard {
+    .contactCard,
+    .titleSecondaryText::after {
         animation: none;
     }
 
@@ -1424,6 +1572,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .titleSecondaryText::after {
+        animation: none !important;
+        background-position: 125% 0;
+    }
+
     .contactCard,
     .developerCard,
     .contactCard:hover,
@@ -1444,5 +1597,88 @@
     .developerCard::after,
     .developerButton::before {
         opacity: 0 !important;
+    }
+}
+
+/* ==========================================================================
+   BRAND ICONS — MAIL.RU / GMAIL / VK / MAX
+   ========================================================================== */
+
+/*
+ * Все брендовые иконки используют currentColor и остаются
+ * в монохромной стилистике страницы.
+ */
+.iconShell {
+    color: rgba(255, 255, 255, 0.83);
+}
+
+.iconShell svg,
+.iconShell img {
+    display: block;
+
+    width: 48%;
+    height: 48%;
+
+    object-fit: contain;
+}
+
+.iconShell svg {
+    fill: currentColor;
+}
+
+/*
+ * Mail.ru визуально тоньше остальных, поэтому увеличен отдельно.
+ */
+.iconShell svg[data-brand='mailru'] {
+    width: 62%;
+    height: 62%;
+
+    fill: none;
+}
+
+/*
+ * Gmail использует обычный конверт, как и раньше.
+ */
+.iconShell svg[data-brand='gmail'] {
+    width: 48%;
+    height: 48%;
+}
+
+/*
+ * VK — отдельный фирменный силуэт.
+ */
+.iconShell svg[data-brand='vk'] {
+    width: 54%;
+    height: 54%;
+}
+
+/*
+ * MAX берётся из public/max.svg.
+ */
+.iconShell img[data-brand='max'] {
+    width: 54%;
+    height: 54%;
+
+    opacity: 0.94;
+
+    filter:
+            grayscale(1)
+            brightness(0)
+            invert(1);
+
+    pointer-events: none;
+    user-select: none;
+}
+
+@media (max-width: 46rem) {
+    .iconShell svg[data-brand='mailru'] {
+        width: 64%;
+        height: 64%;
+    }
+
+    .iconShell svg[data-brand='vk'],
+    .iconShell img[data-brand='max'] {
+        width: 56%;
+        height: 56%;
     }
 }
