@@ -37,9 +37,10 @@ import { BORED_CONTENT } from './content';
 import { CrosshairRenderer, resolveCrosshairColor } from './CrosshairRenderer';
 import styles from './BoredGame.module.css';
 
-const MODE_IDS = ['grow', 'static', 'ninja', 'rush', 'chase', 'rain', 'chain', 'sniper'];
-const STORAGE_KEY = 'raf-console-bored-profile-v5';
+const MODE_IDS = ['grow', 'static', 'ninja', 'rush', 'chase', 'rain', 'chain', 'sniper', 'reaction'];
+const STORAGE_KEY = 'raf-console-bored-profile-v6';
 const LEGACY_STORAGE_KEYS = [
+  'raf-console-bored-profile-v5',
   'raf-console-bored-profile-v4',
   'raf-console-bored-profile-v3',
 ];
@@ -71,6 +72,7 @@ const MODE_ICONS = {
   rain: CloudRain,
   chain: Network,
   sniper: Crosshair,
+  reaction: TimerReset,
 };
 
 const ALL_LIGHTNING_SIDES = ['top', 'bottom', 'left', 'right'];
@@ -241,6 +243,15 @@ export const DEFAULT_GAME_SETTINGS = {
       trainingType: 'tracking',
       targetCount: 4,
       reactionRevealRadiusPercent: 18,
+    },
+    reaction: {
+      lifetimeMs: 1450,
+      spawnMinMs: 700,
+      spawnMaxMs: 2200,
+      resultDisplayMs: 1100,
+      blurPx: 16,
+      sizeMinRem: 2.8,
+      sizeMaxRem: 4.8,
     },
   },
 };
@@ -618,6 +629,7 @@ function getBubbleClass(mode) {
     rain: styles.bubbleRain,
     chain: styles.bubbleChain,
     sniper: styles.bubbleSniper,
+    reaction: styles.bubbleReaction,
   };
 
   return classMap[mode] ?? styles.bubbleStatic;
@@ -679,6 +691,17 @@ function createBubble(mode, settings, id) {
       lifetime: modeSettings.lifetimeMs * randomBetween(0.78, 1.2),
       rainDrift: `${randomBetween(-15, 15)}vw`,
       rainRotate: `${randomBetween(180, 520)}deg`,
+    };
+  }
+
+  if (mode === 'reaction') {
+    return {
+      ...common,
+      x: randomBetween(12, 88),
+      y: randomBetween(16, 84),
+      lifetime: modeSettings.lifetimeMs,
+      hueShift: 0,
+      rotation: 0,
     };
   }
 
@@ -775,7 +798,7 @@ function SelectSetting({ label, description, value, options, onChange, numeric =
   );
 }
 
-export default function BoredGame({ locale = 'ru', settings: externalSettings }) {
+export default function BoredGame({ locale = 'ru', settings: externalSettings = undefined }) {
   const content = BORED_CONTENT[locale] ?? BORED_CONTENT.ru;
   const initialSettings = useMemo(
       () => deepMergeSettings(externalSettings),
@@ -791,7 +814,14 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
   const bubbleIdRef = useRef(0);
   const effectIdRef = useRef(0);
   const spawnTimerRef = useRef(null);
+  const spawnDueAtRef = useRef(0);
+  const spawnWatchdogRef = useRef(null);
+  const lastSuccessfulSpawnAtRef = useRef(0);
   const bubbleTimersRef = useRef(new Map());
+  const reactionCycleTimerRef = useRef(null);
+  const reactionCycleTokenRef = useRef(0);
+  const reactionTargetShownAtRef = useRef(0);
+  const startReactionCycleRef = useRef(null);
   const lastLightningSignatureRef = useRef('');
   const feedbackTimerRef = useRef(null);
   const countdownTimerRef = useRef(null);
@@ -849,6 +879,8 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
   const [scopeInaccuracy, setScopeInaccuracy] = useState(0);
   const [scopeShotCycle, setScopeShotCycle] = useState(false);
   const [reactionTimes, setReactionTimes] = useState([]);
+  const [reactionStage, setReactionStage] = useState('idle');
+  const [reactionResult, setReactionResult] = useState(null);
   const [detectedReactionTargetId, setDetectedReactionTargetId] = useState(null);
   const [presetLibrary, setPresetLibrary] = useState(createEmptyPresetLibrary);
   const [presetType, setPresetType] = useState('all');
@@ -863,6 +895,8 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
   const isSniperReactionMode =
       selectedMode === 'sniper' &&
       gameSettings.modes.sniper.trainingType === 'reaction';
+  const isDedicatedReactionMode = selectedMode === 'reaction';
+  const isAnyReactionMode = isDedicatedReactionMode || isSniperReactionMode;
   const effectiveSensitivity =
       gameSettings.controls.mouseSensitivity *
       (effectiveScopeActive ? gameSettings.controls.zoomSensitivity : 1);
@@ -982,11 +1016,37 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
       return undefined;
     }
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const root = document.documentElement;
+    const body = document.body;
+    const fullscreenNode = fullscreenRef.current;
+    const previousOverflow = body.style.overflow;
+    const previousCursorStyles = [root, body, fullscreenNode]
+        .filter(Boolean)
+        .map((node) => ({
+          node,
+          value: node.style.getPropertyValue('cursor'),
+          priority: node.style.getPropertyPriority('cursor'),
+        }));
+
+    body.style.overflow = 'hidden';
+
+    // The site can hide the native cursor globally for decorative pointer
+    // effects. A fullscreen game must restore it for the HUD. The arena still
+    // hides it locally while the custom crosshair is active.
+    previousCursorStyles.forEach(({ node }) => {
+      node.style.setProperty('cursor', 'default', 'important');
+    });
 
     return () => {
-      document.body.style.overflow = previousOverflow;
+      body.style.overflow = previousOverflow;
+
+      previousCursorStyles.forEach(({ node, value, priority }) => {
+        if (value) {
+          node.style.setProperty('cursor', value, priority);
+        } else {
+          node.style.removeProperty('cursor');
+        }
+      });
     };
   }, [overlayOpen]);
 
@@ -1186,6 +1246,19 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
       window.clearTimeout(spawnTimerRef.current);
       spawnTimerRef.current = null;
     }
+    spawnDueAtRef.current = 0;
+
+    if (spawnWatchdogRef.current !== null) {
+      window.clearInterval(spawnWatchdogRef.current);
+      spawnWatchdogRef.current = null;
+    }
+
+    if (reactionCycleTimerRef.current !== null) {
+      window.clearTimeout(reactionCycleTimerRef.current);
+      reactionCycleTimerRef.current = null;
+    }
+    reactionCycleTokenRef.current += 1;
+    reactionTargetShownAtRef.current = 0;
 
     if (countdownTimerRef.current !== null) {
       window.clearTimeout(countdownTimerRef.current);
@@ -1497,6 +1570,15 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
           );
         }
 
+        if (runningRef.current && modeRef.current === 'reaction') {
+          setReactionResult({ kind: 'miss', milliseconds: null });
+          setReactionStage('result');
+          startReactionCycleRef.current?.(
+              settingsRef.current.modes.reaction.resultDisplayMs
+          );
+          return;
+        }
+
         if (
             runningRef.current &&
             modeRef.current === 'chase' &&
@@ -1517,19 +1599,19 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
         !runningRef.current ||
         (document.hidden && currentSettings.general.pauseWhenHidden)
     ) {
-      return;
+      return false;
     }
 
     const mode = modeRef.current;
     const maxActive =
-        mode === 'chase'
+        mode === 'chase' || mode === 'reaction'
             ? 1
             : mode === 'sniper'
                 ? currentSettings.modes.sniper.targetCount
                 : currentSettings.general.maxActive;
 
     if (bubblesRef.current.length >= maxActive) {
-      return;
+      return false;
     }
 
     bubbleIdRef.current += 1;
@@ -1541,11 +1623,13 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
     }, bubble.lifetime);
 
     bubbleTimersRef.current.set(bubble.id, missTimer);
+    lastSuccessfulSpawnAtRef.current = performance.now();
+    return true;
   }, [missBubble, syncBubbles]);
 
   const scheduleNextSpawn = useCallback(
       (customDelay) => {
-        if (!runningRef.current) {
+        if (!runningRef.current || modeRef.current === 'reaction') {
           return;
         }
 
@@ -1569,12 +1653,18 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
             (currentSettings.general.difficultyRamp / 100)
             : 1;
         const delay = Math.max(90, rawDelay / acceleration);
+        spawnDueAtRef.current = performance.now() + delay;
 
         spawnTimerRef.current = window.setTimeout(() => {
           spawnTimerRef.current = null;
+          spawnDueAtRef.current = 0;
           spawnBubble();
 
-          if (runningRef.current && modeRef.current !== 'chase') {
+          if (
+              runningRef.current &&
+              modeRef.current !== 'chase' &&
+              modeRef.current !== 'reaction'
+          ) {
             scheduleNextSpawn();
           }
         }, delay);
@@ -1583,6 +1673,74 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
   );
 
   scheduleNextSpawnRef.current = scheduleNextSpawn;
+
+  const revealReactionTarget = useCallback(() => {
+    if (!runningRef.current || modeRef.current !== 'reaction') {
+      return;
+    }
+
+    syncBubbles([]);
+    setReactionResult(null);
+    setReactionStage('target');
+    reactionTargetShownAtRef.current = performance.now();
+    spawnBubble();
+  }, [spawnBubble, syncBubbles]);
+
+  const startReactionCycle = useCallback(
+      (resultDelayMs = 0) => {
+        if (!runningRef.current || modeRef.current !== 'reaction') {
+          return;
+        }
+
+        if (reactionCycleTimerRef.current !== null) {
+          window.clearTimeout(reactionCycleTimerRef.current);
+          reactionCycleTimerRef.current = null;
+        }
+
+        reactionCycleTokenRef.current += 1;
+        const token = reactionCycleTokenRef.current;
+        reactionTargetShownAtRef.current = 0;
+        syncBubbles([]);
+
+        const beginWaiting = () => {
+          if (
+              token !== reactionCycleTokenRef.current ||
+              !runningRef.current ||
+              modeRef.current !== 'reaction'
+          ) {
+            return;
+          }
+
+          setReactionStage('waiting');
+          setReactionResult(null);
+          const modeSettings = settingsRef.current.modes.reaction;
+          const waitMs = randomBetween(
+              modeSettings.spawnMinMs,
+              modeSettings.spawnMaxMs
+          );
+
+          reactionCycleTimerRef.current = window.setTimeout(() => {
+            reactionCycleTimerRef.current = null;
+            if (token === reactionCycleTokenRef.current) {
+              revealReactionTarget();
+            }
+          }, Math.max(120, waitMs));
+        };
+
+        if (resultDelayMs > 0) {
+          setReactionStage('result');
+          reactionCycleTimerRef.current = window.setTimeout(() => {
+            reactionCycleTimerRef.current = null;
+            beginWaiting();
+          }, resultDelayMs);
+        } else {
+          beginWaiting();
+        }
+      },
+      [revealReactionTarget, syncBubbles]
+  );
+
+  startReactionCycleRef.current = startReactionCycle;
 
   const getAimClientPoint = useCallback(() => {
     const arena = arenaRef.current;
@@ -1760,6 +1918,15 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
         );
         setHits((current) => current + poppedIds.length);
 
+        if (bubble.mode === 'reaction') {
+          const shownAt = reactionTargetShownAtRef.current || bubble.createdAt;
+          const reactionTime = Math.max(0, performance.now() - shownAt);
+          reactionTargetShownAtRef.current = 0;
+          setReactionTimes((current) => [reactionTime, ...current].slice(0, 10));
+          setReactionResult({ kind: 'hit', milliseconds: reactionTime });
+          setReactionStage('result');
+        }
+
         if (
             bubble.mode === 'sniper' &&
             currentSettings.modes.sniper.trainingType === 'reaction'
@@ -1783,6 +1950,12 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
         if (interaction === 'tap') {
           playShortSound();
           triggerHaptics();
+        }
+
+        if (runningRef.current && modeRef.current === 'reaction') {
+          startReactionCycleRef.current?.(
+              currentSettings.modes.reaction.resultDisplayMs
+          );
         }
 
         if (
@@ -1922,7 +2095,7 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
         !runningRef.current ||
         !controls.longPressEnabled ||
         scopeActiveRef.current ||
-        modeRef.current === 'sniper'
+        (modeRef.current === 'sniper' || modeRef.current === 'reaction')
     ) {
       return;
     }
@@ -1946,6 +2119,10 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
   }, [emitLongDischarge, startLongSound]);
 
   const toggleScope = useCallback(() => {
+    if (modeRef.current === 'reaction') {
+      return;
+    }
+
     if (!settingsRef.current.controls.rightClickScopeEnabled) {
       return;
     }
@@ -1966,7 +2143,9 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
 
         if (event.button === 2) {
           event.preventDefault();
-          toggleScope();
+          if (modeRef.current !== 'reaction') {
+            toggleScope();
+          }
           return;
         }
 
@@ -1981,7 +2160,11 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
           setAimFromClientPoint(event.clientX, event.clientY);
         }
 
-        if (scopeActiveRef.current || modeRef.current === 'sniper') {
+        if (
+            scopeActiveRef.current ||
+            modeRef.current === 'sniper' ||
+            modeRef.current === 'reaction'
+        ) {
           fireSingleShot();
           return;
         }
@@ -2161,6 +2344,8 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
         setEffects([]);
         setCountdownValue(0);
         setDetectedReactionTargetId(null);
+        setReactionStage('idle');
+        setReactionResult(null);
         scopeInaccuracyRef.current = 0;
         setScopeInaccuracy(0);
         setPhase(nextPhase);
@@ -2191,6 +2376,9 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
     if (modeRef.current === 'sniper') {
       setScopeActive(true);
       scopeActiveRef.current = true;
+    } else if (modeRef.current === 'reaction') {
+      setScopeActive(false);
+      scopeActiveRef.current = false;
     }
 
     setPhase('running');
@@ -2207,7 +2395,58 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
       }, currentSettings.general.sessionDurationSeconds * 1000);
     }
 
+    spawnWatchdogRef.current = window.setInterval(() => {
+      if (
+          !runningRef.current ||
+          (document.hidden && settingsRef.current.general.pauseWhenHidden)
+      ) {
+        return;
+      }
+
+      const now = performance.now();
+      const mode = modeRef.current;
+
+      if (mode === 'reaction') {
+        if (
+            bubblesRef.current.length === 0 &&
+            reactionCycleTimerRef.current === null
+        ) {
+          startReactionCycleRef.current?.(0);
+        }
+        return;
+      }
+
+      const modeSettings = settingsRef.current.modes[mode];
+      const maximumExpectedGap = Math.max(
+          900,
+          Number(modeSettings?.spawnMaxMs ?? modeSettings?.nextDelayMs ?? 500) * 2
+      );
+      const timerIsOverdue =
+          spawnDueAtRef.current > 0 && now > spawnDueAtRef.current + 500;
+      const arenaHasStalled =
+          bubblesRef.current.length === 0 &&
+          now - lastSuccessfulSpawnAtRef.current > maximumExpectedGap;
+
+      if (mode === 'chase') {
+        if (bubblesRef.current.length === 0 && spawnTimerRef.current === null) {
+          scheduleNextSpawn(80);
+        }
+        return;
+      }
+
+      if (timerIsOverdue || arenaHasStalled || spawnTimerRef.current === null) {
+        scheduleNextSpawn(0);
+      }
+    }, 250);
+
     window.requestAnimationFrame(() => {
+      lastSuccessfulSpawnAtRef.current = performance.now();
+
+      if (modeRef.current === 'reaction') {
+        startReactionCycleRef.current?.(0);
+        return;
+      }
+
       spawnBubble();
 
       if (modeRef.current !== 'chase') {
@@ -2224,6 +2463,8 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
     setFeedback(null);
     setElapsedSeconds(0);
     setReactionTimes([]);
+    setReactionStage('idle');
+    setReactionResult(null);
     reactionSeenAtRef.current.clear();
     setDetectedReactionTargetId(null);
     modeRef.current = selectedMode;
@@ -2257,7 +2498,15 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
     tick(countdownSeconds);
   }, [beginRunning, ensureAudioReady, selectedMode, stopSession]);
 
-  const openGame = useCallback(() => {
+  const openGame = useCallback((modeId = null) => {
+    const nextMode = MODE_IDS.includes(modeId) ? modeId : modeRef.current;
+
+    // A mode card is now both a selector and the direct entrance to its arena.
+    // Keep the ref in sync immediately so the first Space press always starts
+    // the mode the user has just clicked, even before React finishes rendering.
+    modeRef.current = nextMode;
+    setSelectedMode(nextMode);
+
     stopSession('ready');
     setScore(0);
     setHits(0);
@@ -2359,10 +2608,12 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
       }
 
       if (event.key === 'Escape') {
+        event.preventDefault();
+
         if (document.pointerLockElement && document.exitPointerLock) {
           document.exitPointerLock();
-          return;
         }
+
         closeGame();
       }
     };
@@ -2385,10 +2636,19 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
           window.clearTimeout(spawnTimerRef.current);
           spawnTimerRef.current = null;
         }
+        spawnDueAtRef.current = 0;
+
+        if (reactionCycleTimerRef.current !== null) {
+          window.clearTimeout(reactionCycleTimerRef.current);
+          reactionCycleTimerRef.current = null;
+        }
+        reactionCycleTokenRef.current += 1;
 
         bubbleTimersRef.current.forEach((timer) => window.clearTimeout(timer));
         bubbleTimersRef.current.clear();
         syncBubbles([]);
+      } else if (modeRef.current === 'reaction') {
+        startReactionCycleRef.current?.(0);
       } else {
         scheduleNextSpawnRef.current?.(220);
       }
@@ -2826,6 +3086,54 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
             onChange={(value) => updateMode('nextDelayMs', value)}
         />
       </>
+  ) : selectedMode === 'reaction' ? (
+      <>
+        <RangeSetting
+            {...content.settings.reactionWaitMinMs}
+            value={Math.round(selectedModeSettings.spawnMinMs)}
+            min={200}
+            max={3000}
+            step={50}
+            unit={content.millisecondsShort}
+            onChange={(value) => updateMode('spawnMinMs', value)}
+        />
+        <RangeSetting
+            {...content.settings.reactionWaitMaxMs}
+            value={Math.round(selectedModeSettings.spawnMaxMs)}
+            min={300}
+            max={5000}
+            step={50}
+            unit={content.millisecondsShort}
+            onChange={(value) => updateMode('spawnMaxMs', value)}
+        />
+        <RangeSetting
+            {...content.settings.reactionLifetimeMs}
+            value={Math.round(selectedModeSettings.lifetimeMs)}
+            min={350}
+            max={3000}
+            step={50}
+            unit={content.millisecondsShort}
+            onChange={(value) => updateMode('lifetimeMs', value)}
+        />
+        <RangeSetting
+            {...content.settings.reactionResultDisplayMs}
+            value={Math.round(selectedModeSettings.resultDisplayMs)}
+            min={300}
+            max={3000}
+            step={50}
+            unit={content.millisecondsShort}
+            onChange={(value) => updateMode('resultDisplayMs', value)}
+        />
+        <RangeSetting
+            {...content.settings.reactionBlurPx}
+            value={Math.round(selectedModeSettings.blurPx)}
+            min={4}
+            max={32}
+            step={1}
+            unit="px"
+            onChange={(value) => updateMode('blurPx', value)}
+        />
+      </>
   ) : (
       <>
         <RangeSetting
@@ -2911,7 +3219,7 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
               <button
                   type="button"
                   className={`${styles.mainButton} ${styles.playButton}`}
-                  onClick={openGame}
+                  onClick={() => openGame()}
               >
                 <Maximize2 className={styles.mainButtonIcon} />
                 <span>{content.play}</span>
@@ -2931,7 +3239,7 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
                         className={`${styles.modeCard} ${
                             active ? styles.modeCardActive : ''
                         }`}
-                        onClick={() => setSelectedMode(modeId)}
+                        onClick={() => openGame(modeId)}
                         title={overlayOpen ? content.modeLocked : undefined}
                     >
                   <span className={styles.modeCardTop}>
@@ -4008,20 +4316,26 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
                   </button>
               )}
 
-              <button
-                  type="button"
-                  className={`${styles.mainButton} ${
-                      isSessionActive ? styles.stopButton : styles.startButton
-                  }`}
-                  onClick={isSessionActive ? () => stopSession('finished') : startSession}
-              >
-                {isSessionActive ? (
-                    <Square className={styles.mainButtonIcon} />
-                ) : (
-                    <Play className={styles.mainButtonIcon} />
-                )}
-                <span>{isSessionActive ? content.stop : content.start}</span>
-              </button>
+              <div className={styles.hudPrimaryControl}>
+                <button
+                    type="button"
+                    className={`${styles.mainButton} ${
+                        isSessionActive ? styles.stopButton : styles.startButton
+                    }`}
+                    onClick={isSessionActive ? () => stopSession('finished') : startSession}
+                >
+                  {isSessionActive ? (
+                      <Square className={styles.mainButtonIcon} />
+                  ) : (
+                      <Play className={styles.mainButtonIcon} />
+                  )}
+                  <span>{isSessionActive ? content.stop : content.start}</span>
+                </button>
+
+                <span className={styles.hudKeyboardHint}>
+                  {content.fullscreenKeyboardHint}
+                </span>
+              </div>
 
               <button
                   type="button"
@@ -4121,7 +4435,9 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
                 <div className={styles.runningHint}>
                   {selectedMode === 'sniper'
                       ? content.fullscreenRunningSniper
-                      : content.fullscreenRunning}
+                      : selectedMode === 'reaction'
+                          ? content.fullscreenRunningReaction
+                          : content.fullscreenRunning}
                 </div>
             )}
 
@@ -4184,7 +4500,7 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
                   <span className={styles.bubbleHighlight} />
                   <span className={styles.bubbleCaustic} />
                   {bubble.mode === 'grow' && <span className={styles.bubbleCore} />}
-                  {bubble.mode === 'sniper' && (
+                  {(bubble.mode === 'sniper' || bubble.mode === 'reaction') && (
                       <span className={styles.sniperTargetCore} />
                   )}
                 </span>
@@ -4320,7 +4636,45 @@ export default function BoredGame({ locale = 'ru', settings: externalSettings })
                 </div>
             )}
 
-            {phase === 'running' && isSniperReactionMode && (
+            {phase === 'running' &&
+                selectedMode === 'reaction' &&
+                reactionStage !== 'target' && (
+                    <div
+                        className={styles.reactionBlurLayer}
+                        style={{
+                          '--reaction-blur': `${gameSettings.modes.reaction.blurPx}px`,
+                        }}
+                    >
+                      <div className={styles.reactionBlurContent}>
+                        {reactionStage === 'result' ? (
+                            <>
+                              <span>{content.reactionResultTitle}</span>
+                              <strong>
+                                {reactionResult?.kind === 'hit'
+                                    ? formatReactionTime(
+                                        reactionResult.milliseconds,
+                                        locale
+                                    )
+                                    : content.reactionMissedTitle}
+                              </strong>
+                              <p>
+                                {reactionResult?.kind === 'hit'
+                                    ? content.reactionResultText
+                                    : content.reactionMissedText}
+                              </p>
+                            </>
+                        ) : (
+                            <>
+                              <span>{content.reactionWaitTitle}</span>
+                              <strong>{content.reactionWaitSignal}</strong>
+                              <p>{content.reactionWaitText}</p>
+                            </>
+                        )}
+                      </div>
+                    </div>
+                )}
+
+            {phase === 'running' && isAnyReactionMode && (
                 <div className={styles.reactionTimingPanel}>
                   <div>
                     <span>{content.reactionLast}</span>

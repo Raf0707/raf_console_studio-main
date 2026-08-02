@@ -911,6 +911,29 @@
   gap: 0.55rem;
 }
 
+.hudPrimaryControl {
+  display: flex;
+  min-width: min(22rem, 31vw);
+  flex: 0 1 auto;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.3rem;
+}
+
+.hudKeyboardHint {
+  display: block;
+  padding-inline: 0.25rem;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: clamp(0.52rem, 0.72vw, 0.62rem);
+  font-weight: 680;
+  line-height: 1.25;
+  letter-spacing: 0.015em;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
 .closeButton {
   display: inline-flex;
   width: 3.15rem;
@@ -1762,6 +1785,16 @@
     min-height: 2.65rem;
     padding: 0.48rem 0.66rem;
     font-size: 0.72rem;
+  }
+
+  .hudPrimaryControl {
+    min-width: 7.8rem;
+    max-width: 10.5rem;
+  }
+
+  .hudKeyboardHint {
+    font-size: 0.48rem;
+    white-space: normal;
   }
 
   .closeButton {
@@ -3045,11 +3078,26 @@
  * The HUD always keeps the native browser cursor so Start, Stop, Capture and
  * Close remain clickable before and during a session.
  */
+.fullscreenGame,
 .gameHud,
 .hudStats,
 .hudActions,
+.hudPrimaryControl,
 .hudCell {
   cursor: default !important;
+}
+
+.gameHud {
+  z-index: 2147483646;
+  isolation: isolate;
+  pointer-events: auto !important;
+}
+
+.hudActions,
+.hudPrimaryControl {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto !important;
 }
 
 .gameHud button,
@@ -3057,7 +3105,10 @@
 .captureButton,
 .mainButton,
 .closeButton {
+  position: relative;
+  z-index: 3;
   cursor: pointer !important;
+  pointer-events: auto !important;
 }
 
 .fullscreenArena {
@@ -3416,4 +3467,188 @@
   font-size: 0.84em;
   font-weight: 500;
   line-height: 1;
+}
+
+/* ========================================================================== */
+/*        RAF CONSOLE — UNIFIED STATIC GLASS + CS2 REACTION TRAINER           */
+/* ========================================================================== */
+
+.page {
+  background:
+          linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+          linear-gradient(160deg, #0b0c10 0%, #08090d 48%, #06070a 100%) !important;
+  background-size:
+          clamp(3.5rem, 7vw, 6rem) clamp(3.5rem, 7vw, 6rem),
+          clamp(3.5rem, 7vw, 6rem) clamp(3.5rem, 7vw, 6rem),
+          auto !important;
+}
+
+.page::before {
+  opacity: 0.09 !important;
+  mix-blend-mode: normal !important;
+}
+
+.backgroundGrid {
+  opacity: 0 !important;
+}
+
+.backgroundGlowOne,
+.backgroundGlowTwo {
+  display: none !important;
+  animation: none !important;
+}
+
+.controlPanel,
+.settingsSection,
+.settingsCard,
+.modeCard,
+.presetVault,
+.presetItem,
+.crosshairPreviewStage,
+.reactionTimingPanel,
+.hudCell,
+.presetBar,
+.presetNameField,
+.presetComposer .selectControl {
+  border-color: rgba(255, 255, 255, 0.11) !important;
+  background: rgba(255, 255, 255, 0.025) !important;
+  box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.12),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.018),
+          0 1.4rem 3.8rem -2.7rem rgba(0, 0, 0, 0.82) !important;
+  backdrop-filter: blur(0.72rem) saturate(108%) !important;
+  -webkit-backdrop-filter: blur(0.72rem) saturate(108%) !important;
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+
+.controlPanel::before,
+.settingsSection::before,
+.settingsCard::before,
+.controlPanel::after,
+.settingsSection::after,
+.settingsCard::after,
+.modeCard::before,
+.modeCard::after,
+.presetVault::before,
+.presetItem::before,
+.crosshairPreviewStage::before,
+.reactionTimingPanel::before,
+.hudCell::before,
+.presetBar::before,
+.presetNameField::before,
+.presetComposer .selectControl::before {
+  display: none !important;
+  content: none !important;
+  animation: none !important;
+}
+
+.modeCard,
+.modeCardActive,
+.modeCard:hover,
+.settingsCard:hover,
+.presetItem:hover,
+.crosshairPreviewStage:hover,
+.hudCell:hover {
+  transform: none !important;
+  transition: none !important;
+}
+
+.modeCard {
+  background: rgba(255, 255, 255, 0.021) !important;
+}
+
+.modeCardActive {
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  background: rgba(255, 255, 255, 0.075) !important;
+  box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.17),
+          0 1.2rem 3rem -2.25rem rgba(0, 0, 0, 0.84) !important;
+}
+
+.arenaHalo {
+  animation: none !important;
+  opacity: 0.16 !important;
+}
+
+.bubbleReaction {
+  opacity: 1 !important;
+  animation: none !important;
+  transform: translate(-50%, -50%) !important;
+  filter: none !important;
+}
+
+.bubbleReaction .bubbleVisual {
+  border-width: 2px;
+  background: rgba(255, 255, 255, 0.035);
+  box-shadow:
+          inset 0 0 0.75rem rgba(255, 255, 255, 0.26),
+          inset -0.8rem -0.8rem 1.6rem rgba(0, 0, 0, 0.28),
+          0 0 0 0.22rem rgba(255, 255, 255, 0.07),
+          0 0 1.4rem rgba(255, 255, 255, 0.22);
+}
+
+.reactionBlurLayer {
+  position: absolute;
+  z-index: 80;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(5, 6, 9, 0.28);
+  backdrop-filter: blur(var(--reaction-blur, 16px)) saturate(82%);
+  -webkit-backdrop-filter: blur(var(--reaction-blur, 16px)) saturate(82%);
+  pointer-events: none;
+  animation: none !important;
+  transition: none !important;
+}
+
+.reactionBlurContent {
+  width: min(34rem, calc(100% - 1rem));
+  padding: clamp(1.25rem, 4vw, 2.2rem);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: clamp(1.4rem, 4vw, 2.2rem);
+  text-align: center;
+  background: rgba(8, 9, 13, 0.3);
+  box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.12),
+          0 1.6rem 4.5rem rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(0.75rem);
+  -webkit-backdrop-filter: blur(0.75rem);
+}
+
+.reactionBlurContent > span {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 0.68rem;
+  font-weight: 720;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.reactionBlurContent > strong {
+  display: block;
+  color: rgba(255, 255, 255, 0.96);
+  font-size: clamp(2rem, 8vw, 5rem);
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.reactionBlurContent > p {
+  width: min(29rem, 100%);
+  margin: 0.9rem auto 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: clamp(0.86rem, 2vw, 1rem);
+  line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+  .reactionBlurContent {
+    border-radius: 1.35rem;
+  }
 }

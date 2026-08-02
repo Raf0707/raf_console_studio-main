@@ -7,7 +7,7 @@ export const BORED_CONTENT = {
     titleSecondary:
         'Снимай напряжение',
     subtitle:
-      'Восемь режимов, полноэкранная арена, короткие и непрерывные электрические разряды, а также AIM-настройки под мышь и прицел.',
+      'Девять режимов, полноэкранная арена, тренировка реакции для CS2, короткие и непрерывные электрические разряды, а также AIM-настройки под мышь и прицел.',
     scoring: 'Режим игры',
     scoreMode: 'На очки',
     relaxMode: 'Для удовольствия',
@@ -15,6 +15,7 @@ export const BORED_CONTENT = {
     start: 'Начать',
     stop: 'Стоп',
     close: 'Закрыть игру',
+    fullscreenKeyboardHint: 'Пробел — начать или остановить игру · Esc — выйти из игры',
     running: 'Игра идёт',
     ready: 'Готово к запуску',
     finished: 'Сессия остановлена',
@@ -26,7 +27,7 @@ export const BORED_CONTENT = {
     currentMode: 'Режим',
     fullscreenReadyTitle: 'Всё готово',
     fullscreenReadyText:
-      'Нажмите «Начать». Обычный клик создаёт короткий удар, а удержание с движением запускает непрерывный разряд.',
+      'Нажмите пробел, чтобы начать игру. Обычный клик создаёт короткий удар, а удержание с движением запускает непрерывный разряд.',
     fullscreenFinishedTitle: 'Сессия завершена',
     fullscreenFinishedText:
       'Можно сразу начать ещё раз с теми же настройками или закрыть игру и изменить параметры.',
@@ -34,6 +35,8 @@ export const BORED_CONTENT = {
       'ЛКМ — выстрел или разряд · ПКМ — прицел · Пробел — старт/стоп · Esc — освободить мышь',
     fullscreenRunningSniper:
       'ЛКМ — одиночный выстрел · ПКМ — оптика · удержание отключено · резкий рывок вниз компенсирует неточность',
+    fullscreenRunningReaction:
+      'Наведите прицел и нажмите ЛКМ сразу после исчезновения блюра · Пробел — старт/стоп · Esc — освободить мышь',
     settingsTitle: 'Настройки игры',
     settingsSubtitle:
       'Все параметры сохраняются в браузере и применяются к следующему запуску.',
@@ -64,6 +67,13 @@ export const BORED_CONTENT = {
     presetImportedName: 'Импортированный пресет',
     reactionLast: 'Последняя реакция',
     reactionBest: 'Лучшая реакция',
+    reactionWaitTitle: 'Приготовьтесь',
+    reactionWaitSignal: 'Ждите цель',
+    reactionWaitText: 'Блюр исчезнет без предупреждения. Сразу наведитесь на шарик и лопните его.',
+    reactionResultTitle: 'Время реакции',
+    reactionResultText: 'Результат сохранён. Следующая цель появится после новой случайной паузы.',
+    reactionMissedTitle: 'Цель пропущена',
+    reactionMissedText: 'Шарик исчез раньше попадания. Следующая попытка начнётся автоматически.',
     presets: 'Пресеты',
     presetCalm: 'Спокойно',
     presetNormal: 'Нормально',
@@ -316,6 +326,26 @@ export const BORED_CONTENT = {
         label: 'Зона обнаружения',
         description: 'Размер области внутри оптики, в которой становится видна цель.',
       },
+      reactionWaitMinMs: {
+        label: 'Минимальная пауза до цели',
+        description: 'Самая короткая случайная задержка перед исчезновением блюра.',
+      },
+      reactionWaitMaxMs: {
+        label: 'Максимальная пауза до цели',
+        description: 'Самая длинная случайная задержка перед появлением шарика.',
+      },
+      reactionLifetimeMs: {
+        label: 'Время на попадание',
+        description: 'Сколько миллисекунд шарик остаётся на экране.',
+      },
+      reactionResultDisplayMs: {
+        label: 'Показ результата',
+        description: 'Как долго отображается время реакции перед следующей попыткой.',
+      },
+      reactionBlurPx: {
+        label: 'Сила блюра',
+        description: 'Интенсивность размытия во время ожидания и показа результата.',
+      },
       crosshairStyle: {
         label: 'Стиль прицела CS2',
         description: 'Статичное или динамическое поведение линий при движении и отдаче.',
@@ -502,6 +532,13 @@ export const BORED_CONTENT = {
         description:
           'Обычная тренировка показывает все цели, а тренировка реакции открывает их только внутри оптики и измеряет время попадания.',
       },
+      reaction: {
+        number: '09',
+        title: 'Реакция CS2',
+        short: 'Блюр, цель, выстрел',
+        description:
+          'Экран размывается, затем блюр резко исчезает и в случайной точке появляется шарик. Попадание измеряется в миллисекундах.',
+      },
     },
   },
   en: {
@@ -512,7 +549,7 @@ export const BORED_CONTENT = {
     titleSecondary:
         'Clear your head',
     subtitle:
-      'Eight modes, a fullscreen arena, short and continuous electrical discharges, plus mouse and scope AIM controls.',
+      'Nine modes, a fullscreen arena, a CS2 reaction trainer, short and continuous electrical discharges, plus mouse and scope AIM controls.',
     scoring: 'Play style',
     scoreMode: 'Score mode',
     relaxMode: 'Just for fun',
@@ -520,6 +557,7 @@ export const BORED_CONTENT = {
     start: 'Start',
     stop: 'Stop',
     close: 'Close game',
+    fullscreenKeyboardHint: 'Space — start or stop the game · Esc — exit the game',
     running: 'Game running',
     ready: 'Ready to start',
     finished: 'Session stopped',
@@ -531,7 +569,7 @@ export const BORED_CONTENT = {
     currentMode: 'Mode',
     fullscreenReadyTitle: 'Everything is ready',
     fullscreenReadyText:
-      'Press Start. A normal click plays a short impact; holding and moving starts the continuous discharge.',
+      'Press Space to start the game. A normal click plays a short impact; holding and moving starts the continuous discharge.',
     fullscreenFinishedTitle: 'Session complete',
     fullscreenFinishedText:
       'Start again with the same configuration or close the arena and adjust the settings.',
@@ -539,6 +577,8 @@ export const BORED_CONTENT = {
       'LMB — shot/discharge · RMB — scope · Space — start/stop · Esc — release mouse',
     fullscreenRunningSniper:
       'LMB — single shot · RMB — scope · holding is disabled · a sharp downward flick compensates inaccuracy',
+    fullscreenRunningReaction:
+      'Aim and press LMB as soon as the blur disappears · Space — start/stop · Esc — release mouse',
     settingsTitle: 'Game settings',
     settingsSubtitle:
       'Every option is saved in your browser and applied to the next run.',
@@ -569,6 +609,13 @@ export const BORED_CONTENT = {
     presetImportedName: 'Imported preset',
     reactionLast: 'Last reaction',
     reactionBest: 'Best reaction',
+    reactionWaitTitle: 'Get ready',
+    reactionWaitSignal: 'Wait for the target',
+    reactionWaitText: 'The blur will disappear without warning. Aim at the bubble and pop it immediately.',
+    reactionResultTitle: 'Reaction time',
+    reactionResultText: 'The result is saved. The next target will appear after a new random delay.',
+    reactionMissedTitle: 'Target missed',
+    reactionMissedText: 'The bubble expired before the hit. The next attempt starts automatically.',
     presets: 'Presets',
     presetCalm: 'Calm',
     presetNormal: 'Normal',
@@ -680,6 +727,11 @@ export const BORED_CONTENT = {
       sniperTrainingType: { label: 'Sniper training variant', description: 'Show all targets or reveal them only inside the scope.' },
       sniperTargetCount: { label: 'Simultaneous targets', description: 'Number of active targets in sniper training.' },
       reactionRevealRadiusPercent: { label: 'Detection area', description: 'Size of the area inside the scope that reveals a target.' },
+      reactionWaitMinMs: { label: 'Minimum target delay', description: 'Shortest random delay before the blur disappears.' },
+      reactionWaitMaxMs: { label: 'Maximum target delay', description: 'Longest random delay before the bubble appears.' },
+      reactionLifetimeMs: { label: 'Time to hit', description: 'How long the reaction target remains visible.' },
+      reactionResultDisplayMs: { label: 'Result display time', description: 'How long the reaction time stays visible before the next attempt.' },
+      reactionBlurPx: { label: 'Blur strength', description: 'Blur intensity while waiting and showing the result.' },
       crosshairStyle: { label: 'CS2 crosshair style', description: 'Static or dynamic line behaviour during movement and recoil.' },
       followRecoil: { label: 'Follow recoil', description: 'Moves the crosshair with recoil. Available only when recoil is enabled.' },
       centerDot: { label: 'Center dot', description: 'Shows a dot in the center of the standard crosshair.' },
@@ -722,6 +774,7 @@ export const BORED_CONTENT = {
       rain: { number: '06', title: 'Downpour', short: 'Fall from above', description: 'A stream of bubbles falls from above at different angles and speeds.' },
       chain: { number: '07', title: 'Chain reaction', short: 'One hit, many pops', description: 'A hit detonates nearby targets and builds a chain bonus.' },
       sniper: { number: '08', title: 'Sniper', short: 'Tracking and reaction', description: 'Standard training shows every target, while reaction training reveals targets only inside the scope and measures reaction time.' },
+      reaction: { number: '09', title: 'CS2 reaction', short: 'Blur, target, shot', description: 'The arena blurs, then clears instantly and shows one bubble at a random position. Every hit is measured in milliseconds.' },
     },
   },
 };
