@@ -1,0 +1,40 @@
+.homeRoot {
+    contain: style;
+}
+
+.deferredSection {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 58rem;
+}
+
+@media (max-width: 48rem), (hover: none), (pointer: coarse) {
+    .homeRoot :global([data-raf-home-card='true']) {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+
+        animation: none !important;
+        transform: none !important;
+        translate: none !important;
+        scale: 1 !important;
+        will-change: auto !important;
+    }
+
+    .homeRoot :global([data-raf-home-card='true'])::before,
+    .homeRoot :global([data-raf-home-card='true'])::after,
+    .homeRoot :global([data-raf-home-card='true'] [class*='cardReflection']) {
+        animation: none !important;
+        transition: none !important;
+        filter: none !important;
+        mix-blend-mode: normal !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .homeRoot :global([data-raf-home-card='true']),
+    .homeRoot :global([data-raf-home-card='true'])::before,
+    .homeRoot :global([data-raf-home-card='true'])::after {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+    }
+}

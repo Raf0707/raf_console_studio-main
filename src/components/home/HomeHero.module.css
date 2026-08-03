@@ -1,0 +1,740 @@
+.hero {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    min-height: min(100svh, 64rem);
+    align-items: center;
+
+    padding:
+        clamp(7.5rem, 13vh, 10rem)
+        clamp(1rem, 4vw, 3rem)
+        clamp(3rem, 7vh, 5rem);
+
+    color: #f7f7f7;
+    background: transparent;
+}
+
+.heroInner {
+    width: min(100%, 82rem);
+    margin: 0 auto;
+}
+
+.eyebrow {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.5);
+    font-size: clamp(0.64rem, 0.72vw, 0.78rem);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    line-height: 1.5;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.title {
+    margin: clamp(0.9rem, 2vh, 1.35rem) 0 0;
+
+    color: #f7f7f7;
+    font-size: clamp(1.18rem, 4.15vw, 4rem);
+    font-weight: 610;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    text-shadow: 0 1.2rem 4rem rgba(0, 0, 0, 0.42);
+}
+
+.cards {
+    display: grid;
+    grid-template-columns:
+        minmax(15rem, 0.86fr)
+        minmax(24rem, 1.28fr)
+        minmax(19rem, 1fr);
+    gap: clamp(0.9rem, 1.5vw, 1.25rem);
+
+    margin-top: clamp(2rem, 5vh, 3.6rem);
+}
+
+.card {
+    position: relative;
+
+    min-width: 0;
+    min-height: clamp(22rem, 31vw, 27rem);
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: clamp(1.6rem, 2.4vw, 2.35rem);
+
+    color: #f7f7f7;
+    text-decoration: none;
+
+    background:
+        radial-gradient(
+            30rem 13rem at 8% -16%,
+            rgba(255, 255, 255, 0.12),
+            transparent 68%
+        ),
+        radial-gradient(
+            25rem 14rem at 110% 115%,
+            rgba(255, 255, 255, 0.05),
+            transparent 70%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.055),
+            rgba(255, 255, 255, 0.014) 54%,
+            rgba(255, 255, 255, 0.025)
+        );
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.34),
+        0 1.6rem 4rem -2.2rem rgba(0, 0, 0, 0.78);
+
+    contain: layout paint;
+
+    transition:
+        transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1),
+        border-color 280ms ease,
+        box-shadow 360ms ease;
+}
+
+.card::before {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+
+    pointer-events: none;
+    content: '';
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            122deg,
+            rgba(255, 255, 255, 0.12),
+            transparent 22%,
+            transparent 72%,
+            rgba(255, 255, 255, 0.035)
+        );
+
+    opacity: 0.68;
+}
+
+.card::after {
+    position: absolute;
+    z-index: 0;
+    top: -40%;
+    bottom: -40%;
+    left: -46%;
+
+    width: 24%;
+
+    pointer-events: none;
+    content: '';
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.22),
+            transparent
+        );
+
+    opacity: 0;
+    transform: skewX(-18deg);
+    transition:
+        left 720ms cubic-bezier(0.2, 0.72, 0.2, 1),
+        opacity 240ms ease;
+}
+
+.infoCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: clamp(1.35rem, 2.4vw, 2rem);
+}
+
+.infoTopline,
+.infoText,
+.textLink,
+.cardFooter,
+.websiteVisual,
+.mobileVisual {
+    position: relative;
+    z-index: 1;
+}
+
+.infoTopline {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.infoIcon {
+    display: inline-flex;
+    width: 2.45rem;
+    height: 2.45rem;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+
+    color: rgba(255, 255, 255, 0.82);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+
+    background: rgba(255, 255, 255, 0.035);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        0 0.7rem 1.5rem -1rem rgba(0, 0, 0, 0.9);
+}
+
+.infoLabel {
+    color: rgba(255, 255, 255, 0.42);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.infoText {
+    margin: clamp(2rem, 5vh, 4rem) 0 auto;
+
+    color: rgba(255, 255, 255, 0.92);
+    font-size: clamp(1.15rem, 1.55vw, 1.45rem);
+    font-weight: 520;
+    letter-spacing: -0.018em;
+    line-height: 1.48;
+    text-wrap: pretty;
+}
+
+.textLink,
+.projectsLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.82rem;
+    font-weight: 650;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+}
+
+.textLink {
+    margin-top: 2rem;
+}
+
+.textLink svg,
+.projectsLink svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.webCard {
+    --hero-card-visual-scale: 1;
+}
+
+.mobileCard {
+    --hero-card-visual-scale: 1;
+}
+
+.productCard {
+    display: flex;
+    flex-direction: column;
+
+    padding: clamp(1rem, 1.8vw, 1.35rem);
+}
+
+.websiteVisual,
+.mobileVisual {
+    display: flex;
+    min-height: 0;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.websiteVisual {
+    flex-direction: column;
+    padding: clamp(0.4rem, 1.6vw, 1rem) clamp(0.2rem, 1vw, 0.8rem) 0;
+}
+
+.browserFrame {
+    width: min(100%, 29rem);
+    aspect-ratio: 1.55;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 1.15rem 1.15rem 0.85rem 0.85rem;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.075),
+            rgba(255, 255, 255, 0.012) 55%,
+            rgba(255, 255, 255, 0.035)
+        );
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.23),
+        0 1.2rem 2.8rem -1.35rem rgba(0, 0, 0, 0.92);
+}
+
+.browserToolbar {
+    display: flex;
+    height: 13%;
+    align-items: center;
+    gap: 0.34rem;
+
+    padding-inline: 0.75rem;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.13),
+            rgba(255, 255, 255, 0.035)
+        );
+}
+
+.browserToolbar > span {
+    width: 0.34rem;
+    height: 0.34rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.36);
+}
+
+.browserAddress {
+    width: 48%;
+    height: 34%;
+    margin-left: auto;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.13);
+}
+
+.browserCanvas {
+    display: grid;
+    height: 87%;
+    grid-template-columns: 23% 1fr;
+}
+
+.browserSidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    padding: 0.9rem 0.65rem;
+
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.016);
+}
+
+.browserSidebar span {
+    display: block;
+    height: 0.38rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.browserSidebar span:nth-child(2) {
+    width: 72%;
+}
+
+.browserSidebar span:nth-child(3) {
+    width: 84%;
+}
+
+.browserSidebar span:nth-child(4) {
+    width: 58%;
+}
+
+.browserContent {
+    padding: clamp(0.8rem, 1.8vw, 1.25rem);
+}
+
+.browserHeadline {
+    width: 64%;
+    height: 0.72rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.28);
+}
+
+.browserCopy,
+.browserCopyShort {
+    height: 0.32rem;
+    margin-top: 0.55rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.11);
+}
+
+.browserCopy {
+    width: 88%;
+}
+
+.browserCopyShort {
+    width: 55%;
+}
+
+.browserTiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: clamp(1rem, 2.2vw, 1.75rem);
+}
+
+.browserTiles span {
+    aspect-ratio: 1.15;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.55rem;
+
+    background:
+        radial-gradient(
+            circle at 30% 18%,
+            rgba(255, 255, 255, 0.12),
+            transparent 48%
+        ),
+        rgba(255, 255, 255, 0.02);
+}
+
+.laptopBase {
+    width: min(108%, 31rem);
+    height: 0.46rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-top: 0;
+    border-radius: 0 0 999px 999px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.13),
+            rgba(255, 255, 255, 0.025)
+        );
+}
+
+.mobileVisual {
+    padding: 0.25rem 0 0;
+}
+
+.phoneFrame {
+    position: relative;
+
+    width: min(45%, 8.5rem);
+    aspect-ratio: 0.49;
+
+    padding: 0.42rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 1.55rem;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.12),
+            rgba(255, 255, 255, 0.025) 55%,
+            rgba(255, 255, 255, 0.055)
+        );
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        0 1.4rem 3rem -1.25rem rgba(0, 0, 0, 0.95);
+}
+
+.phoneSpeaker {
+    position: absolute;
+    z-index: 2;
+    top: 0.7rem;
+    left: 50%;
+
+    width: 1.6rem;
+    height: 0.25rem;
+
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-50%);
+}
+
+.phoneScreen {
+    position: relative;
+
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    padding: 1.55rem 0.55rem 0.55rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.15rem;
+
+    background:
+        radial-gradient(
+            circle at 30% 12%,
+            rgba(255, 255, 255, 0.08),
+            transparent 42%
+        ),
+        rgba(0, 0, 0, 0.22);
+}
+
+.phoneStatus {
+    display: flex;
+    justify-content: space-between;
+}
+
+.phoneStatus span {
+    width: 1.1rem;
+    height: 0.22rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.phoneHeroBlock {
+    height: 22%;
+    margin-top: 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 0.6rem;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 255, 255, 0.018)
+        );
+}
+
+.phoneRows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.42rem;
+    margin-top: 0.7rem;
+}
+
+.phoneRows span {
+    display: block;
+    height: 0.32rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.phoneRows span:nth-child(2) {
+    width: 76%;
+}
+
+.phoneRows span:nth-child(3) {
+    width: 56%;
+}
+
+.phoneDock {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.35rem;
+    margin-top: auto;
+}
+
+.phoneDock span {
+    aspect-ratio: 1;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.4rem;
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.cardFooter {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+
+    padding: clamp(1rem, 1.8vw, 1.35rem) 0.25rem 0.2rem;
+}
+
+.cardFooter > div {
+    min-width: 0;
+}
+
+.cardFooter h2 {
+    max-width: 20ch;
+    margin: 0;
+
+    color: #f7f7f7;
+    font-size: clamp(1.08rem, 1.4vw, 1.35rem);
+    font-weight: 640;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    text-wrap: balance;
+}
+
+.cardFooter p {
+    max-width: 43ch;
+    margin: 0.58rem 0 0;
+
+    color: rgba(255, 255, 255, 0.48);
+    font-size: 0.76rem;
+    line-height: 1.45;
+    text-wrap: pretty;
+}
+
+.cardArrow {
+    display: inline-flex;
+    width: 2.4rem;
+    height: 2.4rem;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 50%;
+
+    color: rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.cardArrow svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.projectsLink {
+    width: max-content;
+    margin: clamp(1.3rem, 2.8vh, 2rem) auto 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .card:hover,
+    .card:focus-visible {
+        border-color: rgba(255, 255, 255, 0.28);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.25),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+            0 2rem 5rem -2.2rem rgba(0, 0, 0, 0.88);
+        transform: translateY(-0.35rem);
+    }
+
+    .card:hover::after,
+    .card:focus-visible::after {
+        left: 126%;
+        opacity: 0.8;
+    }
+
+    .textLink:hover,
+    .projectsLink:hover {
+        color: #fff;
+    }
+}
+
+@media (max-width: 72rem) {
+    .hero {
+        min-height: auto;
+        align-items: flex-start;
+    }
+
+    .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .infoCard {
+        min-height: 16rem;
+        grid-column: 1 / -1;
+    }
+
+    .infoText {
+        max-width: 42rem;
+        margin-top: 2rem;
+    }
+
+    .productCard {
+        min-height: 24rem;
+    }
+}
+
+@media (max-width: 48rem) {
+    .hero {
+        padding:
+            calc(env(safe-area-inset-top, 0px) + 6.75rem)
+            0.9rem
+            3rem;
+    }
+
+    .eyebrow {
+        font-size: 0.6rem;
+        letter-spacing: 0.145em;
+    }
+
+    .title {
+        margin-top: 0.8rem;
+        font-size: clamp(1.02rem, 5.35vw, 1.65rem);
+        letter-spacing: -0.055em;
+    }
+
+    .cards {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.85rem;
+        margin-top: 1.75rem;
+    }
+
+    .infoCard {
+        min-height: 16.5rem;
+        grid-column: auto;
+    }
+
+    .productCard {
+        min-height: 25rem;
+    }
+
+    .infoText {
+        margin-top: 1.6rem;
+        font-size: clamp(1.08rem, 5vw, 1.3rem);
+    }
+
+    .browserFrame {
+        width: min(100%, 30rem);
+    }
+
+    .phoneFrame {
+        width: min(38%, 8.2rem);
+    }
+
+    .cardFooter h2 {
+        max-width: 23ch;
+        font-size: clamp(1.12rem, 5vw, 1.32rem);
+    }
+
+    .projectsLink {
+        margin-top: 1.35rem;
+    }
+}
+
+@media (max-width: 23rem) {
+    .title {
+        font-size: 0.96rem;
+    }
+
+    .productCard {
+        min-height: 23rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .card::after {
+        transition: none;
+    }
+
+    .card:hover,
+    .card:focus-visible {
+        transform: none;
+    }
+}
