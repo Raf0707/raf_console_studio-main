@@ -61,6 +61,40 @@ html.raf-refraction-enabled
     will-change: auto !important;
 }
 
+/*
+ * The moving pill keeps its one transform transition, but its decorative
+ * shimmer/caustic layers no longer animate forever while the page is idle.
+ */
+nav[data-raf-navbar-shell='true']
+> span[aria-hidden='true']
+*,
+[data-raf-mobile-navigation-fab='true']
+> span[aria-hidden='true'] {
+    animation: none !important;
+    will-change: auto !important;
+}
+
+html.raf-refraction-lite
+[data-raf-mobile-navigation-fab='true'] {
+    background:
+        radial-gradient(
+            circle at 28% 18%,
+            rgba(255, 255, 255, 0.16),
+            transparent 44%
+        ),
+        rgba(12, 13, 17, 0.9) !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.raf-refraction-lite
+[data-raf-mobile-navigation-fab='true']
+> span[aria-hidden='true'] {
+    filter: none !important;
+    mix-blend-mode: normal !important;
+}
+
 /* Old runtimes may leave transient nodes after Fast Refresh. Never paint them. */
 [data-raf-agency-scene-clone],
 [data-raf-navbar-moving-lens-scene],
