@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/drawer';
 
 import styles from './Navbar.module.css';
+import scrollStyles from './NavbarScroll.module.css';
 
 function normalizePathname(pathname) {
   if (!pathname || pathname === '/') {
@@ -433,10 +434,16 @@ export default function Navbar({
           )}
 
           <DrawerContent
-              className={styles.drawerContent}
+              className={`${styles.drawerContent} ${scrollStyles.drawerContent}`}
               data-raf-glass-surface="mobile-drawer"
+              style={{
+                '--raf-mobile-viewport-height':
+                  mobileFabPosition.viewportHeight > 0
+                    ? `${mobileFabPosition.viewportHeight}px`
+                    : '100dvh',
+              }}
           >
-            <div className={styles.drawerBody}>
+            <div className={`${styles.drawerBody} ${scrollStyles.drawerBody}`}>
               <div className={styles.drawerHeader}>
                 <p className={styles.drawerBrand}>
                   <span>Raf&lt;/&gt;Console</span>{' '}

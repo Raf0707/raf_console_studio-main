@@ -5,25 +5,8 @@ import { OfflineManager } from '@/components/pwa';
 import { ThemeProvider } from '@/components/theme-provider';
 import Header from '@/components/Header';
 import Footer from '@/components/layouts/Footer';
-import GlobalPointerEffects from '@/components/effects/GlobalPointerEffects';
 import InitialLoadGate from '@/components/loading/InitialLoadGate';
-import AdaptiveShaderRuntime from '@/components/liquid-glass/AdaptiveShaderRuntime';
-import FallbackSurfaceRuntime from '@/components/liquid-glass/FallbackSurfaceRuntime';
 import LiquidGlassRuntime from '@/components/liquid-glass/LiquidGlassRuntime';
-import AgencyShaderRuntime from '@/components/liquid-glass/refraction/AgencyShaderRuntime';
-import dynamic from 'next/dynamic';
-
-
-const NavbarDragRefractionRuntime = dynamic(
-    () =>
-        import(
-            '@/components/liquid-glass/refraction/NavbarDragRefractionRuntime'
-            ),
-    {
-      ssr: false,
-    }
-);
-import NavbarProgressiveTextRefractionRuntime from '@/components/liquid-glass/refraction/NavbarProgressiveTextRefractionRuntime';
 import RouteResponsiveController from '@/components/responsive/RouteResponsiveController';
 
 import './globals.css';
@@ -33,7 +16,7 @@ import '@/components/liquid-glass/adaptive-shaders.css';
 import '@/components/liquid-glass/privacy-policy-hero.css';
 import '@/components/liquid-glass/studio-crystal.css';
 import '@/components/liquid-glass/mobile-crystal-drawer.css';
-import '@/components/liquid-glass/refraction/agency-shaders.css';
+import '@/components/liquid-glass/performance-overrides.css';
 
 export const metadata = {
   title: 'Raf</>Console Studio',
@@ -117,7 +100,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="ru"
-      className="dark"
+      className="dark raf-glass-fallback raf-refraction-lite"
       suppressHydrationWarning
     >
       <body
@@ -137,16 +120,7 @@ export default function RootLayout({ children }) {
           <div id="raf-liquid-root">
             <Suspense fallback={null}>
               <Header />
-
-              {/*
-                Both runtimes mutate DOM below the hydrated Header. Keeping them
-                inside the same Suspense boundary guarantees that their effects
-                cannot prepend optical spans into dehydrated server markup.
-              */}
               <LiquidGlassRuntime />
-              <AgencyShaderRuntime />
-              <NavbarDragRefractionRuntime />
-              <NavbarProgressiveTextRefractionRuntime />
             </Suspense>
 
             <div id="raf-page-root">
@@ -155,12 +129,6 @@ export default function RootLayout({ children }) {
 
             <Footer />
           </div>
-
-          <AdaptiveShaderRuntime />
-          <FallbackSurfaceRuntime />
-
-          {/* Глобальные волны, плазма и остальные pointer-анимации сохранены. */}
-          {/*<GlobalPointerEffects />*/}
         </ThemeProvider>
       </body>
     </html>

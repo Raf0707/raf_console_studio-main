@@ -17,6 +17,8 @@ import {
 // Старый жидкий логотип сохранён для быстрого возврата.
 // import LiquidRafLogo from './LiquidRafLogo';
 import RafMinimalizmLogo from './RafMinimalizmLogo';
+import HomeHero from './HomeHero';
+import performanceStyles from './HomePerformance.module.css';
 import styles from './MonochromeHome.module.css';
 
 
@@ -450,249 +452,9 @@ export default function MonochromeHome({
     }, 1000);
   };
 
-  /*
-   * Обработчик старого видеофона сохранён вместе с прежним вариантом hero.
-   * Для быстрого возврата раскомментируйте его и блок <video> ниже.
-   *
-   * const restartVideo = (event) => {
-   *   const video = event.currentTarget;
-   *   video.currentTime = 0;
-   *
-   *   const playbackPromise = video.play();
-   *
-   *   if (
-   *       playbackPromise &&
-   *       typeof playbackPromise.catch === 'function'
-   *   ) {
-   *     playbackPromise.catch(() => {});
-   *   }
-   * };
-   */
-
   return (
-      <main className={styles.page}>
-        <svg
-            className={
-              styles.filterDefinitions
-            }
-            aria-hidden="true"
-        >
-          <defs>
-            <filter
-                id="raf-liquid-refraction"
-                x="-35%"
-                y="-35%"
-                width="170%"
-                height="170%"
-            >
-              <feTurbulence
-                  type="fractalNoise"
-                  baseFrequency="0.008 0.018"
-                  numOctaves="2"
-                  seed="8"
-                  result="noise"
-              >
-                <animate
-                    attributeName="baseFrequency"
-                    dur="14s"
-                    values="
-                  0.008 0.018;
-                  0.012 0.025;
-                  0.008 0.018
-                "
-                    repeatCount="indefinite"
-                />
-              </feTurbulence>
-
-              <feGaussianBlur
-                  in="noise"
-                  stdDeviation="0.6"
-                  result="softNoise"
-              />
-
-              <feDisplacementMap
-                  in="SourceGraphic"
-                  in2="softNoise"
-                  scale="34"
-                  xChannelSelector="R"
-                  yChannelSelector="B"
-              />
-            </filter>
-          </defs>
-        </svg>
-
-        <section
-            className={styles.hero}
-            aria-labelledby="hero-title"
-        >
-          {/*
-           * ПРЕЖНИЙ ВАРИАНТ ПЕРВОГО ЭКРАНА СОХРАНЁН.
-           * Для возврата видеофона раскомментируйте этот блок вместе с
-           * restartVideo выше и снова подключите LiquidRafLogo в импортах.
-           *
-           * <video
-           *     className={styles.heroVideo}
-           *     autoPlay
-           *     loop
-           *     muted
-           *     playsInline
-           *     preload="auto"
-           *     disablePictureInPicture
-           *     aria-hidden="true"
-           *     onEnded={restartVideo}
-           * >
-           *   <source
-           *       src="/rafconsole_demo.mp4"
-           *       type="video/mp4"
-           *   />
-           * </video>
-           *
-           * <div
-           *     className={styles.heroVeil}
-           *     aria-hidden="true"
-           * />
-           *
-           * <div
-           *     className={styles.heroGrid}
-           *     aria-hidden="true"
-           * />
-           *
-           * <LiquidRafLogo placement="hero" />
-           */}
-
-          <div
-              className={styles.minimalHeroGrid}
-              aria-hidden="true"
-          />
-
-          <RafMinimalizmLogo
-              placement="hero"
-              className={styles.heroDesktopLogo}
-          />
-
-          <div
-              className={`
-            ${styles.heroContent}
-            ${
-                  isRussian
-                      ? styles.heroContentRussian
-                      : styles.heroContentEnglish
-              }
-          `}
-          >
-            <div className={styles.heroIntro}>
-              <p className={styles.eyebrow}>
-                {copy.eyebrow}
-              </p>
-
-              <h1
-                  id="hero-title"
-                  className={`${styles.heroTitle} ${
-                      isRussian
-                          ? styles.heroTitleRussian
-                          : styles.heroTitleEnglish
-                  }`}
-              >
-                <span className={styles.heroTitlePrimary}>
-                  {copy.titlePrimary}
-                </span>
-
-                <span className={styles.heroTitleSecondary}>
-                  <span className={styles.heroTitleLine}>
-                    {copy.titleSecondaryFirst}
-                  </span>
-
-                  <span className={styles.heroTitleLine}>
-                    {copy.titleSecondarySecond}
-                  </span>
-                </span>
-              </h1>
-            </div>
-
-            <div
-                className={styles.heroMobileLogoSlot}
-                aria-hidden="true"
-            >
-              <RafMinimalizmLogo
-                  placement="hero"
-                  className={styles.heroMobileLogo}
-              />
-            </div>
-
-            <div className={styles.heroAfterLogo}>
-              <p className={styles.heroSubtitle}>
-                {copy.subtitle}
-              </p>
-
-              <div className={styles.heroActions}>
-                <Link
-                    href={
-                      isRussian
-                          ? '/contacts_ru'
-                          : '/contacts'
-                    }
-                    className={`
-                  ${styles.actionButton}
-                  ${styles.actionButtonPrimary}
-                `}
-                >
-                  <span>
-                    {copy.primaryAction}
-                  </span>
-
-                  <ArrowDownRight
-                      aria-hidden="true"
-                  />
-                </Link>
-
-                <Link
-                    href={
-                      isRussian
-                          ? '/projects_ru'
-                          : '/projects'
-                    }
-                    className={`
-                  ${styles.actionButton}
-                  ${styles.actionButtonGhost}
-                `}
-                >
-                  {copy.secondaryAction}
-                </Link>
-              </div>
-            </div>
-
-            <div
-                className={styles.heroMeta}
-                aria-label={
-                  isRussian
-                      ? 'Возможности студии'
-                      : 'Studio capabilities'
-                }
-            >
-              {copy.heroMeta.map(
-                  (item) => (
-                      <span key={item}>
-                        {item}
-                      </span>
-                  )
-              )}
-            </div>
-          </div>
-
-          <a
-              className={styles.scrollHint}
-              href="#services"
-          >
-          <span>
-            {copy.scrollHint}
-          </span>
-
-            <span
-                className={styles.scrollLine}
-                aria-hidden="true"
-            />
-          </a>
-        </section>
+      <main className={`${styles.page} ${performanceStyles.homeRoot}`}>
+        <HomeHero locale={locale} />
 
         <div className={styles.contentSurface}>
           <section
@@ -735,6 +497,7 @@ export default function MonochromeHome({
                       ${styles.glassPanel}
                       ${styles.serviceCard}
                     `}
+                            data-raf-home-card="true"
                             key={service.title}
                         >
                           <div
@@ -796,6 +559,7 @@ export default function MonochromeHome({
               className={`
             ${styles.section}
             ${styles.aboutSection}
+            ${performanceStyles.deferredSection}
           `}
               aria-labelledby="about-title"
           >
@@ -817,6 +581,7 @@ export default function MonochromeHome({
               ${styles.glassPanel}
               ${styles.aboutPanel}
             `}
+                data-raf-home-card="true"
             >
               <p
                   className={
@@ -868,6 +633,7 @@ export default function MonochromeHome({
               className={`
             ${styles.section}
             ${styles.contactSection}
+            ${performanceStyles.deferredSection}
           `}
               aria-labelledby="contact-title"
           >
@@ -958,6 +724,7 @@ export default function MonochromeHome({
                       ${styles.glassPanel}
                       ${styles.contactCard}
                     `}
+                            data-raf-home-card="true"
                             href={channel.href}
                             key={channel.label}
                             target={

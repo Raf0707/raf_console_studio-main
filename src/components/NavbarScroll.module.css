@@ -1,0 +1,48 @@
+.drawerContent {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+
+    height:
+        min(
+            48rem,
+            calc(
+                var(--raf-mobile-viewport-height, 100vh)
+                - max(0.5rem, env(safe-area-inset-top))
+            )
+        ) !important;
+
+    max-height:
+        calc(
+            var(--raf-mobile-viewport-height, 100vh)
+            - max(0.5rem, env(safe-area-inset-top))
+        ) !important;
+
+    overflow: hidden !important;
+}
+
+.drawerBody {
+    min-height: 0;
+    flex: 1 1 auto;
+
+    height: auto !important;
+
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+
+    padding:
+        1rem
+        max(0.9rem, env(safe-area-inset-right))
+        max(1.25rem, env(safe-area-inset-bottom))
+        max(0.9rem, env(safe-area-inset-left)) !important;
+
+    overscroll-behavior-x: none;
+    overscroll-behavior-y: contain;
+    scrollbar-width: none;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+}
+
+.drawerBody::-webkit-scrollbar {
+    display: none;
+}
