@@ -16,7 +16,6 @@ import '@/components/liquid-glass/adaptive-shaders.css';
 import '@/components/liquid-glass/privacy-policy-hero.css';
 import '@/components/liquid-glass/studio-crystal.css';
 import '@/components/liquid-glass/mobile-crystal-drawer.css';
-import '@/components/liquid-glass/refraction/agency-shaders.css';
 import '@/components/liquid-glass/performance-overrides.css';
 
 export const metadata = {
