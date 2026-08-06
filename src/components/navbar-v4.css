@@ -15,14 +15,12 @@
     -webkit-backdrop-filter: blur(1.25rem) saturate(68%) !important;
 }
 
-/* Remove every SVG/filter-based refraction layer from the navbar. */
 [data-raf-navbar-shell="true"] [data-raf-refraction-target],
 [data-raf-navbar-moving-lens-scene="true"],
 [data-raf-navbar-progressive-text-mask="true"] {
     display: none !important;
 }
 
-/* Reset any attributes left behind by an older runtime during hot reload. */
 [data-raf-navbar-shell="true"] [data-raf-navbar-text-refraction],
 [data-raf-navbar-shell="true"] [data-raf-navbar-text-warp] {
     filter: none !important;
@@ -30,7 +28,6 @@
     letter-spacing: inherit !important;
 }
 
-/* Base and tint are fully opaque, creating a soft matte material. */
 [data-raf-navbar-shell="true"] > span:nth-of-type(1) {
     background: #18191d !important;
     backdrop-filter: blur(1.25rem) saturate(68%) !important;
@@ -47,7 +44,6 @@
             ) !important;
 }
 
-/* Keep only a restrained matte highlight, not a moving glass lens. */
 [data-raf-navbar-shell="true"] > span:nth-of-type(6) {
     opacity: 0.2 !important;
     background:
@@ -65,7 +61,6 @@
     opacity: 0.27 !important;
 }
 
-/* Active item becomes a solid raised matte capsule. */
 [data-raf-navbar-shell="true"] [class*="dropSurface"] {
     background: #2a2b31 !important;
     box-shadow:
@@ -113,7 +108,6 @@
     color: rgba(255, 255, 255, 0.98) !important;
 }
 
-/* Mobile navigation uses the same opaque matte material. */
 [data-raf-mobile-navigation-fab="true"] {
     background: #1c1d22 !important;
     border-color: rgba(255, 255, 255, 0.12) !important;
@@ -153,17 +147,14 @@
 /*                       V4 HOME HERO COMPACT HEADING                         */
 /* -------------------------------------------------------------------------- */
 
-/* Remove the auxiliary studio label above the main heading. */
 section[aria-labelledby="hero-title"] > div > header > p:first-child {
     display: none !important;
 }
 
-/* Bring the hero closer to the fixed navbar. */
 section[aria-labelledby="hero-title"] {
     padding-top: clamp(5.8rem, 7vw, 7.2rem) !important;
 }
 
-/* Keep the full title on one line and scale it with the viewport width. */
 section[aria-labelledby="hero-title"] h1#hero-title {
     width: 100% !important;
     max-width: 100% !important;
@@ -175,7 +166,6 @@ section[aria-labelledby="hero-title"] h1#hero-title {
     text-wrap: nowrap !important;
 }
 
-/* Tighten the text block and lift the showcase cards into the first viewport. */
 section[aria-labelledby="hero-title"] h1#hero-title + p {
     margin-top: clamp(1rem, 1.55vw, 1.45rem) !important;
 }
@@ -189,20 +179,44 @@ section[aria-labelledby="hero-title"] header + div {
         padding-top:
                 calc(
                         env(safe-area-inset-top, 0px)
-                        + 5.25rem
+                        + 6.2rem
                 ) !important;
     }
 
     section[aria-labelledby="hero-title"] h1#hero-title {
-        font-size: clamp(0.72rem, 4.15vw, 2rem) !important;
+        max-width: 12ch !important;
+        font-size: clamp(2.05rem, 9.2vw, 3.15rem) !important;
+        line-height: 1.02 !important;
         letter-spacing: -0.052em !important;
+        white-space: normal !important;
+        text-wrap: balance !important;
     }
 
     section[aria-labelledby="hero-title"] h1#hero-title + p {
-        margin-top: 0.85rem !important;
+        margin-top: 1.35rem !important;
     }
 
     section[aria-labelledby="hero-title"] header + div {
-        margin-top: 1.7rem !important;
+        margin-top: 2.45rem !important;
+    }
+
+    [data-raf-glass-surface="mobile-drawer"] {
+        height: min(92dvh, 52rem) !important;
+        max-height: calc(100dvh - env(safe-area-inset-top, 0px)) !important;
+        overflow: hidden !important;
+    }
+
+    [data-raf-glass-surface="mobile-drawer"] > div {
+        min-height: 0 !important;
+        overflow-y: auto !important;
+        overscroll-behavior-y: contain !important;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y !important;
+        padding-bottom:
+                max(
+                        1.5rem,
+                        env(safe-area-inset-bottom, 0px)
+                ) !important;
+        scrollbar-width: thin;
     }
 }
