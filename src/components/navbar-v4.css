@@ -1,0 +1,150 @@
+/*
+ * V4 navigation: opaque matte shell without optical refraction.
+ * Page cards retain their transparent glass styles; these rules are scoped
+ * exclusively to the desktop navbar, mobile navigation FAB and drawer.
+ */
+
+[data-raf-navbar-shell="true"] {
+    background: #18191d !important;
+    border-color: rgba(255, 255, 255, 0.11) !important;
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.075),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.46),
+            0 0.9rem 2.6rem rgba(0, 0, 0, 0.34) !important;
+    backdrop-filter: blur(1.25rem) saturate(68%) !important;
+    -webkit-backdrop-filter: blur(1.25rem) saturate(68%) !important;
+}
+
+/* Remove every SVG/filter-based refraction layer from the navbar. */
+[data-raf-navbar-shell="true"] [data-raf-refraction-target],
+[data-raf-navbar-moving-lens-scene="true"],
+[data-raf-navbar-progressive-text-mask="true"] {
+    display: none !important;
+}
+
+/* Reset any attributes left behind by an older runtime during hot reload. */
+[data-raf-navbar-shell="true"] [data-raf-navbar-text-refraction],
+[data-raf-navbar-shell="true"] [data-raf-navbar-text-warp] {
+    filter: none !important;
+    transform: none !important;
+    letter-spacing: inherit !important;
+}
+
+/* Base and tint are fully opaque, creating a soft matte material. */
+[data-raf-navbar-shell="true"] > span:nth-of-type(1) {
+    background: #18191d !important;
+    backdrop-filter: blur(1.25rem) saturate(68%) !important;
+    -webkit-backdrop-filter: blur(1.25rem) saturate(68%) !important;
+}
+
+[data-raf-navbar-shell="true"] > span:nth-of-type(5) {
+    background:
+            linear-gradient(
+                    180deg,
+                    #222329 0%,
+                    #191a1e 54%,
+                    #15161a 100%
+            ) !important;
+}
+
+/* Keep only a restrained matte highlight, not a moving glass lens. */
+[data-raf-navbar-shell="true"] > span:nth-of-type(6) {
+    opacity: 0.2 !important;
+    background:
+            linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.15),
+                    rgba(255, 255, 255, 0.015) 56%,
+                    transparent 100%
+            ) !important;
+    mix-blend-mode: normal !important;
+}
+
+[data-raf-navbar-shell="true"]:hover > span:nth-of-type(6),
+[data-raf-navbar-shell="true"]:focus-within > span:nth-of-type(6) {
+    opacity: 0.27 !important;
+}
+
+/* Active item becomes a solid raised matte capsule. */
+[data-raf-navbar-shell="true"] [class*="dropSurface"] {
+    background: #2a2b31 !important;
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.42),
+            0 0.48rem 1.15rem rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+[data-raf-navbar-shell="true"] [class*="dropBase"] {
+    background: #2a2b31 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+[data-raf-navbar-shell="true"] [class*="dropTint"] {
+    display: block !important;
+    background:
+            linear-gradient(
+                    180deg,
+                    #34363d 0%,
+                    #292a30 55%,
+                    #24252a 100%
+            ) !important;
+}
+
+[data-raf-navbar-shell="true"] [class*="dropSheen"],
+[data-raf-navbar-shell="true"] [class*="dropHighlight"],
+[data-raf-navbar-shell="true"] [class*="dropCaustic"],
+[data-raf-navbar-shell="true"] [class*="dropRipple"] {
+    display: none !important;
+    animation: none !important;
+}
+
+[data-raf-navbar-shell="true"] [class*="dropRim"] {
+    opacity: 0.42 !important;
+}
+
+[data-raf-navbar-shell="true"] a {
+    text-shadow: none !important;
+}
+
+[data-raf-navbar-shell="true"] a[aria-current="page"] {
+    color: rgba(255, 255, 255, 0.98) !important;
+}
+
+/* Mobile navigation uses the same opaque matte material. */
+[data-raf-mobile-navigation-fab="true"] {
+    background: #1c1d22 !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.08),
+            0 0.85rem 2.2rem rgba(0, 0, 0, 0.38) !important;
+    backdrop-filter: blur(1.2rem) saturate(68%) !important;
+    -webkit-backdrop-filter: blur(1.2rem) saturate(68%) !important;
+}
+
+[data-raf-mobile-navigation-fab="true"] > span:not(:last-child) {
+    background-color: transparent !important;
+}
+
+[data-raf-glass-surface="mobile-drawer"] {
+    background:
+            linear-gradient(
+                    180deg,
+                    #202126 0%,
+                    #15161a 100%
+            ) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(1.5rem) saturate(68%) !important;
+    -webkit-backdrop-filter: blur(1.5rem) saturate(68%) !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    [data-raf-navbar-shell="true"],
+    [data-raf-mobile-navigation-fab="true"],
+    [data-raf-glass-surface="mobile-drawer"] {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+}
