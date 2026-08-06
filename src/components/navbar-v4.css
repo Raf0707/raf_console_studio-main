@@ -143,10 +143,6 @@
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/*                       V4 HOME HERO COMPACT HEADING                         */
-/* -------------------------------------------------------------------------- */
-
 section[aria-labelledby="hero-title"] > div > header > p:first-child {
     display: none !important;
 }
@@ -200,23 +196,39 @@ section[aria-labelledby="hero-title"] header + div {
         margin-top: 2.45rem !important;
     }
 
+    /*
+     * The drawer itself becomes the native scrolling surface. This avoids
+     * Vaul intercepting the gesture before an inner flex child can scroll,
+     * which happened on short iPhone viewports.
+     */
     [data-raf-glass-surface="mobile-drawer"] {
         height: min(92dvh, 52rem) !important;
         max-height: calc(100dvh - env(safe-area-inset-top, 0px)) !important;
-        overflow: hidden !important;
-    }
-
-    [data-raf-glass-surface="mobile-drawer"] > div {
-        min-height: 0 !important;
+        overflow-x: hidden !important;
         overflow-y: auto !important;
         overscroll-behavior-y: contain !important;
         -webkit-overflow-scrolling: touch;
         touch-action: pan-y !important;
+        scrollbar-width: thin;
+    }
+
+    [data-raf-glass-surface="mobile-drawer"] > div {
+        width: 100% !important;
+        min-height: max-content !important;
+        height: auto !important;
+        overflow: visible !important;
+        touch-action: pan-y !important;
         padding-bottom:
                 max(
-                        1.5rem,
+                        2rem,
                         env(safe-area-inset-bottom, 0px)
                 ) !important;
-        scrollbar-width: thin;
+    }
+
+    [data-raf-glass-surface="mobile-drawer"] ul,
+    [data-raf-glass-surface="mobile-drawer"] li,
+    [data-raf-glass-surface="mobile-drawer"] a,
+    [data-raf-glass-surface="mobile-drawer"] button {
+        touch-action: pan-y !important;
     }
 }
