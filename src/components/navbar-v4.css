@@ -175,6 +175,15 @@ section[aria-labelledby="hero-title"] h1#hero-title {
     text-wrap: nowrap !important;
 }
 
+/* Tighten the text block and lift the showcase cards into the first viewport. */
+section[aria-labelledby="hero-title"] h1#hero-title + p {
+    margin-top: clamp(1rem, 1.55vw, 1.45rem) !important;
+}
+
+section[aria-labelledby="hero-title"] header + div {
+    margin-top: clamp(2rem, 3.2vw, 3.15rem) !important;
+}
+
 @media (max-width: 48rem) {
     section[aria-labelledby="hero-title"] {
         padding-top:
@@ -187,5 +196,13 @@ section[aria-labelledby="hero-title"] h1#hero-title {
     section[aria-labelledby="hero-title"] h1#hero-title {
         font-size: clamp(0.72rem, 4.15vw, 2rem) !important;
         letter-spacing: -0.052em !important;
+    }
+
+    section[aria-labelledby="hero-title"] h1#hero-title + p {
+        margin-top: 0.85rem !important;
+    }
+
+    section[aria-labelledby="hero-title"] header + div {
+        margin-top: 1.7rem !important;
     }
 }
