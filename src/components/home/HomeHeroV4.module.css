@@ -1,0 +1,647 @@
+.heroV4 {
+    display: block !important;
+    min-height: auto !important;
+    overflow: hidden;
+    padding:
+            clamp(8.5rem, 10vw, 11rem)
+            clamp(1rem, 3.4vw, 3.5rem)
+            clamp(4.5rem, 8vw, 8rem);
+    place-items: initial !important;
+    color: #f5f5f5;
+    background: transparent !important;
+}
+
+.heroShell {
+    width: min(100%, 96rem);
+    margin: 0 auto;
+}
+
+.heroHeading {
+    max-width: 94rem;
+}
+
+.eyebrow {
+    margin: 0 0 clamp(1rem, 2vw, 1.6rem);
+    color: rgba(255, 255, 255, 0.46);
+    font-size: clamp(0.68rem, 0.74vw, 0.8rem);
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+
+.title {
+    max-width: 16ch;
+    margin: 0;
+    color: #f7f7f7;
+    font-size: clamp(3.65rem, 6.35vw, 7.25rem);
+    font-weight: 620;
+    letter-spacing: -0.06em;
+    line-height: 0.95;
+    text-wrap: balance;
+}
+
+.subtitle {
+    max-width: 59rem;
+    margin: clamp(1.7rem, 2.7vw, 2.7rem) 0 0;
+    color: rgba(255, 255, 255, 0.76);
+    font-size: clamp(1.08rem, 1.45vw, 1.42rem);
+    font-weight: 430;
+    letter-spacing: -0.012em;
+    line-height: 1.58;
+    text-wrap: pretty;
+}
+
+.showcaseGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.18fr) minmax(22rem, 0.92fr);
+    gap: clamp(1rem, 1.8vw, 1.65rem);
+    margin-top: clamp(3.5rem, 6vw, 6.2rem);
+}
+
+.showcaseCard {
+    position: relative;
+    display: grid;
+    min-width: 0;
+    min-height: clamp(34rem, 43vw, 42rem);
+    grid-template-rows: minmax(0, 1fr) auto;
+    overflow: hidden;
+    padding: clamp(1.2rem, 2.2vw, 2rem);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: clamp(2rem, 3.4vw, 3.4rem);
+    color: #f3f3f3;
+    text-decoration: none;
+    background:
+            radial-gradient(
+                    circle at 15% 0%,
+                    rgba(255, 255, 255, 0.095),
+                    transparent 34%
+            ),
+            linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.052),
+                    rgba(255, 255, 255, 0.012) 58%,
+                    rgba(255, 255, 255, 0.026)
+            );
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.12),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.36),
+            0 2.2rem 6rem rgba(0, 0, 0, 0.34);
+    backdrop-filter: blur(1.05rem) saturate(74%);
+    -webkit-backdrop-filter: blur(1.05rem) saturate(74%);
+    isolation: isolate;
+    transition:
+            transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1),
+            border-color 320ms ease,
+            box-shadow 420ms ease;
+}
+
+.showcaseCard::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    pointer-events: none;
+    content: '';
+    background:
+            linear-gradient(
+                    118deg,
+                    rgba(255, 255, 255, 0.075),
+                    transparent 26%,
+                    transparent 72%,
+                    rgba(255, 255, 255, 0.018)
+            );
+}
+
+.showcaseCard::after {
+    position: absolute;
+    z-index: -1;
+    top: -22%;
+    left: -18%;
+    width: 64%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    pointer-events: none;
+    content: '';
+    opacity: 0.34;
+    background: rgba(255, 255, 255, 0.12);
+    filter: blur(5.8rem);
+}
+
+.showcaseCard:hover {
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.16),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.34),
+            0 3rem 7rem rgba(0, 0, 0, 0.46);
+    transform: translateY(-0.55rem);
+}
+
+.deviceStage {
+    display: grid;
+    min-height: 0;
+    place-items: center;
+    padding:
+            clamp(0.2rem, 1vw, 1rem)
+            clamp(0.1rem, 1.3vw, 1.15rem)
+            clamp(1.4rem, 2.6vw, 2.4rem);
+}
+
+.browserDevice {
+    position: relative;
+    width: min(100%, 46rem);
+    padding-bottom: 0.62rem;
+}
+
+.browserFrame {
+    overflow: hidden;
+    aspect-ratio: 1.55;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 1.35rem 1.35rem 0.8rem 0.8rem;
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.065),
+                    rgba(0, 0, 0, 0.12)
+            );
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.12),
+            0 1.4rem 4rem rgba(0, 0, 0, 0.34);
+    backdrop-filter: blur(0.7rem);
+    -webkit-backdrop-filter: blur(0.7rem);
+}
+
+.browserToolbar {
+    display: flex;
+    height: 11.5%;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0 0.95rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.browserDots {
+    display: flex;
+    gap: 0.38rem;
+}
+
+.browserDots span {
+    width: clamp(0.3rem, 0.48vw, 0.42rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.38);
+}
+
+.browserAddress {
+    width: 43%;
+    height: 36%;
+    margin-left: auto;
+    border: 1px solid rgba(255, 255, 255, 0.065);
+    border-radius: 999rem;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.browserBody {
+    display: grid;
+    height: 88.5%;
+    grid-template-columns: 24% 1fr;
+}
+
+.browserSidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 1.35rem 1rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.browserSidebar span {
+    height: 0.42rem;
+    border-radius: 999rem;
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.browserSidebar span:nth-child(1) { width: 82%; }
+.browserSidebar span:nth-child(2) { width: 58%; }
+.browserSidebar span:nth-child(3) { width: 70%; }
+.browserSidebar span:nth-child(4) { width: 46%; }
+
+.browserCanvas {
+    padding: clamp(1.25rem, 2.3vw, 2rem);
+}
+
+.browserHeadline,
+.browserLineLong,
+.browserLineShort {
+    display: block;
+    height: 0.48rem;
+    border-radius: 999rem;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.browserHeadline {
+    width: 48%;
+    height: clamp(0.7rem, 1.15vw, 0.95rem);
+    background: rgba(255, 255, 255, 0.34);
+}
+
+.browserLineLong {
+    width: 78%;
+    margin-top: 0.95rem;
+}
+
+.browserLineShort {
+    width: 48%;
+    margin-top: 0.62rem;
+}
+
+.browserTiles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.55rem, 1vw, 0.9rem);
+    margin-top: clamp(1.7rem, 3.1vw, 2.7rem);
+}
+
+.browserTiles span {
+    aspect-ratio: 1.08;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 0.72rem;
+    background:
+            radial-gradient(
+                    circle at 20% 15%,
+                    rgba(255, 255, 255, 0.075),
+                    transparent 44%
+            ),
+            rgba(255, 255, 255, 0.012);
+}
+
+.laptopBase {
+    position: absolute;
+    right: -4%;
+    bottom: 0;
+    left: -4%;
+    height: 0.62rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 0 0 999rem 999rem;
+    background:
+            linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.15),
+                    rgba(255, 255, 255, 0.025)
+            );
+    box-shadow: 0 0.5rem 1.3rem rgba(0, 0, 0, 0.3);
+}
+
+.phoneDevice {
+    display: grid;
+    width: 100%;
+    min-height: 100%;
+    place-items: center;
+}
+
+.phoneFrame {
+    position: relative;
+    width: clamp(10rem, 17vw, 14.5rem);
+    aspect-ratio: 0.52;
+    padding: 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: clamp(2rem, 3vw, 2.8rem);
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.055),
+                    rgba(0, 0, 0, 0.13)
+            );
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.13),
+            0 1.8rem 4.4rem rgba(0, 0, 0, 0.38);
+    backdrop-filter: blur(0.8rem);
+    -webkit-backdrop-filter: blur(0.8rem);
+}
+
+.phoneFrame::before {
+    position: absolute;
+    inset: 0.48rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: calc(clamp(2rem, 3vw, 2.8rem) - 0.38rem);
+    pointer-events: none;
+    content: '';
+}
+
+.phoneSpeaker {
+    position: absolute;
+    z-index: 2;
+    top: 0.82rem;
+    left: 50%;
+    width: 18%;
+    height: 0.26rem;
+    border-radius: 999rem;
+    background: rgba(255, 255, 255, 0.18);
+    transform: translateX(-50%);
+}
+
+.phoneScreen {
+    position: relative;
+    height: 100%;
+    padding: 2.4rem 0.8rem 0.85rem;
+    border-radius: calc(clamp(2rem, 3vw, 2.8rem) - 0.68rem);
+}
+
+.phoneTopline {
+    display: flex;
+    justify-content: space-between;
+}
+
+.phoneTopline span {
+    width: 18%;
+    height: 0.28rem;
+    border-radius: 999rem;
+    background: rgba(255, 255, 255, 0.17);
+}
+
+.phoneFeature {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1.85;
+    margin-top: 1.15rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.9rem;
+    background:
+            radial-gradient(
+                    circle at 20% 15%,
+                    rgba(255, 255, 255, 0.09),
+                    transparent 46%
+            ),
+            rgba(255, 255, 255, 0.025);
+}
+
+.phoneLineLong,
+.phoneLineMedium,
+.phoneLineShort {
+    display: block;
+    height: 0.33rem;
+    margin-top: 0.72rem;
+    border-radius: 999rem;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.phoneLineLong { width: 100%; }
+.phoneLineMedium { width: 76%; }
+.phoneLineShort { width: 58%; }
+
+.phoneNavigation {
+    position: absolute;
+    right: 0.8rem;
+    bottom: 0.85rem;
+    left: 0.8rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.48rem;
+}
+
+.phoneNavigation span {
+    aspect-ratio: 1;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.62rem;
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.cardFooter {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1.2rem;
+    align-items: end;
+    padding: clamp(0.2rem, 0.8vw, 0.7rem);
+}
+
+.cardCopy h2 {
+    max-width: 19ch;
+    margin: 0;
+    font-size: clamp(1.55rem, 2.15vw, 2.15rem);
+    font-weight: 620;
+    letter-spacing: -0.035em;
+    line-height: 1.08;
+    text-wrap: balance;
+}
+
+.mobileCard .cardCopy h2 {
+    max-width: 18ch;
+}
+
+.cardCopy p {
+    max-width: 35rem;
+    margin: 0.85rem 0 0;
+    color: rgba(255, 255, 255, 0.52);
+    font-size: clamp(0.88rem, 1.05vw, 1rem);
+    font-weight: 470;
+    line-height: 1.5;
+}
+
+.cardArrow {
+    display: grid;
+    width: 3.25rem;
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.78);
+    background: rgba(255, 255, 255, 0.025);
+    transition:
+            transform 320ms ease,
+            background 320ms ease,
+            border-color 320ms ease;
+}
+
+.cardArrow svg {
+    width: 1.05rem;
+    height: 1.05rem;
+}
+
+.showcaseCard:hover .cardArrow {
+    border-color: rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.075);
+    transform: translate(0.16rem, 0.16rem);
+}
+
+.heroFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: clamp(2.2rem, 4vw, 3.6rem);
+}
+
+.heroActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.heroMeta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.7rem 1.5rem;
+    color: rgba(255, 255, 255, 0.38);
+    font-size: 0.72rem;
+    font-weight: 650;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.heroMeta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.heroMeta span:not(:last-child)::after {
+    width: 0.22rem;
+    height: 0.22rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.28);
+    content: '';
+}
+
+@media (min-width: 94rem) {
+    .title {
+        max-width: none;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 72rem) {
+    .showcaseGrid {
+        grid-template-columns: minmax(0, 1.12fr) minmax(19rem, 0.88fr);
+    }
+
+    .showcaseCard {
+        min-height: 33rem;
+    }
+}
+
+@media (max-width: 58rem) {
+    .showcaseGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .showcaseCard {
+        min-height: 32rem;
+    }
+
+    .mobileCard .deviceStage {
+        min-height: 20rem;
+    }
+
+    .phoneFrame {
+        width: clamp(10.5rem, 27vw, 13rem);
+    }
+}
+
+@media (max-width: 48rem) {
+    .heroV4 {
+        padding:
+                calc(env(safe-area-inset-top, 0px) + 6.8rem)
+                clamp(0.8rem, 4vw, 1.2rem)
+                clamp(3.5rem, 11vw, 5rem);
+    }
+
+    .eyebrow {
+        font-size: 0.64rem;
+        letter-spacing: 0.15em;
+    }
+
+    .title {
+        max-width: 11ch;
+        font-size: clamp(2.85rem, 13.4vw, 4.8rem);
+        line-height: 0.96;
+    }
+
+    .subtitle {
+        max-width: 37rem;
+        margin-top: 1.45rem;
+        font-size: clamp(1rem, 4.5vw, 1.16rem);
+        line-height: 1.52;
+    }
+
+    .showcaseGrid {
+        gap: 0.9rem;
+        margin-top: 2.5rem;
+    }
+
+    .showcaseCard {
+        min-height: 27rem;
+        padding: 1rem;
+        border-radius: 2rem;
+    }
+
+    .webCard .deviceStage {
+        min-height: 16rem;
+        padding: 0.4rem 0.25rem 1.2rem;
+    }
+
+    .mobileCard .deviceStage {
+        min-height: 18rem;
+    }
+
+    .browserFrame {
+        border-radius: 0.9rem 0.9rem 0.5rem 0.5rem;
+    }
+
+    .browserCanvas {
+        padding: 1rem;
+    }
+
+    .browserTiles {
+        margin-top: 1.35rem;
+    }
+
+    .cardFooter {
+        padding: 0.25rem;
+    }
+
+    .cardCopy h2 {
+        font-size: clamp(1.4rem, 6vw, 1.8rem);
+    }
+
+    .cardArrow {
+        width: 2.9rem;
+    }
+
+    .heroFooter {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.6rem;
+        margin-top: 2rem;
+    }
+
+    .heroActions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .heroMeta {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 25rem) {
+    .title {
+        font-size: clamp(2.45rem, 12.5vw, 3.25rem);
+    }
+
+    .showcaseCard {
+        min-height: 25rem;
+    }
+
+    .phoneFrame {
+        width: 9.5rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .showcaseCard,
+    .cardArrow {
+        transition-duration: 1ms !important;
+    }
+}
