@@ -148,3 +148,44 @@
         -webkit-backdrop-filter: none !important;
     }
 }
+
+/* -------------------------------------------------------------------------- */
+/*                       V4 HOME HERO COMPACT HEADING                         */
+/* -------------------------------------------------------------------------- */
+
+/* Remove the auxiliary studio label above the main heading. */
+section[aria-labelledby="hero-title"] > div > header > p:first-child {
+    display: none !important;
+}
+
+/* Bring the hero closer to the fixed navbar. */
+section[aria-labelledby="hero-title"] {
+    padding-top: clamp(5.8rem, 7vw, 7.2rem) !important;
+}
+
+/* Keep the full title on one line and scale it with the viewport width. */
+section[aria-labelledby="hero-title"] h1#hero-title {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    font-size: clamp(1.9rem, 4.25vw, 4.75rem) !important;
+    line-height: 1 !important;
+    letter-spacing: -0.058em !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+}
+
+@media (max-width: 48rem) {
+    section[aria-labelledby="hero-title"] {
+        padding-top:
+                calc(
+                        env(safe-area-inset-top, 0px)
+                        + 5.25rem
+                ) !important;
+    }
+
+    section[aria-labelledby="hero-title"] h1#hero-title {
+        font-size: clamp(0.72rem, 4.15vw, 2rem) !important;
+        letter-spacing: -0.052em !important;
+    }
+}
