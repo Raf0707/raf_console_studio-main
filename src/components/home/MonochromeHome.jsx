@@ -298,24 +298,6 @@ const CONTENT = {
 
     channels: [
       {
-        label: 'GitHub',
-        value: 'Raf0707',
-        href: 'https://github.com/Raf0707',
-        icon: Github,
-      },
-      {
-        label: 'Email',
-        value: 'raf_android-dev@mail.ru',
-        href: 'mailto:raf_android-dev@mail.ru',
-        icon: MailRuIcon,
-      },
-      {
-        label: 'Gmail',
-        value: 'raf.console@gmail.com',
-        href: 'mailto:raf.console@gmail.com',
-        icon: Mail,
-      },
-      {
         label: 'Telegram',
         value: '@raf_console_official',
         href: 'https://t.me/raf_console_official',
@@ -333,6 +315,25 @@ const CONTENT = {
         href: 'https://max.ru/u/f9LHodD0cOJ7Ixa-3E9mekZ7fo13O0Pzdjm3xIZKMt-X7hkV3ThDFjasFV4',
         icon: MaxIcon,
       },
+      {
+        label: 'Email',
+        value: 'raf_android-dev@mail.ru',
+        href: 'mailto:raf_android-dev@mail.ru',
+        icon: MailRuIcon,
+      },
+      {
+        label: 'Gmail',
+        value: 'raf.console@gmail.com',
+        href: 'mailto:raf.console@gmail.com',
+        icon: Mail,
+      },
+      {
+        label: 'GitHub',
+        value: 'Raf0707',
+        href: 'https://github.com/Raf0707',
+        icon: Github,
+      }
+
     ],
 
     contactAction:

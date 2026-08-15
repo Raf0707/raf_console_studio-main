@@ -915,9 +915,86 @@ export function AppStudioGlass({
     };
 
     return (
-        <main className="raf-studio-page relative isolate min-h-screen overflow-hidden bg-transparent text-white">
+        <main className="raf-studio-page relative min-h-screen overflow-hidden bg-transparent text-white">
+            <div className="raf-studio-background" aria-hidden="true" />
 
             <style jsx global>{`
+
+/* ==========================================================================
+   RAF CONSOLE STUDIO — HOME BACKGROUND
+   Реальный fixed-слой, чтобы isolation/stacking-context Studio
+   не прятал фон за страницей.
+   ========================================================================== */
+
+.raf-studio-page {
+    --raf-page-canvas: #111417;
+    --raf-page-grid-line: rgba(0, 0, 0, 0.48);
+    --raf-page-grid-size: clamp(4.2rem, 5.45vw, 6.25rem);
+
+    position: relative;
+
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+.raf-studio-background {
+    position: fixed;
+    z-index: 0;
+
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+
+    pointer-events: none;
+
+    background-color: var(--raf-page-canvas);
+
+    background-image:
+        radial-gradient(
+            ellipse at 48% 34%,
+            rgba(255, 255, 255, 0.075) 0%,
+            rgba(255, 255, 255, 0.038) 26%,
+            rgba(255, 255, 255, 0.012) 48%,
+            transparent 74%
+        ),
+        linear-gradient(
+            var(--raf-page-grid-line) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            var(--raf-page-grid-line) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        100% 100%,
+        var(--raf-page-grid-size) var(--raf-page-grid-size),
+        var(--raf-page-grid-size) var(--raf-page-grid-size);
+
+    background-position:
+        center,
+        0 0,
+        0 0;
+
+    background-repeat:
+        no-repeat,
+        repeat,
+        repeat;
+
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+@media (max-width: 820px) {
+    .raf-studio-page {
+        --raf-page-grid-size: clamp(3.6rem, 17vw, 4.85rem);
+    }
+}
+
                 /*
                  * Второй фрагмент hero-заголовка крупнее первого
                  * и получает самостоятельный световой блик
@@ -1494,7 +1571,7 @@ export function AppStudioGlass({
                     }
                 }
             `}</style>
-            <div className="mx-auto w-full max-w-[96rem] space-y-10 px-4 pb-20 sm:space-y-12 sm:px-6 lg:space-y-14 lg:px-8">
+            <div className="relative z-10 mx-auto w-full max-w-[96rem] space-y-10 px-4 pb-20 sm:space-y-12 sm:px-6 lg:space-y-14 lg:px-8">
                 <Hero
                     content={activeContent.hero}
                     activeService={activeService}
