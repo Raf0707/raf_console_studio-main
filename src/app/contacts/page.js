@@ -100,11 +100,12 @@ const contactItems = [
     },
     {
         title: 'Email',
-        value: 'raf_android-dev@mail.ru',
+        value: 'raf-console-studio@mail.ru',
         description:
             'Business inquiries and detailed project briefs',
-        href: 'mailto:raf_android-dev@mail.ru',
+        href: 'mailto:raf-console-studio@mail.ru',
         external: false,
+        copyEmail: true,
         icon: <MailRuIcon />,
     },
     {
@@ -114,6 +115,7 @@ const contactItems = [
             'Business inquiries and detailed project briefs',
         href: 'mailto:raf.console@gmail.com',
         external: false,
+        copyEmail: true,
         icon: <EnvelopeIcon />,
     },
     {
@@ -167,7 +169,13 @@ export default function ContactPage() {
     const [titleShineMode, setTitleShineMode] =
         useState('idle');
 
+    const [copySnackbarVisible, setCopySnackbarVisible] =
+        useState(false);
+
     const titleShineTimerRef =
+        useRef(null);
+
+    const copySnackbarTimerRef =
         useRef(null);
 
     useEffect(() => {
@@ -175,6 +183,12 @@ export default function ContactPage() {
             if (titleShineTimerRef.current !== null) {
                 window.clearTimeout(
                     titleShineTimerRef.current,
+                );
+            }
+
+            if (copySnackbarTimerRef.current !== null) {
+                window.clearTimeout(
+                    copySnackbarTimerRef.current,
                 );
             }
         };
@@ -204,6 +218,46 @@ export default function ContactPage() {
                 setTitleShineMode('idle');
                 titleShineTimerRef.current = null;
             }, 920);
+    };
+
+    const showCopySnackbar = () => {
+        setCopySnackbarVisible(true);
+
+        if (copySnackbarTimerRef.current !== null) {
+            window.clearTimeout(copySnackbarTimerRef.current);
+        }
+
+        copySnackbarTimerRef.current = window.setTimeout(() => {
+            setCopySnackbarVisible(false);
+            copySnackbarTimerRef.current = null;
+        }, 2200);
+    };
+
+    const copyEmailToClipboard = async (email) => {
+        try {
+            await navigator.clipboard.writeText(email);
+        } catch {
+            const textarea = document.createElement('textarea');
+            textarea.value = email;
+            textarea.setAttribute('readonly', '');
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            textarea.remove();
+        }
+
+        showCopySnackbar();
+    };
+
+    const handleContactClick = (event, item) => {
+        if (!item.copyEmail) {
+            return;
+        }
+
+        event.preventDefault();
+        void copyEmailToClipboard(item.value);
     };
 
     return (
@@ -279,6 +333,9 @@ export default function ContactPage() {
                             }
                             className={
                                 styles.contactCard
+                            }
+                            onClick={(event) =>
+                                handleContactClick(event, item)
                             }
                             style={{
                                 '--card-index':
@@ -403,6 +460,38 @@ export default function ContactPage() {
                     <ArrowIcon />
                 </a>
             </section>
+
+            <div
+                role="status"
+                aria-live="polite"
+                aria-label="Notification"
+                style={{
+                    position: 'fixed',
+                    left: '50%',
+                    bottom: 'max(24px, env(safe-area-inset-bottom))',
+                    zIndex: 10000,
+                    padding: '12px 18px',
+                    border: '1px solid rgba(255, 255, 255, 0.18)',
+                    borderRadius: '14px',
+                    background: 'rgba(15, 17, 23, 0.82)',
+                    boxShadow: '0 12px 40px rgba(0, 0, 0, 0.34)',
+                    backdropFilter: 'blur(18px)',
+                    WebkitBackdropFilter: 'blur(18px)',
+                    color: '#fff',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    letterSpacing: '0.01em',
+                    pointerEvents: 'none',
+                    opacity: copySnackbarVisible ? 1 : 0,
+                    transform: copySnackbarVisible
+                        ? 'translate(-50%, 0)'
+                        : 'translate(-50%, 14px)',
+                    transition:
+                        'opacity 180ms ease, transform 180ms ease',
+                }}
+            >
+                Email copied
+            </div>
         </main>
     );
 }

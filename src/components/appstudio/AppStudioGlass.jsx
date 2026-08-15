@@ -15,6 +15,7 @@ import {
     Code2,
     Gauge,
     Gem,
+    Github,
     Globe2,
     Layers3,
     LayoutTemplate,
@@ -84,7 +85,7 @@ function SectionHeading({ eyebrow, title, description, align = 'center' }) {
     return (
         <div
             className={cn(
-                'space-y-4',
+                'space-y-3',
                 centered ? 'mx-auto max-w-3xl text-center' : 'max-w-2xl',
             )}
         >
@@ -234,16 +235,16 @@ function Hero({
     };
 
     return (
-        <section className="relative flex min-h-[82svh] items-center pt-28 sm:pt-32">
-            <div className="mx-auto w-full max-w-7xl space-y-10">
+        <section className="relative flex min-h-[82svh] items-center pt-24 sm:pt-28">
+            <div className="mx-auto w-full max-w-7xl space-y-8">
                 <ServiceSegment
                     activeService={activeService}
                     labels={segmentLabels}
                     onChange={onServiceChange}
                 />
 
-                <div className="grid items-center gap-12 lg:grid-cols-[1.12fr_.88fr]">
-                    <div className="space-y-8 text-center lg:text-left">
+                <div className="grid items-center gap-9 lg:grid-cols-[1.12fr_.88fr]">
+                    <div className="space-y-7 text-center lg:text-left">
                         <div className="inline-flex items-center gap-2 rounded-full bg-white/[0.06] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/55 shadow-sm backdrop-blur-xl">
                             <Sparkles className="h-4 w-4" />
                             {content.badge}
@@ -260,7 +261,7 @@ function Hero({
                                     text-white
                                     lg:text-[4.6rem]
                                 "
-                                                        >
+                            >
                                 <span className="block">
                                     {content.titlePrimary}
                                 </span>
@@ -410,60 +411,251 @@ function PreviewTile({ icon: Icon, label, large = false }) {
     );
 }
 
-function Intro({ content, form }) {
+function StudioContactCard({ content }) {
+    const channels = [
+        {
+            label: 'Telegram',
+            value: '@raf_console_official',
+            href: 'https://t.me/raf_console_official',
+            icon: Send,
+        },
+        {
+            label: 'VK',
+            value: '@raf_console_official',
+            href: 'https://vk.ru/raf_console_official',
+            icon: VkIcon,
+        },
+        {
+            label: 'MAX',
+            value: '+7 989 116 34 33',
+            href: 'https://max.ru/u/f9LHodD0cOJ7Ixa-3E9mekZ7fo13O0Pzdjm3xIZKMt-X7hkV3ThDFjasFV4',
+            image: '/max.svg',
+        },
+        {
+            label: 'Email',
+            value: 'raf_android-dev@mail.ru',
+            href: 'mailto:raf_android-dev@mail.ru',
+            icon: MailRuIcon,
+        },
+        {
+            label: 'Gmail',
+            value: 'raf.console@gmail.com',
+            href: 'mailto:raf.console@gmail.com',
+            icon: Mail,
+        },
+    ];
+
     return (
-        <section id="contact-form" className="grid scroll-mt-28 gap-6 lg:grid-cols-[.9fr_1.1fr]">
-            <GlassSurface className="p-7 sm:p-9">
-                <p className="mb-7 text-xs font-semibold uppercase tracking-[0.25em] text-white/40">
+        <GlassSurface className="h-full p-3 sm:p-4">
+            <div className="mb-3 px-2 pt-1">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/40">
+                    {content.eyebrow}
+                </p>
+                <p className="mt-1.5 text-sm leading-6 text-white/55">
+                    {content.text}
+                </p>
+            </div>
+
+            <div className="grid gap-2">
+                {channels.map((channel) => {
+                    const Icon = channel.icon;
+                    const external = channel.href.startsWith('http');
+
+                    return (
+                        <a
+                            key={channel.label}
+                            href={channel.href}
+                            target={external ? '_blank' : undefined}
+                            rel={external ? 'noopener noreferrer' : undefined}
+                            className="
+        raf-studio-liquid-card
+        group
+        grid
+        min-h-[4.7rem]
+        grid-cols-[auto_minmax(0,1fr)_auto]
+        grid-rows-[auto_auto]
+        items-center
+        gap-x-3
+        gap-y-0
+        rounded-[1.25rem]
+        border
+        border-white/[0.11]
+        bg-white/[0.025]
+        px-3.5
+        py-3
+        transition
+        hover:bg-white/[0.055]
+        sm:min-h-[5rem]
+        sm:px-4
+    "
+                        >
+    <span
+        className="
+            row-span-2
+            flex
+            h-9
+            w-9
+            shrink-0
+            self-center
+            items-center
+            justify-center
+            rounded-full
+            border
+            border-white/[0.14]
+            bg-white/[0.05]
+            text-white/80
+            sm:h-10
+            sm:w-10
+        "
+    >
+        {channel.image ? (
+            <img
+                src={channel.image}
+                alt=""
+                aria-hidden="true"
+                draggable="false"
+                className="
+            h-[1.125rem]
+            w-[1.125rem]
+            object-contain
+            grayscale
+            brightness-0
+            invert
+        "
+            />
+        ) : (
+            <Icon
+                className={cn(
+                    'h-[1.125rem] w-[1.125rem]',
+                    channel.label === 'VK' &&
+                    'h-[1.35rem] w-[1.35rem] -translate-x-[0.08rem]',
+                    channel.label === 'Email' &&
+                    'h-[1.4rem] w-[1.4rem]',
+                )}
+                aria-hidden="true"
+            />
+        )}
+    </span>
+
+                            <span
+                                className="
+            col-start-2
+            row-start-1
+            min-w-0
+            self-end
+            pb-0.5
+            text-[10px]
+            font-semibold
+            leading-none
+            uppercase
+            tracking-[0.18em]
+            text-white/35
+        "
+                            >
+        {channel.label}
+    </span>
+
+                            <strong
+                                className="
+            col-start-2
+            row-start-2
+            min-w-0
+            self-start
+            truncate
+            pt-0.5
+            text-sm
+            font-semibold
+            leading-none
+            tracking-[-0.02em]
+            text-white/88
+            sm:text-[0.95rem]
+        "
+                            >
+                                {channel.value}
+                            </strong>
+
+                            <ArrowRight
+                                className="
+            col-start-3
+            row-span-2
+            h-4
+            w-4
+            shrink-0
+            self-center
+            text-white/35
+            transition-transform
+            duration-300
+            group-hover:translate-x-0.5
+            group-hover:text-white/65
+        "
+                            />
+                        </a>
+                    );
+                })}
+            </div>
+        </GlassSurface>
+    );
+}
+
+function Intro({ content, contactContent }) {
+    return (
+        <section
+            id="contact-card"
+            className="grid scroll-mt-24 gap-4 lg:grid-cols-[.9fr_1.1fr] lg:items-stretch"
+        >
+            <GlassSurface className="h-full p-6 sm:p-7">
+                <p className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-white/40">
                     {content.eyebrow}
                 </p>
 
-                <div className="space-y-7">
+                <div className="space-y-5">
                     {content.items.map((item) => (
-                        <div key={item.title} className="flex gap-4">
-              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/[0.06]">
-                <Check className="h-4 w-4" />
-              </span>
+                        <div key={item.title} className="flex gap-3.5">
+                            <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/[0.06]">
+                                <Check className="h-4 w-4" />
+                            </span>
+
                             <div>
-                                <h3 className="font-semibold tracking-[-0.02em] text-white">{item.title}</h3>
-                                <p className="mt-1 text-sm leading-6 text-white/50">{item.text}</p>
+                                <h3 className="font-semibold tracking-[-0.02em] text-white">
+                                    {item.title}
+                                </h3>
+
+                                <p className="mt-1 text-sm leading-6 text-white/50">
+                                    {item.text}
+                                </p>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                <div className="raf-studio-glass-button mt-8 inline-flex items-center gap-2 rounded-full bg-white/[0.12] px-4 py-2 text-sm font-semibold text-white backdrop-blur-md">
+                <div className="raf-studio-glass-button mt-6 inline-flex items-center gap-2 rounded-full bg-white/[0.12] px-4 py-2 text-sm font-semibold text-white backdrop-blur-md">
                     <BadgeCheck className="h-4 w-4" />
                     {content.warranty}
                 </div>
             </GlassSurface>
 
-            <GlassSurface className="p-3 sm:p-4">
-                <div data-raf-shader-ignore="true">
-                    {form}
-                </div>
-            </GlassSurface>
+            <StudioContactCard content={contactContent} />
         </section>
     );
 }
 
 function FeatureGrid({ content }) {
     return (
-        <section className="space-y-10">
+        <section className="space-y-7">
             <SectionHeading
                 eyebrow={content.eyebrow}
                 title={content.title}
                 description={content.description}
             />
 
-            <div className="grid gap-5 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-3">
                 {content.items.map((item, index) => {
                     const Icon = iconMap[item.icon] || Gem;
 
                     return (
-                        <GlassSurface key={item.title} interactive className="h-full p-7">
+                        <GlassSurface key={item.title} interactive className="h-full p-5">
                             <div className="flex h-full flex-col">
-                                <div className="mb-8 flex items-center justify-between">
+                                <div className="mb-6 flex items-center justify-between">
                   <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/[0.07]">
                     <Icon className="h-5 w-5 text-white/75" />
                   </span>
@@ -483,8 +675,8 @@ function FeatureGrid({ content }) {
 function AiSection({ content, onAction }) {
     return (
         <section>
-            <GlassSurface className="raf-studio-no-outer-outline p-7 sm:p-10 lg:p-12">
-                <div className="grid items-center gap-10 lg:grid-cols-[1fr_.8fr]">
+            <GlassSurface className="raf-studio-no-outer-outline p-6 sm:p-8 lg:p-10">
+                <div className="grid items-center gap-8 lg:grid-cols-[1fr_.8fr]">
                     <div>
                         <SectionHeading
                             eyebrow={content.eyebrow}
@@ -492,7 +684,7 @@ function AiSection({ content, onAction }) {
                             description={content.description}
                             align="left"
                         />
-                        <GlassButton onClick={onAction} className="mt-8">
+                        <GlassButton onClick={onAction} className="mt-6">
                             {content.action}
                         </GlassButton>
                     </div>
@@ -501,7 +693,7 @@ function AiSection({ content, onAction }) {
                         {content.points.map((point) => (
                             <div
                                 key={point}
-                                className="raf-studio-liquid-card flex min-h-28 items-start gap-3 rounded-[1.4rem] border border-transparent bg-white/[0.03] p-5 backdrop-blur-sm"
+                                className="raf-studio-liquid-card flex min-h-24 items-start gap-3 rounded-[1.4rem] border border-transparent bg-white/[0.03] p-4 backdrop-blur-sm"
                             >
                                 <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-white/65" />
                                 <p className="text-sm font-medium leading-6 text-white/65">{point}</p>
@@ -516,21 +708,21 @@ function AiSection({ content, onAction }) {
 
 function Process({ content }) {
     return (
-        <section id="process" className="scroll-mt-28 space-y-10">
+        <section id="process" className="scroll-mt-24 space-y-7">
             <SectionHeading
                 eyebrow={content.eyebrow}
                 title={content.title}
                 description={content.description}
             />
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {content.items.map((item, index) => {
                     const Icon = iconMap[item.icon] || Code2;
 
                     return (
                         <GlassSurface key={item.title} interactive className="h-full p-6">
                             <div className="flex h-full flex-col">
-                                <div className="mb-8 flex items-center justify-between">
+                                <div className="mb-6 flex items-center justify-between">
                   <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/[0.07]">
                     <Icon className="h-4 w-4" />
                   </span>
@@ -549,21 +741,21 @@ function Process({ content }) {
 
 function Audience({ content, onAction }) {
     return (
-        <section className="space-y-10">
+        <section className="space-y-7">
             <SectionHeading
                 eyebrow={content.eyebrow}
                 title={content.title}
                 description={content.description}
             />
 
-            <div className="grid gap-5 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-3">
                 {content.items.map((item) => {
                     const Icon = iconMap[item.icon] || Store;
 
                     return (
-                        <GlassSurface key={item.title} interactive className="p-7">
+                        <GlassSurface key={item.title} interactive className="p-6">
                             <Icon className="h-6 w-6 text-white/65" />
-                            <h3 className="mt-7 text-xl font-semibold tracking-[-0.03em] text-white">{item.title}</h3>
+                            <h3 className="mt-5 text-xl font-semibold tracking-[-0.03em] text-white">{item.title}</h3>
                             <p className="mt-3 text-sm leading-6 text-white/50">{item.text}</p>
                         </GlassSurface>
                     );
@@ -579,21 +771,21 @@ function Audience({ content, onAction }) {
 
 function Services({ content }) {
     return (
-        <section className="space-y-10">
+        <section className="space-y-7">
             <SectionHeading
                 eyebrow={content.eyebrow}
                 title={content.title}
                 description={content.description}
             />
 
-            <div className="grid gap-5 lg:grid-cols-2">
+            <div className="grid gap-4 lg:grid-cols-2">
                 {content.items.map((service) => (
-                    <GlassSurface key={service.title} className="p-7 sm:p-8">
+                    <GlassSurface key={service.title} className="p-6 sm:p-7">
             <span className="inline-flex rounded-full bg-white/[0.06] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/45">
               {service.tag}
             </span>
-                        <h3 className="mt-6 text-2xl font-semibold tracking-[-0.035em] text-white">{service.title}</h3>
-                        <ul className="mt-6 space-y-3">
+                        <h3 className="mt-4 text-2xl font-semibold tracking-[-0.035em] text-white">{service.title}</h3>
+                        <ul className="mt-4 space-y-2.5">
                             {service.items.map((item) => (
                                 <li key={item} className="flex gap-3 text-sm leading-6 text-white/55">
                                     <Check className="mt-1 h-4 w-4 shrink-0 text-white/65" />
@@ -661,136 +853,17 @@ function VkIcon({
     );
 }
 
-function DirectContact({
-                           content,
-                       }) {
-    const contactButtonClass = `
-        raf-studio-glass-button
-        flex
-        min-w-[7.5rem]
-        flex-1
-        flex-col
-        items-center
-        justify-center
-        gap-3
-        rounded-[1.5rem]
-        bg-white/[0.05]
-        p-4
-        text-center
-        transition
-        hover:bg-white/[0.1]
-        sm:max-w-36
-    `;
-
-    return (
-        <section>
-            <GlassSurface className="p-8 text-center sm:p-10">
-                <SectionHeading
-                    eyebrow={content.eyebrow}
-                    title={content.title}
-                    description={content.text}
-                />
-
-                <div
-                    className="
-                        mx-auto
-                        mt-8
-                        flex
-                        max-w-4xl
-                        flex-wrap
-                        justify-center
-                        gap-4
-                    "
-                >
-                    <a
-                        href="mailto:raf_android-dev@mail.ru"
-                        className={contactButtonClass}
-                    >
-                        <MailRuIcon className="h-7 w-7" />
-
-                        <span className="text-sm font-medium">
-                            Mail.ru
-                        </span>
-                    </a>
-
-                    <a
-                        href="mailto:raf.console@gmail.com"
-                        className={contactButtonClass}
-                    >
-                        <Mail className="h-5 w-5" />
-
-                        <span className="text-sm font-medium">
-                            Gmail
-                        </span>
-                    </a>
-
-                    <a
-                        href="https://t.me/raf_console_official"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={contactButtonClass}
-                    >
-                        <Send className="h-5 w-5" />
-
-                        <span className="text-sm font-medium">
-                            Telegram
-                        </span>
-                    </a>
-
-                    <a
-                        href="https://vk.ru/raf_console_official"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={contactButtonClass}
-                    >
-                        <VkIcon className="h-6 w-6" />
-
-                        <span className="text-sm font-medium">
-                            VK
-                        </span>
-                    </a>
-
-                    <a
-                        href="https://max.ru/u/f9LHodD0cOJ7Ixa-3E9mekZ7fo13O0Pzdjm3xIZKMt-X7hkV3ThDFjasFV4"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={contactButtonClass}
-                    >
-                        <img
-                            src="/max.svg"
-                            alt=""
-                            aria-hidden="true"
-                            draggable="false"
-                            className="
-                                h-6
-                                w-6
-                                object-contain
-                                grayscale
-                                brightness-0
-                                invert
-                            "
-                        />
-
-                        <span className="text-sm font-medium">
-                            MAX
-                        </span>
-                    </a>
-                </div>
-            </GlassSurface>
-        </section>
-    );
-}
 
 function Faq({ content }) {
     return (
-        <section className="space-y-10">
+        <section className="space-y-7">
             <SectionHeading eyebrow={content.eyebrow} title={content.title} />
 
-            <div className="mx-auto max-w-4xl space-y-3">
+            <div className="mx-auto max-w-4xl space-y-2.5">
                 {content.items.map((item) => (
                     <details
                         key={item.question}
-                        className="raf-studio-liquid-card raf-studio-no-outer-outline group rounded-[1.5rem] border-0 bg-black/[0.2] px-6 py-5 backdrop-blur-sm"
+                        className="raf-studio-liquid-card raf-studio-no-outer-outline group rounded-[1.5rem] border-0 bg-black/[0.2] px-5 py-4 backdrop-blur-sm"
                     >
                         <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-white">
                             {item.question}
@@ -806,15 +879,14 @@ function Faq({ content }) {
 
 export function AppStudioGlass({
                                    content,
-                                   forms,
                                }) {
     /*
      * При каждом новом открытии страницы студии всегда начинаем
      * с раздела мобильных приложений
      *
      * Состояние больше не читается из localStorage и URL, поэтому
-     * после ухода на другую вкладку и возврата SegmentButton,
-     * контент и форма гарантированно синхронизированы
+     * после ухода на другую вкладку и возврата SegmentButton
+     * выбранный раздел всегда синхронизирован с контентом
      */
     const [activeService, setActiveService] =
         useState('mobile');
@@ -834,10 +906,9 @@ export function AppStudioGlass({
         [activeService, content.services],
     );
 
-    const activeForm = forms[activeService];
 
-    const scrollToForm = () => {
-        document.getElementById('contact-form')?.scrollIntoView({
+    const scrollToContact = () => {
+        document.getElementById('contact-card')?.scrollIntoView({
             behavior: 'smooth',
             block: 'start',
         });
@@ -873,7 +944,7 @@ export function AppStudioGlass({
                             );
 
                     font-size: inherit;
-                    
+
                     font-weight: 560;
                     line-height: 0.96;
                     letter-spacing: -0.065em;
@@ -993,7 +1064,7 @@ export function AppStudioGlass({
                     .raf-studio-title-secondary {
                         margin-inline: 0;
 
-                        
+
                     }
                 }
 
@@ -1423,22 +1494,24 @@ export function AppStudioGlass({
                     }
                 }
             `}</style>
-            <div className="mx-auto w-full max-w-[96rem] space-y-28 px-4 pb-28 sm:px-6 lg:space-y-36 lg:px-8">
+            <div className="mx-auto w-full max-w-[96rem] space-y-10 px-4 pb-20 sm:space-y-12 sm:px-6 lg:space-y-14 lg:px-8">
                 <Hero
                     content={activeContent.hero}
                     activeService={activeService}
                     segmentLabels={content.segment}
                     onServiceChange={handleServiceChange}
-                    onPrimaryAction={scrollToForm}
+                    onPrimaryAction={scrollToContact}
                 />
 
-                <Intro content={activeContent.intro} form={activeForm} />
+                <Intro
+                    content={activeContent.intro}
+                    contactContent={content.contactCard}
+                />
                 <FeatureGrid content={activeContent.features} />
-                <AiSection content={activeContent.ai} onAction={scrollToForm} />
+                <AiSection content={activeContent.ai} onAction={scrollToContact} />
                 <Process content={activeContent.process} />
-                <Audience content={activeContent.audience} onAction={scrollToForm} />
+                <Audience content={activeContent.audience} onAction={scrollToContact} />
                 <Services content={activeContent.services} />
-                <DirectContact content={content.directContact} />
                 <Faq content={activeContent.faq} />
             </div>
         </main>

@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils';
 
 import styles from './Header.module.css';
 import refractionStyles from './HeaderRefraction.module.css';
+import RafMinimalizmLogo from '@/components/home/RafMinimalizmLogo';
 
 const LANGUAGE_ANIMATION_DURATION = 360;
 
@@ -320,10 +321,10 @@ export default function Header() {
                     label: 'Политика',
                     href: '/privacy_policy_ru',
                 },
-                {
+                /*{
                     label: 'От скуки',
                     href: '/bored_ru',
-                },
+                },*/
                 /*{
                     label: 'Настройки',
                     href: '/settings_ru',
@@ -352,10 +353,10 @@ export default function Header() {
                 label: 'Policy',
                 href: '/privacy_policy',
             },
-            {
+            /*{
                 label: 'AntiBoredom',
                 href: '/bored',
-            },
+            },*/
             /*{
                 label: 'Settings',
                 href: '/settings',
@@ -502,22 +503,17 @@ export default function Header() {
                     className={refractionStyles.rim}
                 />
                 <Link
-                    href={
-                        isRussian
-                            ? '/main_ru'
-                            : '/main'
-                    }
+                    href={isRussian ? '/main_ru' : '/main'}
                     scroll={false}
-                    className={cn(
-                        refractionStyles.content,
-                        'relative z-20 shrink-0 whitespace-nowrap text-xs font-semibold tracking-[-0.04em] text-white sm:text-sm xl:text-base'
-                    )}
+                    className="relative z-20 flex shrink-0 items-center bg-transparent border-0 shadow-none"
+                    aria-label="RAF — Raf Console Studio"
                 >
-                    Raf&lt;/&gt;Console{' '}
-
-                    <span className="hidden font-normal text-white/45 2xl:inline">
-                        Studio
-                    </span>
+                    <img
+                        src="/raf-minimal-logo.png"
+                        alt="RAF"
+                        draggable="false"
+                        className="block h-[2.1rem] w-auto object-contain"
+                    />
                 </Link>
 
                 <Navbar

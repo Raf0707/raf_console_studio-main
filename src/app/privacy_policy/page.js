@@ -962,7 +962,7 @@ export default function PrivacyPolicy() {
 
                         <div className={styles.contactGrid}>
                             <a
-                                href="mailto:raf_android-dev@mail.ru"
+                                href="mailto:raf-console-studio@mail.ru"
                                 className={styles.contactCard}
                             >
                                 <span className={styles.contactIcon}>
@@ -973,7 +973,7 @@ export default function PrivacyPolicy() {
                                     <small>Email</small>
 
                                     <strong>
-                                        raf_android-dev@mail.ru
+                                        raf-console-studio@mail.ru
                                     </strong>
                                 </span>
 

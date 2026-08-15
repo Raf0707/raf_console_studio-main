@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 
 import {
   ArrowDownRight,
@@ -85,45 +84,17 @@ function MailRuIcon(props) {
 
 const CONTENT = {
   ru: {
-    eyebrow:
-        'Raf</>Console Studio · Digital Product Lab',
+    brandTitle:
+        'Raf</>Console Studio',
 
-    titlePrimary: 'От идеи —',
-    titleSecondaryFirst: 'к цифровому',
-    titleSecondarySecond: 'продукту',
-
-    subtitle:
-        'Проектируем сайты и приложения, в которых технология, архитектура и визуальный язык работают как единая система',
-
-    primaryAction:
-        'Обсудить проект',
-
-    secondaryAction:
-        'Посмотреть работы',
-
-    scrollHint:
-        'Листайте ниже',
-
-    heroMeta: [
-      'Web',
-      'Mobile',
-      'Product design',
-    ],
-
-    servicesEyebrow:
-        'Направления',
-
-    servicesTitle:
-        'Минимализм, наполненный глубиной',
-
-    servicesLead:
-        'Чёрный, белый и выразительная шкала серого. Вместо цветовых акцентов — свет, отражения, глубина и движение жидкого стекла',
+    brandTagline:
+        'От идеи — к цифровому продукту',
 
     services: [
       {
         number: '01',
         icon: Code2,
-        title: 'Разработка сайтов',
+        title: 'Высокопроизводительные сайты',
         text:
             'Быстрые, адаптивные и визуально цельные веб-продукты — от лендинга до сложного сервиса',
         tags: [
@@ -162,29 +133,28 @@ const CONTENT = {
         'О студии',
 
     aboutTitle:
-        'Разрабатываем не отдельные экраны, а цельные цифровые системы',
+        'Создаём цифровые продукты, которые превращают внимание в действие',
 
     aboutParagraphs: [
-      'Raf</>Console Studio создаёт мобильные приложения и веб-продукты, которые решают реальные задачи пользователей и бизнеса.',
-      'Мы объединяем проектирование, дизайн, разработку и дальнейшее развитие продукта. Поэтому интерфейс не существует отдельно от архитектуры, а визуальная часть поддерживает функциональность.',
-      'Результат адаптируется под платформу, сохраняет узнаваемость бренда и остаётся удобным на любом экране.',
+      'Сайт или приложение должны не просто выглядеть современно — они должны быстро объяснять ценность предложения, вызывать доверие и помогать человеку сделать следующий шаг.',
+      'Мы строим каждый проект вокруг цели бизнеса: увеличить количество обращений, усилить позиционирование, упростить путь клиента, запустить новое направление или сделать существующий сервис убедительнее.',
+      'В результате вы получаете цифровой продукт, который работает на бренд и продажи сегодня и остаётся сильной основой для дальнейшего роста.',
     ],
 
     stats: [
       [
         '01',
-        'Единая архитектура',
+        'Доверие с первого контакта',
       ],
       [
         '02',
-        'Адаптивный интерфейс',
+        'Больше целевых действий',
       ],
       [
         '03',
-        'Долгосрочное развитие',
+        'Основа для роста',
       ],
     ],
-
     contactEyebrow:
         'Связь',
 
@@ -195,24 +165,6 @@ const CONTENT = {
         'Опишите задачу, приложите референсы или готовый дизайн — мы обсудим архитектуру, визуальное направление и план реализации.',
 
     channels: [
-      {
-        label: 'GitHub',
-        value: 'Raf0707',
-        href: 'https://github.com/Raf0707',
-        icon: Github,
-      },
-      {
-        label: 'Email',
-        value: 'raf_android-dev@mail.ru',
-        href: 'mailto:raf_android-dev@mail.ru',
-        icon: MailRuIcon,
-      },
-      {
-        label: 'Gmail',
-        value: 'raf.console@gmail.com',
-        href: 'mailto:raf.console@gmail.com',
-        icon: Mail,
-      },
       {
         label: 'Telegram',
         value: '@raf_console_official',
@@ -231,6 +183,24 @@ const CONTENT = {
         href: 'https://max.ru/u/f9LHodD0cOJ7Ixa-3E9mekZ7fo13O0Pzdjm3xIZKMt-X7hkV3ThDFjasFV4',
         icon: MaxIcon,
       },
+      {
+        label: 'Email',
+        value: 'raf_android-dev@mail.ru',
+        href: 'mailto:raf_android-dev@mail.ru',
+        icon: MailRuIcon,
+      },
+      {
+        label: 'Gmail',
+        value: 'raf.console@gmail.com',
+        href: 'mailto:raf.console@gmail.com',
+        icon: Mail,
+      },
+      {
+        label: 'GitHub',
+        value: 'Raf0707',
+        href: 'https://github.com/Raf0707',
+        icon: Github,
+      }
     ],
 
     contactAction:
@@ -246,45 +216,17 @@ const CONTENT = {
   },
 
   en: {
-    eyebrow:
-        'Raf</>Console Studio · Digital Product Lab',
+    brandTitle:
+        'Raf</>Console Studio',
 
-    titlePrimary: 'From idea',
-    titleSecondaryFirst: 'to digital',
-    titleSecondarySecond: 'product',
-
-    subtitle:
-        'We design websites and applications where technology, architecture and visual language work as one system.',
-
-    primaryAction:
-        'Discuss a project',
-
-    secondaryAction:
-        'View projects',
-
-    scrollHint:
-        'Scroll to explore',
-
-    heroMeta: [
-      'Web',
-      'Mobile',
-      'Product design',
-    ],
-
-    servicesEyebrow:
-        'Expertise',
-
-    servicesTitle:
-        'Minimalism with depth',
-
-    servicesLead:
-        'Black, white and a rich grayscale. Instead of colorful accents: light, reflection, depth and liquid-glass motion.',
+    brandTagline:
+        'From idea to digital product',
 
     services: [
       {
         number: '01',
         icon: Code2,
-        title: 'Website development',
+        title: 'High‑performance websites',
         text:
             'Fast, responsive and visually consistent web products — from landing pages to complex services.',
         tags: [
@@ -323,29 +265,28 @@ const CONTENT = {
         'About the studio',
 
     aboutTitle:
-        'We design complete digital systems, not isolated screens',
+        'Digital products that turn attention into action',
 
     aboutParagraphs: [
-      'Raf</>Console Studio creates mobile applications and web products that solve real user and business problems.',
-      'We connect product planning, design, development and ongoing evolution. The interface is never separated from architecture, and the visual layer supports functionality.',
-      'The result adapts to every platform, preserves the brand identity and remains comfortable on every screen.',
+      'A website or application should do more than look modern — it should communicate value quickly, build trust and make the next step obvious to the customer.',
+      'We shape every project around a business goal: generating more enquiries, strengthening positioning, simplifying the customer journey, launching a new direction or making an existing service more convincing.',
+      'The result is a digital product that supports your brand and sales today while remaining a strong foundation for future growth.',
     ],
 
     stats: [
       [
         '01',
-        'Unified architecture',
+        'Trust from the first contact',
       ],
       [
         '02',
-        'Responsive interface',
+        'More meaningful actions',
       ],
       [
         '03',
-        'Long-term evolution',
+        'Built for growth',
       ],
     ],
-
     contactEyebrow:
         'Contact',
 
@@ -410,10 +351,6 @@ export default function MonochromeHome({
                                        }) {
   const copy =
       CONTENT[locale] ?? CONTENT.ru;
-
-  const isRussian =
-      locale === 'ru';
-
 
   const saveContact = () => {
     const vCard = [
@@ -521,179 +458,6 @@ export default function MonochromeHome({
           </defs>
         </svg>
 
-        <section
-            className={styles.hero}
-            aria-labelledby="hero-title"
-        >
-          {/*
-           * ПРЕЖНИЙ ВАРИАНТ ПЕРВОГО ЭКРАНА СОХРАНЁН.
-           * Для возврата видеофона раскомментируйте этот блок вместе с
-           * restartVideo выше и снова подключите LiquidRafLogo в импортах.
-           *
-           * <video
-           *     className={styles.heroVideo}
-           *     autoPlay
-           *     loop
-           *     muted
-           *     playsInline
-           *     preload="auto"
-           *     disablePictureInPicture
-           *     aria-hidden="true"
-           *     onEnded={restartVideo}
-           * >
-           *   <source
-           *       src="/rafconsole_demo.mp4"
-           *       type="video/mp4"
-           *   />
-           * </video>
-           *
-           * <div
-           *     className={styles.heroVeil}
-           *     aria-hidden="true"
-           * />
-           *
-           * <div
-           *     className={styles.heroGrid}
-           *     aria-hidden="true"
-           * />
-           *
-           * <LiquidRafLogo placement="hero" />
-           */}
-
-          <div
-              className={styles.minimalHeroGrid}
-              aria-hidden="true"
-          />
-
-          <RafMinimalizmLogo
-              placement="hero"
-              className={styles.heroDesktopLogo}
-          />
-
-          <div
-              className={`
-            ${styles.heroContent}
-            ${
-                  isRussian
-                      ? styles.heroContentRussian
-                      : styles.heroContentEnglish
-              }
-          `}
-          >
-            <div className={styles.heroIntro}>
-              <p className={styles.eyebrow}>
-                {copy.eyebrow}
-              </p>
-
-              <h1
-                  id="hero-title"
-                  className={`${styles.heroTitle} ${
-                      isRussian
-                          ? styles.heroTitleRussian
-                          : styles.heroTitleEnglish
-                  }`}
-              >
-                <span className={styles.heroTitlePrimary}>
-                  {copy.titlePrimary}
-                </span>
-
-                <span className={styles.heroTitleSecondary}>
-                  <span className={styles.heroTitleLine}>
-                    {copy.titleSecondaryFirst}
-                  </span>
-
-                  <span className={styles.heroTitleLine}>
-                    {copy.titleSecondarySecond}
-                  </span>
-                </span>
-              </h1>
-            </div>
-
-            <div
-                className={styles.heroMobileLogoSlot}
-                aria-hidden="true"
-            >
-              <RafMinimalizmLogo
-                  placement="hero"
-                  className={styles.heroMobileLogo}
-              />
-            </div>
-
-            <div className={styles.heroAfterLogo}>
-              <p className={styles.heroSubtitle}>
-                {copy.subtitle}
-              </p>
-
-              <div className={styles.heroActions}>
-                <Link
-                    href={
-                      isRussian
-                          ? '/contacts_ru'
-                          : '/contacts'
-                    }
-                    className={`
-                  ${styles.actionButton}
-                  ${styles.actionButtonPrimary}
-                `}
-                >
-                  <span>
-                    {copy.primaryAction}
-                  </span>
-
-                  <ArrowDownRight
-                      aria-hidden="true"
-                  />
-                </Link>
-
-                <Link
-                    href={
-                      isRussian
-                          ? '/projects_ru'
-                          : '/projects'
-                    }
-                    className={`
-                  ${styles.actionButton}
-                  ${styles.actionButtonGhost}
-                `}
-                >
-                  {copy.secondaryAction}
-                </Link>
-              </div>
-            </div>
-
-            <div
-                className={styles.heroMeta}
-                aria-label={
-                  isRussian
-                      ? 'Возможности студии'
-                      : 'Studio capabilities'
-                }
-            >
-              {copy.heroMeta.map(
-                  (item) => (
-                      <span key={item}>
-                        {item}
-                      </span>
-                  )
-              )}
-            </div>
-          </div>
-
-          <a
-              className={styles.scrollHint}
-              href="#services"
-          >
-          <span>
-            {copy.scrollHint}
-          </span>
-
-            <span
-                className={styles.scrollLine}
-                aria-hidden="true"
-            />
-          </a>
-        </section>
-
         <div className={styles.contentSurface}>
           <section
               id="services"
@@ -701,28 +465,46 @@ export default function MonochromeHome({
               aria-labelledby="services-title"
           >
             <div className={styles.sectionHeading}>
-              <div>
-                <p
-                    className={
-                      styles.sectionEyebrow
-                    }
-                >
-                  {copy.servicesEyebrow}
-                </p>
-
-                <h2
+              <div
+                  style={{
+                    gridColumn: '1 / -1',
+                    width: '100%',
+                    minWidth: 0,
+                  }}
+              >
+                <h1
                     id="services-title"
                     className={styles.sectionTitle}
+                    style={{
+                      width: '100%',
+                      maxWidth: 'none',
+                      margin: 0,
+                      fontSize: 'clamp(1.4rem, 7.6vw, 7rem)',
+                      fontWeight: 620,
+                      lineHeight: 0.94,
+                      letterSpacing: '-0.055em',
+                      whiteSpace: 'nowrap',
+                    }}
                 >
-                  {copy.servicesTitle}
-                </h2>
+                  {copy.brandTitle}
+                </h1>
+
+                <p
+                    className={styles.sectionLead}
+                    style={{
+                      maxWidth: 'none',
+                      marginTop: 'clamp(0.9rem, 2vw, 1.6rem)',
+                      fontSize: 'clamp(1rem, 2.25vw, 2rem)',
+                      fontWeight: 450,
+                      lineHeight: 1.2,
+                      letterSpacing: '-0.018em',
+                      whiteSpace: 'nowrap',
+                    }}
+                >
+                  {copy.brandTagline}
+                </p>
               </div>
-
-              <p className={styles.sectionLead}>
-                {copy.servicesLead}
-              </p>
             </div>
-
             <div className={styles.servicesGrid}>
               {copy.services.map(
                   (service) => {
@@ -828,7 +610,7 @@ export default function MonochromeHome({
 
               <h2
                   id="about-title"
-                  className={styles.sectionTitle}
+                  className={`${styles.sectionTitle} ${styles.aboutTitle}`}
               >
                 {copy.aboutTitle}
               </h2>

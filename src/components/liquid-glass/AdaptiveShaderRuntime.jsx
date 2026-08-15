@@ -11,6 +11,13 @@ import { createGpuRuntime } from './adaptive/gpu-runtime';
 import { MAX_SURFACES } from './adaptive/shader-source';
 import { collectSurfaces, isActuallyVisible } from './adaptive/surfaces';
 
+// Mutation batches larger than this are almost always a big DOM change
+// (route change, list re-render, etc). Walking `.closest()` for every
+// single record in a huge batch is itself a source of jank on weak
+// devices, so above this threshold we skip the per-record filter and
+// just schedule a rescan directly.
+const MUTATION_BATCH_RESCAN_THRESHOLD = 40;
+
 export default function AdaptiveShaderRuntime() {
     const canvasRef = useRef(null);
 
@@ -33,6 +40,12 @@ export default function AdaptiveShaderRuntime() {
         let needsSurfaceScan = true;
         let needsRectRefresh = true;
         let surfaces = [];
+        // Reused across frames: the subset of `surfaces` that is
+        // currently visible. No object allocation happens on this path
+        // anymore (see refreshSurfaceRects) — we just track how many of
+        // the slots are populated.
+        const activeSurfaces = new Array(MAX_SURFACES).fill(null);
+        let activeCount = 0;
         const surfacesData = new Float32Array(MAX_SURFACES * 4);
         const surfacesMeta = new Float32Array(MAX_SURFACES * 4);
         let pointerX = window.innerWidth * 0.5;
@@ -171,48 +184,55 @@ export default function AdaptiveShaderRuntime() {
             }
         };
 
+        // Hot path — runs up to once per rendered frame while the shader
+        // is active. Previously this allocated a new `{ ...item, rect }`
+        // object for every surface, every time it ran (pointer move,
+        // scroll, resize, DOM mutation all set needsRectRefresh). That
+        // constant allocation is what shows up as GC stutter / hangs on
+        // low-end phones. Now it writes straight into the pre-allocated
+        // typed arrays and keeps a flat reference list (`activeSurfaces`)
+        // with zero new objects created per call.
         const refreshSurfaceRects = (settings) => {
-            if (needsSurfaceScan || performance.now() - lastSurfaceScan > 900) {
+            const now = performance.now();
+            if (needsSurfaceScan || now - lastSurfaceScan > 900) {
                 surfaces = collectSurfaces(settings.maxSurfaces);
-                lastSurfaceScan = performance.now();
+                lastSurfaceScan = now;
                 needsSurfaceScan = false;
             }
 
             surfacesData.fill(0);
             surfacesMeta.fill(0);
+            activeCount = 0;
 
-            const visible = [];
-            for (const item of surfaces) {
+            const maxSurfaces = Math.min(settings.maxSurfaces, MAX_SURFACES);
+            for (let i = 0; i < surfaces.length && activeCount < maxSurfaces; i += 1) {
+                const item = surfaces[i];
                 const rect = item.element.getBoundingClientRect();
                 if (!isActuallyVisible(item.element, rect)) {
                     continue;
                 }
-                visible.push({ ...item, rect });
-                if (visible.length >= settings.maxSurfaces) {
-                    break;
-                }
-            }
-            surfaces = visible;
 
-            surfaces.forEach((item, index) => {
-                const offset = index * 4;
+                const offset = activeCount * 4;
                 const hover =
-                    pointerX >= item.rect.left
-                    && pointerX <= item.rect.right
-                    && pointerY >= item.rect.top
-                    && pointerY <= item.rect.bottom;
+                    pointerX >= rect.left
+                    && pointerX <= rect.right
+                    && pointerY >= rect.top
+                    && pointerY <= rect.bottom;
 
-                surfacesData[offset] = item.rect.left;
-                surfacesData[offset + 1] = item.rect.top;
-                surfacesData[offset + 2] = item.rect.width;
-                surfacesData[offset + 3] = item.rect.height;
+                surfacesData[offset] = rect.left;
+                surfacesData[offset + 1] = rect.top;
+                surfacesData[offset + 2] = rect.width;
+                surfacesData[offset + 3] = rect.height;
                 surfacesMeta[offset] = item.radius;
                 surfacesMeta[offset + 1] = item.element.hasAttribute(
                     'data-raf-large-glass',
                 ) ? 0.82 : 1.0;
                 surfacesMeta[offset + 2] = item.kind;
                 surfacesMeta[offset + 3] = hover ? 1.0 : 0.0;
-            });
+
+                activeSurfaces[activeCount] = item;
+                activeCount += 1;
+            }
 
             needsRectRefresh = false;
         };
@@ -265,7 +285,7 @@ export default function AdaptiveShaderRuntime() {
             gl.uniform1f(uniforms.time, time * 0.001);
             gl.uniform1f(uniforms.scroll, window.scrollY || 0);
             gl.uniform1f(uniforms.strength, settings.strength);
-            gl.uniform1i(uniforms.surfaceCount, surfaces.length);
+            gl.uniform1i(uniforms.surfaceCount, activeCount);
             gl.uniform4fv(uniforms.surfaces, surfacesData);
             gl.uniform4fv(uniforms.surfaceMeta, surfacesMeta);
             gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -295,7 +315,7 @@ export default function AdaptiveShaderRuntime() {
             updateDiagnostics({
                 jankRatio: Number(jankRatio.toFixed(3)),
                 longTasks,
-                surfaceCount: surfaces.length,
+                surfaceCount: activeCount,
             });
 
             if (time > warmupUntil) {
@@ -402,6 +422,16 @@ export default function AdaptiveShaderRuntime() {
         reducedMotion.addEventListener?.('change', handleReducedMotion);
 
         mutationObserver = new MutationObserver((mutations) => {
+            // Large batches are expensive to walk with `.closest()` per
+            // record — and are almost always a real structural change
+            // anyway, so just schedule a rescan directly instead of
+            // filtering.
+            if (mutations.length > MUTATION_BATCH_RESCAN_THRESHOLD) {
+                needsSurfaceScan = true;
+                needsRectRefresh = true;
+                return;
+            }
+
             const hasRelevantMutation = mutations.some((mutation) => {
                 const target = mutation.target;
 

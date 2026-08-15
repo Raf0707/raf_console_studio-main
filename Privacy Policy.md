@@ -44,5 +44,5 @@ All our projects are governed by the GNU General Public License (GPL) version 3.
 Contact Us
 If you have any questions about this Privacy Policy or our data practices, please contact us at:
 
-- Email: raf_android-dev@mail.ru
+- Email: raf-console-studio@mail.ru
 - Telegram: t.me/raf_console_official
